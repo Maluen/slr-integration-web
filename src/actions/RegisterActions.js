@@ -27,7 +27,7 @@ class RegisterActions {
       alert('registration success');
     } catch (err) {
       // registration failed
-      alert('registration failed');
+      alert('registration failed: ' + err.response.body.error);
     }
   }
 

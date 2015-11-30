@@ -3,6 +3,9 @@
 import 'babel-core/polyfill';
 import path from 'path';
 import express from 'express';
+import passport from 'passport';
+import { Strategy as LocalStrategy } from 'passport-local';
+import mongoose from 'mongoose';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 import Router from './routes';
@@ -10,11 +13,23 @@ import Html from './components/Html';
 
 const server = global.server = express();
 const port = process.env.PORT || 5000;
+const database = 'slr-integration-web'; // TODO: get value from private config file?
+
 server.set('port', port);
 
 //
 // Register Node.js middleware
 // -----------------------------------------------------------------------------
+
+// session
+server.use(require('express-session')({
+  secret: 'CZ08[yQhXAeP3c8A{_7MkPo)JQ9djs', // TODO: generate on deploy?
+  resave: false,
+  saveUninitialized: false,
+}));
+server.use(passport.initialize());
+server.use(passport.session());
+
 server.use(express.static(path.join(__dirname, 'public')));
 
 //
@@ -49,6 +64,22 @@ server.get('*', async (req, res, next) => {
     next(err);
   }
 });
+
+//
+// Configure passport
+// -----------------------------------------------------------------------------
+
+const User = require('./api/models/User');
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+//
+// Connect to the database
+// -----------------------------------------------------------------------------
+
+mongoose.connect(`mongodb://localhost/${database}`);
+
 
 //
 // Launch the server

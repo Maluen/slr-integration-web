@@ -1,3 +1,5 @@
+import User from './models/User';
+
 const register = async (req, res, next) => {
   try {
     const email = req.query.email;
@@ -16,17 +18,18 @@ const register = async (req, res, next) => {
     }
 
     // STUB
-    let isSuccess = true;
 
-    if (isSuccess) {
-      res.status(200).json({
-        checkActivation: true,
-      });
-    } else {
-      res.status(400).json({
-        errorMessage: 'TODO',
-      });
-    }
+    User.register(new User({ email }), password, (err) => {
+      if (err) {
+        res.status(400).send({
+          error: err.message,
+        });
+      } else {
+        res.status(200).send({
+          checkActivation: true,
+        });
+      }
+    });
   } catch (err) {
     next(err);
   }
