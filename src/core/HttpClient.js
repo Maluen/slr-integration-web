@@ -32,6 +32,24 @@ const HttpClient = {
       });
   }),
 
+  post: (path, data) => new Promise((resolve, reject) => {
+    request
+      .post(getUrl(path))
+      .send(data)
+      .accept('application/json')
+      .end((err, res) => {
+        if (err) {
+          if (err.status === 404) {
+            resolve(null);
+          } else {
+            reject(err);
+          }
+        } else {
+          resolve(res.body);
+        }
+      });
+  }),
+
 };
 
 export default HttpClient;

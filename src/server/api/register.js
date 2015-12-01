@@ -1,9 +1,12 @@
-import User from './models/User';
+import { Router } from 'express';
+import User from '../models/User';
 
-const register = async (req, res, next) => {
+const router = new Router();
+
+router.post('/register', async (req, res, next) => {
   try {
-    const email = req.query.email;
-    const password = req.query.password;
+    const email = req.body.email;
+    const password = req.body.password;
 
     // validation
 
@@ -33,7 +36,6 @@ const register = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-};
+});
 
-export default register;
-
+export default router;

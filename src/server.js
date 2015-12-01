@@ -3,6 +3,7 @@
 import 'babel-core/polyfill';
 import path from 'path';
 import express from 'express';
+import bodyParser from 'body-parser';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import mongoose from 'mongoose';
@@ -21,6 +22,11 @@ server.set('port', port);
 // Register Node.js middleware
 // -----------------------------------------------------------------------------
 
+// support json encoded bodies
+server.use(bodyParser.json());
+// support encoded bodies
+server.use(bodyParser.urlencoded({ extended: true }));
+
 // session
 server.use(require('express-session')({
   secret: 'CZ08[yQhXAeP3c8A{_7MkPo)JQ9djs', // TODO: generate on deploy?
@@ -35,8 +41,7 @@ server.use(express.static(path.join(__dirname, 'public')));
 //
 // Register API middleware
 // -----------------------------------------------------------------------------
-server.use('/api/content', require('./api/content'));
-server.use('/api', require('./api/services'));
+server.use('/api', require('./server/api/main'));
 
 //
 // Register server-side rendering middleware
@@ -69,7 +74,7 @@ server.get('*', async (req, res, next) => {
 // Configure passport
 // -----------------------------------------------------------------------------
 
-const User = require('./api/models/User');
+const User = require('./server/models/User');
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());

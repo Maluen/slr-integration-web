@@ -24,7 +24,7 @@ const fileExists = filename => new Promise(resolve => {
 
 const router = new Router();
 
-router.get('/', async (req, res, next) => {
+router.get('/content', async (req, res, next) => {
   try {
     const path = req.query.path;
 

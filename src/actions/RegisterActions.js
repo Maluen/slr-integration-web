@@ -21,7 +21,7 @@ class RegisterActions {
   async register(email, password) {
     // TODO: url encode?
     try {
-      const response = await http.get(`/api/register?email=${email}&password=${password}`);
+      const response = await http.post('/api/register', { email, password });
 
       // registration success
       alert('registration success');
