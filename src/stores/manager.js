@@ -1,5 +1,5 @@
-import RegisterStore from './RegisterStore';
+import AccountStore from './AccountStore';
 
 export default {
-  'registerStore': new RegisterStore(),
+  'accountStore': new AccountStore(),
 };

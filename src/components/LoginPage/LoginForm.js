@@ -3,7 +3,7 @@
 import React, { PropTypes, Component } from 'react';
 import { accountActions } from '../../actions/manager';
 
-class RegisterForm extends Component {
+class LoginForm extends Component {
 
   static propTypes = {
     email: PropTypes.string,
@@ -27,7 +27,7 @@ class RegisterForm extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    accountActions.register(this.props.email, this.props.password);
+    accountActions.login(this.props.email, this.props.password);
   };
 
   render() {
@@ -43,11 +43,11 @@ class RegisterForm extends Component {
           <input type="password" value={this.props.password} onChange={this.handlePasswordChange} />
         </p>
 
-        <input type="submit" value="Register" />
+        <input type="submit" value="Login" />
       </form>
     );
   }
 
 }
 
-export default RegisterForm;
+export default LoginForm;

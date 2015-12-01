@@ -3,6 +3,10 @@
 import keyMirror from 'fbjs/lib/keyMirror';
 
 export default keyMirror({
-  REGISTER_UPDATE_EMAIL: null,
-  REGISTER_UPDATE_PASSWORD: null,
+  ACCOUNT_UPDATE_EMAIL: null,
+  ACCOUNT_UPDATE_PASSWORD: null,
+  ACCOUNT_REGISTER_ERROR: null,
+  ACCOUNT_REGISTER_SUCCESS: null,
+  ACCOUNT_LOGIN_ERROR: null,
+  ACCOUNT_LOGIN_SUCCESS: null,
 });

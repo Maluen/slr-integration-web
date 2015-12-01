@@ -3,7 +3,8 @@
 import React, { PropTypes, Component } from 'react';
 import withStyles from '../../decorators/withStyles';
 import styles from './RegisterPage.scss';
-import { registerStore } from '../../stores/manager';
+import { accountStore } from '../../stores/manager';
+import RegisterError from './RegisterError';
 import RegisterForm from './RegisterForm';
 
 @withStyles(styles)
@@ -16,20 +17,20 @@ class RegisterPage extends Component {
   constructor(...args) {
     super(...args);
 
-    this.state = registerStore.exportState();
+    this.state = accountStore.exportState();
   }
 
   componentDidMount() {
-    registerStore.addChangeListener(this._onChange.bind(this));
+    accountStore.addChangeListener(this._onChange.bind(this));
   }
 
   componentWillUnmount() {
-    registerStore.removeChangeListener(this._onChange.bind(this));
+    accountStore.removeChangeListener(this._onChange.bind(this));
   }
 
   // event handler for 'change' events coming from the store
   _onChange() {
-    this.setState(registerStore.exportState());
+    this.setState(accountStore.exportState());
   }
 
   render() {
@@ -39,6 +40,7 @@ class RegisterPage extends Component {
       <div className="RegisterPage">
         <div className="RegisterPage-container">
           <h1>{title}</h1>
+          <RegisterError {...this.state} />
           <RegisterForm {...this.state} />
         </div>
       </div>

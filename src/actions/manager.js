@@ -1,5 +1,5 @@
-import RegisterActions from './RegisterActions';
+import AccountActions from './AccountActions';
 
 export default {
-  'registerActions': new RegisterActions(),
+  'accountActions': new AccountActions(),
 };

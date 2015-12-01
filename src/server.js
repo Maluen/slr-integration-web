@@ -4,6 +4,7 @@ import 'babel-core/polyfill';
 import path from 'path';
 import express from 'express';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import mongoose from 'mongoose';
@@ -26,6 +27,8 @@ server.set('port', port);
 server.use(bodyParser.json());
 // support encoded bodies
 server.use(bodyParser.urlencoded({ extended: true }));
+
+server.use(cookieParser());
 
 // session
 server.use(require('express-session')({
