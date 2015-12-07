@@ -2,13 +2,20 @@
 
 import 'babel-core/polyfill';
 import ReactDOM from 'react-dom';
+import Flux from './Flux';
+import Iso from 'iso';
 import FastClick from 'fastclick';
 import Router from './routes';
 import Location from './core/Location';
 import { addEventListener, removeEventListener } from './core/DOMUtils';
+import Globals from './core/Globals';
+
+// services client implementation
+Globals.services = require('./client/Services');
 
 let cssContainer = document.getElementById('css');
 const appContainer = document.getElementById('app');
+const flux = new Flux();
 const context = {
   onSetTitle: value => document.title = value,
   onSetMeta: (name, content) => {
@@ -25,6 +32,7 @@ const context = {
     meta.setAttribute('content', content);
     document.getElementsByTagName('head')[0].appendChild(meta);
   },
+  flux: flux,
 };
 
 function render(state) {
@@ -49,19 +57,28 @@ function render(state) {
 
 function run() {
   let currentLocation = null;
+  let currentUser = null;
   let currentState = null;
 
   // Make taps on links and buttons work fast on mobiles
   FastClick.attach(document.body);
 
+  // restore flux state sent by server
+  Iso.bootstrap((state) => {
+    // Now I do something with this data, perhaps run it through some library and then append the result to node?
+    flux.bootstrap(state);
+  });
+
   // Re-render the app when window.location changes
   const unlisten = Location.listen(location => {
     currentLocation = location;
+    currentUser = flux.getStore('accountStore').getState();
     currentState = Object.assign({}, location.state, {
       path: location.pathname,
       query: location.query,
       state: location.state,
       context,
+      user: currentUser,
     });
     render(currentState);
   });

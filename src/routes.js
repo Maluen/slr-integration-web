@@ -3,6 +3,8 @@
 import React from 'react';
 import Router from 'react-routing/src/Router';
 import http from './core/HttpClient';
+import Location from './core/Location';
+//import StoreFactory from './stores/StoreFactory';
 import App from './components/App';
 import ContentPage from './components/ContentPage';
 import ContactPage from './components/ContactPage';
@@ -17,11 +19,35 @@ const router = new Router(on => {
     return component && <App context={state.context}>{component}</App>;
   });
 
-  on('/contact', async () => <ContactPage />);
+  on('/contact', async () => {
+    return <ContactPage />;
+  });
 
-  on('/login', async () => <LoginPage />);
+  on('/login', async (state) => {
+    if (state.user.isAuthenticated) {
+      Location.push('/');
+      return null;
+    }
+    return <LoginPage />;
+  });
 
-  on('/register', async () => <RegisterPage />);
+  on('/logout', async (state) => {
+    if (!state.user.isAuthenticated) {
+      Location.push('/');
+      return null;
+    }
+
+    state.context.flux.getActions('accountActions').logout();
+    return null;
+  });
+
+  on('/register', async (state) => {
+    if (state.user.isAuthenticated) {
+      Location.push('/');
+      return null;
+    }
+    return <RegisterPage />;
+  });
 
   on('*', async (state) => {
     const content = await http.get(`/api/content?path=${state.path}`);

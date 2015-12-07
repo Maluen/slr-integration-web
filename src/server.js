@@ -7,10 +7,13 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
+import Globals from './core/Globals';
 import mongoose from 'mongoose';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 import Router from './routes';
+import Flux from './Flux';
+import Iso from 'iso';
 import Html from './components/Html';
 
 const server = global.server = express();
@@ -33,13 +36,28 @@ server.use(cookieParser());
 // session
 server.use(require('express-session')({
   secret: 'CZ08[yQhXAeP3c8A{_7MkPo)JQ9djs', // TODO: generate on deploy?
-  resave: false,
+  rolling: true,
+  resave: true,
   saveUninitialized: false,
 }));
 server.use(passport.initialize());
 server.use(passport.session());
 
 server.use(express.static(path.join(__dirname, 'public')));
+
+
+//
+// Register Globals
+// -----------------------------------------------------------------------------
+
+// services server implementation
+Globals.services = require('./server/Services');
+
+server.use((req, res, next) => {
+  Globals.req = req;
+  Globals.res = res;
+  next();
+});
 
 //
 // Register API middleware
@@ -52,19 +70,49 @@ server.use('/api', require('./server/api/main'));
 server.get('*', async (req, res, next) => {
   try {
     let statusCode = 200;
-    const data = { title: '', description: '', css: '', body: '' };
+    const data = { title: '', description: '', css: '', body: '', prefetched: '' };
     const css = [];
+    const flux = new Flux();
     const context = {
       onInsertCss: value => css.push(value),
       onSetTitle: value => data.title = value,
       onSetMeta: (key, value) => data[key] = value,
       onPageNotFound: () => statusCode = 404,
+      flux: flux,
     };
 
-    await Router.dispatch({ path: req.path, context }, (state, component) => {
+    /*
+    await flux.getActions('accountActions').fetch();
+    const user = flux.getStore('accountStore').getState();
+
+    await Router.dispatch({ path: req.path, context, user }, (state, component) => {
       data.body = ReactDOM.renderToString(component);
       data.css = css.join('');
+    });*/
+
+    await flux.getActions('accountActions').fetch(req);
+    const user = flux.getStore('accountStore').getState();
+
+    let componentToRender = null;
+    await Router.dispatch({ path: req.path, context, user }, (state, component) => {
+      componentToRender = component;
     });
+
+    let fullRendered = false;
+    while (!fullRendered) {
+      data.body = ReactDOM.renderToString(componentToRender);
+      data.css = css.join('');
+
+      if (flux.promises.length !== 0) {
+        await flux.promises.all();
+      } else {
+        fullRendered = true;
+      }
+    }
+
+    const iso = new Iso();
+    iso.add(null, flux.takeSnapshot(), null);
+    data.prefetched = iso.render();
 
     const html = ReactDOM.renderToStaticMarkup(<Html {...data} />);
     res.status(statusCode).send('<!doctype html>\n' + html);

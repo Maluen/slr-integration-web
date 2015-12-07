@@ -10,6 +10,7 @@ class Html extends Component {
     description: PropTypes.string,
     css: PropTypes.string,
     body: PropTypes.string.isRequired,
+    prefetched: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -44,6 +45,7 @@ class Html extends Component {
         <div id="app" dangerouslySetInnerHTML={{__html: this.props.body}} />
         <script src="/app.js"></script>
         <script dangerouslySetInnerHTML={this.trackingCode()} />
+        <div id="prefetched" style={{display: 'none'}} dangerouslySetInnerHTML={{__html: this.props.prefetched}} />
       </body>
       </html>
     );

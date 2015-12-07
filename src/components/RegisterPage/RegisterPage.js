@@ -1,36 +1,27 @@
 /*! React Starter Kit | MIT License | http://www.reactstarterkit.com/ */
 
 import React, { PropTypes, Component } from 'react';
-import withStyles from '../../decorators/withStyles';
 import styles from './RegisterPage.scss';
-import { accountStore } from '../../stores/manager';
+import withStyles from '../../decorators/withStyles';
+import connectToStores from 'alt/utils/connectToStores';
 import RegisterError from './RegisterError';
 import RegisterForm from './RegisterForm';
 
 @withStyles(styles)
+@connectToStores
 class RegisterPage extends Component {
 
   static contextTypes = {
     onSetTitle: PropTypes.func.isRequired,
+    flux: PropTypes.object.isRequired,
   };
 
-  constructor(...args) {
-    super(...args);
-
-    this.state = accountStore.exportState();
+  static getStores(props, context) {
+    return [context.flux.getStore('accountStore')];
   }
 
-  componentDidMount() {
-    accountStore.addChangeListener(this._onChange.bind(this));
-  }
-
-  componentWillUnmount() {
-    accountStore.removeChangeListener(this._onChange.bind(this));
-  }
-
-  // event handler for 'change' events coming from the store
-  _onChange() {
-    this.setState(accountStore.exportState());
+  static getPropsFromStores(props, context) {
+    return context.flux.getStore('accountStore').getState();
   }
 
   render() {
@@ -40,8 +31,8 @@ class RegisterPage extends Component {
       <div className="RegisterPage">
         <div className="RegisterPage-container">
           <h1>{title}</h1>
-          <RegisterError {...this.state} />
-          <RegisterForm {...this.state} />
+          <RegisterError {...this.props} />
+          <RegisterForm {...this.props} />
         </div>
       </div>
     );

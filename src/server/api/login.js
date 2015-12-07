@@ -1,25 +1,16 @@
 import { Router } from 'express';
-import passport from 'passport';
+import loginService from '../services/login';
 
 const router = new Router();
 
-router.post('/login', (req, res, next) => {
+router.post('/login', async (req, res) => {
   try {
-    // HACK: passport requires <username, password> fields
-    req.body.username = req.body.email;
-
-    passport.authenticate('local', (err, user) => {
-      if (err) {
-        return next(err); // will generate a 500 error
-      }
-      // Generate a JSON response reflecting authentication status
-      if (!user) {
-        return res.status(400).send({ error: 'Invalid email or password' });
-      }
-      return res.status(200).send();
-    })(req, res, next);
+    const email = req.body.email;
+    const password = req.body.password;
+    const response = await loginService(email, password, req, res);
+    res.status(200).send(response);
   } catch (err) {
-    next(err);
+    res.status(400).send(err);
   }
 });
 

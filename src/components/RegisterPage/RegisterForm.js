@@ -1,7 +1,6 @@
 /*! React Starter Kit | MIT License | http://www.reactstarterkit.com/ */
 
 import React, { PropTypes, Component } from 'react';
-import { accountActions } from '../../actions/manager';
 
 class RegisterForm extends Component {
 
@@ -10,37 +9,47 @@ class RegisterForm extends Component {
     password: PropTypes.string,
   };
 
+  static contextTypes = {
+    flux: PropTypes.object.isRequired,
+  };
+
   static defaultProps = {
     email: '',
     password: '',
   };
 
-  handleEmailChange = (event) => {
+  constructor(...args) {
+    super(...args);
+
+    this.accountActions = this.context.flux.getActions('accountActions');
+  }
+
+  handleEmailChange(event) {
     const email = event.currentTarget.value.trim();
-    accountActions.updateEmail(email);
-  };
+    this.accountActions.updateEmail(email);
+  }
 
-  handlePasswordChange = (event) => {
+  handlePasswordChange(event) {
     const password = event.currentTarget.value.trim();
-    accountActions.updatePassword(password);
-  };
+    this.accountActions.updatePassword(password);
+  }
 
-  handleSubmit = (event) => {
+  handleSubmit(event) {
     event.preventDefault();
-    accountActions.register(this.props.email, this.props.password);
-  };
+    this.accountActions.register(this.props.email, this.props.password);
+  }
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form onSubmit={this.handleSubmit.bind(this)}>
         <p>
           <label>Email</label>
-          <input type="text" value={this.props.email} onChange={this.handleEmailChange} />
+          <input type="text" value={this.props.email} onChange={this.handleEmailChange.bind(this)} />
         </p>
 
         <p>
           <label>Password</label>
-          <input type="password" value={this.props.password} onChange={this.handlePasswordChange} />
+          <input type="password" value={this.props.password} onChange={this.handlePasswordChange.bind(this)} />
         </p>
 
         <input type="submit" value="Register" />
