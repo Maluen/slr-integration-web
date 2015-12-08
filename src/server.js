@@ -5,6 +5,8 @@ import path from 'path';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
+import expressSession from 'express-session';
+import connectMongo from 'connect-mongo';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import Globals from './core/Globals';
@@ -23,6 +25,12 @@ const database = 'slr-integration-web'; // TODO: get value from private config f
 server.set('port', port);
 
 //
+// Connect to the database
+// -----------------------------------------------------------------------------
+
+mongoose.connect(`mongodb://localhost/${database}`);
+
+//
 // Register Node.js middleware
 // -----------------------------------------------------------------------------
 
@@ -34,11 +42,13 @@ server.use(bodyParser.urlencoded({ extended: true }));
 server.use(cookieParser());
 
 // session
-server.use(require('express-session')({
+const MongoStore = connectMongo(expressSession);
+server.use(expressSession({
   secret: 'CZ08[yQhXAeP3c8A{_7MkPo)JQ9djs', // TODO: generate on deploy?
   rolling: true,
   resave: true,
   saveUninitialized: false,
+  store: new MongoStore({ mongooseConnection: mongoose.connection }),
 }));
 server.use(passport.initialize());
 server.use(passport.session());
@@ -129,12 +139,6 @@ const User = require('./server/models/User');
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-
-//
-// Connect to the database
-// -----------------------------------------------------------------------------
-
-mongoose.connect(`mongodb://localhost/${database}`);
 
 
 //
