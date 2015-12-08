@@ -10,6 +10,9 @@ import ContentPage from './components/ContentPage';
 import ContactPage from './components/ContactPage';
 import LoginPage from './components/LoginPage';
 import RegisterPage from './components/RegisterPage';
+import MachinesPage from './components/MachinesPage';
+import MachineCreationPage from './components/MachineCreationPage';
+import ProjectsPage from './components/ProjectsPage';
 import NotFoundPage from './components/NotFoundPage';
 import ErrorPage from './components/ErrorPage';
 
@@ -47,6 +50,30 @@ const router = new Router(on => {
       return null;
     }
     return <RegisterPage />;
+  });
+
+  on('/machines', async (state) => {
+    if (!state.user.isAuthenticated) {
+      Location.push('/login');
+      return null;
+    }
+    return <MachinesPage />;
+  });
+
+  on('/createMachine', async (state) => {
+    if (!state.user.isAuthenticated) {
+      Location.push('/login');
+      return null;
+    }
+    return <MachineCreationPage />;
+  });
+
+  on('/projects', async (state) => {
+    if (!state.user.isAuthenticated) {
+      Location.push('/login');
+      return null;
+    }
+    return <ProjectsPage />;
   });
 
   on('*', async (state) => {

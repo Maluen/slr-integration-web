@@ -18,4 +18,8 @@ export default {
     return await http.get('/api/logout');
   },
 
+  createMachine: async (hostname, port) => {
+    return await http.post('/api/createMachine', { hostname, port });
+  },
+
 };

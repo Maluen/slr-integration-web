@@ -7,5 +7,6 @@ router.use(require('./register'));
 router.use(require('./login'));
 router.use(require('./currentuser'));
 router.use(require('./logout'));
+router.use(require('./createMachine'));
 
 export default router;
