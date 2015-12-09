@@ -3,6 +3,7 @@ import loginService from './services/login';
 import currentuserService from './services/currentuser';
 import logoutService from './services/logout';
 import createMachineService from './services/createMachine';
+import createMachineAccessService from './services/createMachineAccess';
 
 export default {
 
@@ -24,6 +25,10 @@ export default {
 
   createMachine: async (hostname, port, req) => {
     return await createMachineService(hostname, port, req);
+  },
+
+  createMachineAccess: async (machineId, userId, permission, options, req) => {
+    return await createMachineAccessService(machineId, userId, permission, options, req);
   },
 
 };

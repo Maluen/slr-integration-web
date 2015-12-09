@@ -22,4 +22,8 @@ export default {
     return await http.post('/api/createMachine', { hostname, port });
   },
 
+  createMachineAccess: async (machineId, userId, permission) => {
+    return await http.post('/api/createMachineAccess', { machineId, userId, permission });
+  },
+
 };
