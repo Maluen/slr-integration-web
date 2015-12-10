@@ -17,6 +17,7 @@ import Router from './routes';
 import Flux from './Flux';
 import Iso from 'iso';
 import Html from './components/Html';
+import NullComponent from './components/NullComponent';
 
 const server = global.server = express();
 const port = process.env.PORT || 5000;
@@ -79,10 +80,11 @@ server.use('/api', require('./server/api/main'));
 // -----------------------------------------------------------------------------
 server.get('*', async (req, res, next) => {
   try {
+    const flux = new Flux(req, res);
+
     let statusCode = 200;
     const data = { title: '', description: '', css: '', body: '', prefetched: '' };
     const css = [];
-    const flux = new Flux();
     const context = {
       onInsertCss: value => css.push(value),
       onSetTitle: value => data.title = value,
@@ -100,7 +102,7 @@ server.get('*', async (req, res, next) => {
       data.css = css.join('');
     });*/
 
-    await flux.getActions('accountActions').fetch(req);
+    await flux.getActions('accountActions').fetch();
     const user = flux.getStore('accountStore').getState();
 
     let componentToRender = null;
@@ -108,24 +110,37 @@ server.get('*', async (req, res, next) => {
       componentToRender = component;
     });
 
-    let fullRendered = false;
-    while (!fullRendered) {
-      data.body = ReactDOM.renderToString(componentToRender);
-      data.css = css.join('');
-
-      if (flux.promises.length !== 0) {
-        await flux.promises.all();
-      } else {
-        fullRendered = true;
+    // render and/or wait for the completition of async tasks
+    // until either there are no more or a redirect is triggered
+    while (true) {
+      if (flux.location) {
+        break;
       }
+
+      if (componentToRender.type !== NullComponent) {
+        data.body = ReactDOM.renderToString(componentToRender);
+        data.css = css.join('');
+      }
+
+      if (flux.promises.length === 0) {
+        break;
+      }
+
+      await flux.promises.all();
     }
 
-    const iso = new Iso();
-    iso.add(null, flux.takeSnapshot(), null);
-    data.prefetched = iso.render();
+    if (flux.location) {
+      res.redirect(flux.location);
+    } else if (componentToRender.type === NullComponent) {
+      res.status(400).send();
+    } else {
+      const iso = new Iso();
+      iso.add(null, flux.takeSnapshot(), null);
+      data.prefetched = iso.render();
 
-    const html = ReactDOM.renderToStaticMarkup(<Html {...data} />);
-    res.status(statusCode).send('<!doctype html>\n' + html);
+      const html = ReactDOM.renderToStaticMarkup(<Html {...data} />);
+      res.status(statusCode).send('<!doctype html>\n' + html);
+    }
   } catch (err) {
     next(err);
   }

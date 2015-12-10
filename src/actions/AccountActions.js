@@ -1,15 +1,15 @@
 import Globals from '../core/Globals';
-import Location from '../core/Location';
 
 class AccountActions {
 
-  fetch(req = null) {
+  fetch() {
     return this.alt.promise(async (resolve) => {
       try {
-        const response = await Globals.services.currentuser(req);
+        const response = await Globals.services.currentuser(this.alt.req);
         this.dispatch(response.user);
       } catch (err) {
         // no-op
+        console.log('fetch error', err);
       }
       resolve();
     });
@@ -23,13 +23,16 @@ class AccountActions {
     return password;
   }
 
-  async register(email, password) {
-    try {
-      const response = await Globals.services.register(email, password);
-      this.actions.registerSuccess(response.isActivationRequired);
-    } catch (err) {
-      this.actions.registerError(err.response.body.error);
-    }
+  register(email, password) {
+    return this.alt.promise(async (resolve) => {
+      try {
+        const response = await Globals.services.register(email, password, this.alt.req, this.alt.res);
+        this.actions.registerSuccess(response.isActivationRequired);
+      } catch (err) {
+        this.actions.registerError(err.response.body.error);
+      }
+      resolve();
+    });
   }
 
   registerError(errorMessage) {
@@ -41,7 +44,7 @@ class AccountActions {
       dispatch(isActivationRequired);
 
       if (isActivationRequired) {
-        Location.push('/activate');
+        this.alt.redirect('/activate');
       } else {
         // user has been automatically logged in
         this.actions.loginSuccess();
@@ -49,13 +52,16 @@ class AccountActions {
     };
   }
 
-  async login(email, password) {
-    try {
-      await Globals.services.login(email, password);
-      this.actions.loginSuccess();
-    } catch (err) {
-      this.actions.loginError(err.response.body.error);
-    }
+  login(email, password) {
+    return this.alt.promise(async (resolve) => {
+      try {
+        await Globals.services.login(email, password, this.alt.req, this.alt.res);
+        this.actions.loginSuccess();
+      } catch (err) {
+        this.actions.loginError(err.response.body.error);
+      }
+      resolve();
+    });
   }
 
   loginError(errorMessage) {
@@ -65,20 +71,22 @@ class AccountActions {
   loginSuccess() {
     return (dispatch) => {
       dispatch();
-      Location.push('/');
+      this.alt.redirect('/');
     };
   }
 
   logout() {
-    return async (dispatch) => {
+    return this.alt.promise(async (resolve) => {
       try {
-        await Globals.services.logout();
-        dispatch();
-        Location.push('/');
+        await Globals.services.logout(this.alt.req);
+        this.dispatch();
+        this.alt.redirect('/');
       } catch (err) {
         // no-op
+        console.log('logout error', err);
       }
-    };
+      resolve();
+    });
   }
 
 }

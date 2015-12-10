@@ -1,5 +1,6 @@
 import Alt from 'alt';
 import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
+import Location from './core/Location';
 import AccountActions from './actions/AccountActions';
 import MachineCreationActions from './actions/MachineCreationActions';
 import AccountStore from './stores/AccountStore';
@@ -7,10 +8,15 @@ import MachineCreationStore from './stores/MachineCreationStore';
 
 class Flux extends Alt {
 
-  constructor(...args) {
-    super(...args);
+  constructor(req = null, res = null) {
+    super();
+
+    // server only
+    this.req = req;
+    this.res = res;
 
     this.promises = [];
+    this.location = null;
 
     this.addActions('accountActions', AccountActions);
     this.addActions('machineCreationActions', MachineCreationActions);
@@ -28,6 +34,14 @@ class Flux extends Alt {
       this.promises = [...this.promises, promise];
     }
     return promise;
+  }
+
+  redirect(location) {
+    if (!canUseDOM) {
+      this.location = location;
+    } else {
+      Location.push(location);
+    }
   }
 
 }

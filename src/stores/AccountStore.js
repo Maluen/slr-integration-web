@@ -25,13 +25,17 @@ class AccountStore {
   }
 
   onFetch(currentUser) {
-    this.setState({
-      email: currentUser.email,
-      password: '',
-      registerErrorMessage: '',
-      loginErrorMessage: '',
-      isAuthenticated: true,
-    });
+    if (!currentUser) {
+      this.setState(this.getInitialState());
+    } else {
+      this.setState({
+        email: currentUser.email,
+        password: '',
+        registerErrorMessage: '',
+        loginErrorMessage: '',
+        isAuthenticated: true,
+      });
+    }
   }
 
   onUpdateEmail(email) {

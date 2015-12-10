@@ -1,5 +1,4 @@
 import Globals from '../core/Globals';
-import Location from '../core/Location';
 
 class MachineCreationActions {
 
@@ -14,18 +13,19 @@ class MachineCreationActions {
   create(hostname, port) {
     return this.alt.promise(async (resolve) => {
       try {
-        const response = await Globals.services.createMachine(hostname, port);
+        await Globals.services.createMachine(hostname, port, this.alt.req);
         this.actions.createSuccess();
       } catch (err) {
         this.actions.createError(err.response.body.error);
       }
+      resolve();
     });
   }
 
   createSuccess() {
     return (dispatch) => {
       dispatch();
-      Location.push('/machines');
+      this.alt.redirect('/machines');
     };
   }
 

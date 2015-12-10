@@ -3,76 +3,71 @@
 import React from 'react';
 import Router from 'react-routing/src/Router';
 import http from './core/HttpClient';
-import Location from './core/Location';
-//import StoreFactory from './stores/StoreFactory';
 import App from './components/App';
 import ContentPage from './components/ContentPage';
 import ContactPage from './components/ContactPage';
-import LoginPage from './components/LoginPage';
 import RegisterPage from './components/RegisterPage';
+import LoginPage from './components/LoginPage';
 import MachinesPage from './components/MachinesPage';
 import MachineCreationPage from './components/MachineCreationPage';
 import ProjectsPage from './components/ProjectsPage';
 import NotFoundPage from './components/NotFoundPage';
 import ErrorPage from './components/ErrorPage';
+import NullComponent from './components/NullComponent';
+
+const authenticated = (state, next) => {
+  if (!state.user.isAuthenticated) {
+    state.context.flux.redirect('/login');
+    return <NullComponent />; // HACK for preventing next handlers and the render
+  }
+  return next();
+};
+
+const notAuthenticated = (state, next) => {
+  if (state.user.isAuthenticated) {
+    state.context.flux.redirect('/');
+    return <NullComponent />; // HACK for preventing next handlers and the render
+  }
+  return next();
+};
 
 const router = new Router(on => {
   on('*', async (state, next) => {
     const component = await next();
-    return component && <App context={state.context}>{component}</App>;
+    if (!component) {
+      return false; // continue with next global or error handler
+    } else if (component.type === NullComponent) {
+      return component; // skip render
+    }
+    return <App context={state.context}>{component}</App>;
   });
 
   on('/contact', async () => {
     return <ContactPage />;
   });
 
-  on('/login', async (state) => {
-    if (state.user.isAuthenticated) {
-      Location.push('/');
-      return null;
-    }
-    return <LoginPage />;
-  });
-
-  on('/logout', async (state) => {
-    if (!state.user.isAuthenticated) {
-      Location.push('/');
-      return null;
-    }
-
-    state.context.flux.getActions('accountActions').logout();
-    return null;
-  });
-
-  on('/register', async (state) => {
-    if (state.user.isAuthenticated) {
-      Location.push('/');
-      return null;
-    }
+  on('/register', notAuthenticated, async () => {
     return <RegisterPage />;
   });
 
-  on('/machines', async (state) => {
-    if (!state.user.isAuthenticated) {
-      Location.push('/login');
-      return null;
-    }
+  on('/login', notAuthenticated, async () => {
+    return <LoginPage />;
+  });
+
+  on('/logout', authenticated, async (state) => {
+    state.context.flux.getActions('accountActions').logout();
+    return <NullComponent />;
+  });
+
+  on('/machines', authenticated, async () => {
     return <MachinesPage />;
   });
 
-  on('/createMachine', async (state) => {
-    if (!state.user.isAuthenticated) {
-      Location.push('/login');
-      return null;
-    }
+  on('/createMachine', authenticated, async () => {
     return <MachineCreationPage />;
   });
 
-  on('/projects', async (state) => {
-    if (!state.user.isAuthenticated) {
-      Location.push('/login');
-      return null;
-    }
+  on('/projects', authenticated, async () => {
     return <ProjectsPage />;
   });
 
