@@ -8,18 +8,15 @@ export default function login(email, password, req, res) {
 
     passport.authenticate('local', (err, user) => {
       if (err) {
-        reject({ error: err });
-        return;
+        return reject({ error: err });
       }
       // Generate a JSON response reflecting authentication status
       if (!user) {
-        reject({ error: 'Invalid email or password' });
-        return;
+        return reject({ error: 'Invalid email or password' });
       }
       req.login(user, (otherErr) => {
         if (otherErr) {
-          reject({ error: otherErr });
-          return;
+          return reject({ error: otherErr });
         }
         resolve();
       });

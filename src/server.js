@@ -93,15 +93,6 @@ server.get('*', async (req, res, next) => {
       flux: flux,
     };
 
-    /*
-    await flux.getActions('accountActions').fetch();
-    const user = flux.getStore('accountStore').getState();
-
-    await Router.dispatch({ path: req.path, context, user }, (state, component) => {
-      data.body = ReactDOM.renderToString(component);
-      data.css = css.join('');
-    });*/
-
     await flux.getActions('accountActions').fetch();
     const user = flux.getStore('accountStore').getState();
 

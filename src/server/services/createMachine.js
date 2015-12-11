@@ -10,26 +10,25 @@ export default function createMachine(hostname, port, req) {
     try {
       const response = await currentuserService(req);
       currentUser = response.user;
-    } catch (e) {
-      reject({ error: 'Access denied: you must be logged-in.' });
-      return;
+      if (!currentUser) {
+        return reject({ error: 'Access denied: you must be logged-in.' });
+      }
+    } catch (err) {
+      return reject({ error: err });
     }
 
     if (!hostname || hostname === 'undefined') {
-      reject({ error: `The 'hostname' query parameter cannot be empty.` });
-      return;
+      return reject({ error: `The 'hostname' query parameter cannot be empty.` });
     }
 
     if (!port || port === 'undefined') {
-      reject({ error: `The 'port' query parameter cannot be empty.` });
-      return;
+      return reject({ error: `The 'port' query parameter cannot be empty.` });
     }
 
     const machine = new Machine({ hostname, port });
     machine.save((err) => {
       if (err) {
-        reject({ error: err });
-        return;
+        return reject({ error: err });
       }
 
       // add access to machine creator

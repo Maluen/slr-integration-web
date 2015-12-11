@@ -9,8 +9,11 @@ export default function createMachineAccess(machineId, userId, permission, optio
     try {
       const response = await currentuserService(req);
       currentUser = response.user;
-    } catch (e) {
-      return reject({ error: 'Access denied: you must be logged-in.' });
+      if (!currentUser) {
+        return reject({ error: 'Access denied: you must be logged-in.' });
+      }
+    } catch (err) {
+      return reject({ error: err });
     }
 
     if (!machineId) {

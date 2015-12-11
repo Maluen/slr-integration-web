@@ -7,31 +7,29 @@ export default function register(email, password, req, res) {
     // TODO: validation
 
     if (!email || email === 'undefined') {
-      reject({error: `The 'email' query parameter cannot be empty.`});
-      return;
+      return reject({error: `The 'email' query parameter cannot be empty.`});
     }
 
     if (!password || password === 'undefined') {
-      reject({error: `The 'password' query parameter cannot be empty.`});
-      return;
+      return reject({error: `The 'password' query parameter cannot be empty.`});
     }
 
     // Actual registration
 
     User.register(new User({ email }), password, (err) => {
       if (err) {
-        reject({ error: err.message });
+        return reject({ error: err.message });
+      }
+
+      const isActivationRequired = serverSettings.ACCOUNT_ACTIVATION;
+      if (isActivationRequired) {
+        // TODO: send activation email
+        resolve({ isActivationRequired: true });
       } else {
-        const isActivationRequired = serverSettings.ACCOUNT_ACTIVATION;
-        if (isActivationRequired) {
-          // TODO: send activation email
-          resolve({ isActivationRequired: true });
-        } else {
-          // auto login
-          loginService(email, password, req, res).then(() => {
-            resolve({ isActivationRequired: false });
-          }, reject);
-        }
+        // auto login
+        loginService(email, password, req, res).then(() => {
+          resolve({ isActivationRequired: false });
+        }, reject);
       }
     });
   });
