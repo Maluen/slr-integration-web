@@ -80,7 +80,7 @@ export default function createMachineAccess(machineId, userId, permission, optio
         return reject({ error: err });
       }
 
-      resolve(machineAccess);
+      resolve({ machineAccess });
     });
   });
 }

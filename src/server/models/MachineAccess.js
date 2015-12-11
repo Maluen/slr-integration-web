@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 const { ObjectId } = Schema;
 
 const MachineAccess = new Schema({
-  machine: ObjectId,
-  user: ObjectId,
+  machine: { type: ObjectId, ref: 'Machine' },
+  user: { type: ObjectId, ref: 'User' },
   permission: String,
 });
 

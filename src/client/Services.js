@@ -26,4 +26,8 @@ export default {
     return await http.post('/api/createMachineAccess', { machineId, userId, permission });
   },
 
+  readMachines: async () => {
+    return await http.post('/api/readMachines');
+  },
+
 };
