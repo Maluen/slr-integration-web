@@ -1,5 +1,5 @@
 import User from '../models/User';
-import serverSettings from '../settings';
+import serverConfig from '../config';
 import loginService from './login';
 
 export default function register(email, password, req, res) {
@@ -21,7 +21,7 @@ export default function register(email, password, req, res) {
         return reject({ error: err.message });
       }
 
-      const isActivationRequired = serverSettings.ACCOUNT_ACTIVATION;
+      const isActivationRequired = serverConfig.ACCOUNT_ACTIVATION;
       if (isActivationRequired) {
         // TODO: send activation email
         resolve({ isActivationRequired: true });

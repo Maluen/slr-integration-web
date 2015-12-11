@@ -16,7 +16,7 @@ class MachineCreationActions {
         await Globals.services.createMachine(hostname, port, this.alt.req);
         this.actions.createSuccess();
       } catch (err) {
-        this.actions.createError(err.response.body.error);
+        this.actions.createError(err);
       }
       resolve();
     });
