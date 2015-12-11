@@ -27,7 +27,7 @@ export default {
   },
 
   readMachines: async () => {
-    return await http.post('/api/readMachines');
+    return await http.get('/api/readMachines');
   },
 
 };

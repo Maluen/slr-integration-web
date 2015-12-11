@@ -1,6 +1,6 @@
 import Globals from '../core/Globals';
 
-class AccountActions {
+export default class AccountActions {
 
   fetch() {
     return this.alt.promise(async (resolve) => {
@@ -90,5 +90,3 @@ class AccountActions {
   }
 
 }
-
-export default AccountActions;

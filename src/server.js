@@ -117,7 +117,7 @@ server.get('*', async (req, res, next) => {
         break;
       }
 
-      await flux.promises.all();
+      await Promise.all(flux.promises);
     }
 
     if (flux.location) {

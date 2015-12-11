@@ -1,4 +1,4 @@
-class MachineCreationStore {
+export default class MachineCreationStore {
   constructor() {
     const machineCreationActions = this.alt.getActions('machineCreationActions');
 

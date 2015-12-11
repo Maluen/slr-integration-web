@@ -1,6 +1,6 @@
 import Globals from '../core/Globals';
 
-class MachineCreationActions {
+export default class MachineCreationActions {
 
   updateHostname(hostname) {
     return hostname;
@@ -13,8 +13,8 @@ class MachineCreationActions {
   create(hostname, port) {
     return this.alt.promise(async (resolve) => {
       try {
-        await Globals.services.createMachine(hostname, port, this.alt.req);
-        this.actions.createSuccess();
+        const response = await Globals.services.createMachine(hostname, port, this.alt.req);
+        this.actions.createSuccess(response.machine);
       } catch (err) {
         this.actions.createError(err);
       }
@@ -22,9 +22,9 @@ class MachineCreationActions {
     });
   }
 
-  createSuccess() {
+  createSuccess(machine) {
     return (dispatch) => {
-      dispatch();
+      dispatch(machine);
       this.alt.redirect('/machines');
     };
   }
@@ -34,5 +34,3 @@ class MachineCreationActions {
   }
 
 }
-
-export default MachineCreationActions;

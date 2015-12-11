@@ -1,4 +1,4 @@
-class AccountStore {
+export default class AccountStore {
   constructor() {
     const accountActions = this.alt.getActions('accountActions');
 

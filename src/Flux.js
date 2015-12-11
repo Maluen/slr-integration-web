@@ -2,9 +2,11 @@ import Alt from 'alt';
 import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
 import Location from './core/Location';
 import AccountActions from './actions/AccountActions';
-import MachineCreationActions from './actions/MachineCreationActions';
 import AccountStore from './stores/AccountStore';
+import MachineCreationActions from './actions/MachineCreationActions';
 import MachineCreationStore from './stores/MachineCreationStore';
+import MachinesActions from './actions/MachinesActions';
+import MachinesStore from './stores/MachinesStore';
 
 class Flux extends Alt {
 
@@ -19,10 +21,13 @@ class Flux extends Alt {
     this.location = null;
 
     this.addActions('accountActions', AccountActions);
-    this.addActions('machineCreationActions', MachineCreationActions);
-
     this.addStore('accountStore', AccountStore);
+
+    this.addActions('machineCreationActions', MachineCreationActions);
     this.addStore('machineCreationStore', MachineCreationStore);
+
+    this.addActions('machinesActions', MachinesActions);
+    this.addStore('machinesStore', MachinesStore);
   }
 
   promise(fn) {

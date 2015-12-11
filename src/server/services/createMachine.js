@@ -33,7 +33,7 @@ export default function createMachine(hostname, port, req) {
 
       // add access to machine creator
       createdMachineAccessService(machine._id, currentUser._id, 'Administrator', { isAfterCreate: true }, req)
-        .then(resolve, reject);
+        .then(resolve.bind(null, { machine }), reject);
     });
   });
 }
