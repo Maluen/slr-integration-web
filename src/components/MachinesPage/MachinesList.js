@@ -1,6 +1,7 @@
 /*! React Starter Kit | MIT License | http://www.reactstarterkit.com/ */
 
 import React, { PropTypes, Component } from 'react';
+import MachineListItem from './MachinesListItem';
 
 class MachinesList extends Component {
 
@@ -21,9 +22,9 @@ class MachinesList extends Component {
       <div className="MachinesList">
         <div className="MachinesList-container">
           <ul>
-            {this.props.machines.map((machine) => {
-              return <li key={machine._id}>{machine.hostname}:{machine.port}</li>;
-            })}
+            {this.props.machines.map((machine) =>
+              <MachineListItem {...machine} />
+            )}
           </ul>
         </div>
       </div>
