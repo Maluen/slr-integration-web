@@ -1,7 +1,7 @@
 import MachineAccess from '../models/MachineAccess';
 import currentUserService from './currentUser';
 
-export default function saveMachineAccess(id = null, machineId, userId, permission, options = {}, req) {
+export default function saveMachineAccess(machineId, userId, permission, options = {}, req) {
   return new Promise(async (resolve, reject) => {
     // TODO: validation
 

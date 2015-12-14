@@ -49,7 +49,7 @@ class MachinesPage extends Component {
       <div className="MachinesPage">
         <div className="MachinesPage-container">
           <h1>{title}</h1>
-          <a className="MachinesPage-link MachinesPage-link-saveMachine" href="/saveMachine" onClick={Link.handleClick}>Create new</a>
+          <a className="MachinesPage-link MachinesPage-link-saveMachine" href="/createMachine" onClick={Link.handleClick}>Create new</a>
           {this.props.isFetched ?
             <MachinesList machines={this.props.machines} />
           :

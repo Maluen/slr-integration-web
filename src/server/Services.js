@@ -28,8 +28,8 @@ export default {
     return await saveMachineService(id, hostname, port, req);
   },
 
-  saveMachineAccess: async (id, machineId, userId, permission, options, req) => {
-    return await saveMachineAccessService(id, machineId, userId, permission, options, req);
+  saveMachineAccess: async (machineId, userId, permission, options, req) => {
+    return await saveMachineAccessService(machineId, userId, permission, options, req);
   },
 
   readMachines: async (req) => {

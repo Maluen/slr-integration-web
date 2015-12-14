@@ -63,7 +63,7 @@ const router = new Router(on => {
     return <MachinesPage />;
   });
 
-  on('/saveMachine', authenticated, async () => {
+  on('/createMachine', authenticated, async () => {
     return <MachineCreationPage />;
   });
 

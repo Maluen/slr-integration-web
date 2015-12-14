@@ -22,8 +22,8 @@ export default {
     return await http.post('/api/saveMachine', { id, hostname, port });
   },
 
-  saveMachineAccess: async (id, machineId, userId, permission) => {
-    return await http.post('/api/saveMachineAccess', { id, machineId, userId, permission });
+  saveMachineAccess: async (machineId, userId, permission) => {
+    return await http.post('/api/saveMachineAccess', { machineId, userId, permission });
   },
 
   readMachines: async () => {
