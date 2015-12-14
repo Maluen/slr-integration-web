@@ -23,7 +23,7 @@ class MachinesList extends Component {
         <div className="MachinesList-container">
           <ul>
             {this.props.machines.map((machine) =>
-              <MachineListItem {...machine} />
+              <MachineListItem key={machine._id} {...machine} />
             )}
           </ul>
         </div>

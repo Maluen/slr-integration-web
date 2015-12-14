@@ -5,7 +5,7 @@ export default class AccountActions {
   fetch() {
     return this.alt.promise(async (resolve) => {
       try {
-        const response = await Globals.services.currentuser(this.alt.req);
+        const response = await Globals.services.currentUser(this.alt.req);
         this.dispatch(response.user);
       } catch (err) {
         // no-op

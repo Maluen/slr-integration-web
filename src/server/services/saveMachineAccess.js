@@ -1,13 +1,13 @@
 import MachineAccess from '../models/MachineAccess';
-import currentuserService from './currentuser';
+import currentUserService from './currentUser';
 
-export default function createMachineAccess(machineId, userId, permission, options = {}, req) {
+export default function saveMachineAccess(id = null, machineId, userId, permission, options = {}, req) {
   return new Promise(async (resolve, reject) => {
     // TODO: validation
 
     let currentUser = null;
     try {
-      const response = await currentuserService(req);
+      const response = await currentUserService(req);
       currentUser = response.user;
       if (!currentUser) {
         return reject({ error: 'Access denied: you must be logged-in.' });
@@ -59,7 +59,7 @@ export default function createMachineAccess(machineId, userId, permission, optio
           machineAccess.permission = permission;
           try {
             await machineAccess.save();
-            return resolve(machineAccess);
+            return resolve({ machineAccess: machineAccess.toObject() });
           } catch (err) {
             return reject({ error: err });
           }
@@ -80,7 +80,7 @@ export default function createMachineAccess(machineId, userId, permission, optio
         return reject({ error: err });
       }
 
-      resolve({ machineAccess });
+      resolve({ machineAccess: machineAccess.toObject() });
     });
   });
 }

@@ -18,7 +18,7 @@ export default function login(email, password, req, res) {
         if (otherErr) {
           return reject({ error: otherErr });
         }
-        resolve();
+        resolve({ user: user.toObject() });
       });
     })(req, res);
   });

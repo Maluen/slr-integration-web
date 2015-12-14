@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import currentuserService from '../services/currentuser';
+import currentUserService from '../services/currentUser';
 
 const router = new Router();
 
-router.get('/currentuser', async (req, res) => {
+router.get('/currentUser', async (req, res) => {
   try {
-    const response = await currentuserService(req);
+    const response = await currentUserService(req);
     res.status(200).send(response);
   } catch (err) {
     res.status(400).send(err);

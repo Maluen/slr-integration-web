@@ -10,20 +10,20 @@ export default {
     return await http.post('/api/login', { email, password });
   },
 
-  currentuser: async () => {
-    return await http.get('/api/currentuser');
+  currentUser: async () => {
+    return await http.get('/api/currentUser');
   },
 
   logout: async () => {
     return await http.get('/api/logout');
   },
 
-  createMachine: async (hostname, port) => {
-    return await http.post('/api/createMachine', { hostname, port });
+  saveMachine: async (id, hostname, port) => {
+    return await http.post('/api/saveMachine', { id, hostname, port });
   },
 
-  createMachineAccess: async (machineId, userId, permission) => {
-    return await http.post('/api/createMachineAccess', { machineId, userId, permission });
+  saveMachineAccess: async (id, machineId, userId, permission) => {
+    return await http.post('/api/saveMachineAccess', { id, machineId, userId, permission });
   },
 
   readMachines: async () => {

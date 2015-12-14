@@ -67,9 +67,9 @@ function run() {
   FastClick.attach(document.body);
 
   // restore flux state sent by server
-  Iso.bootstrap((state) => {
+  Iso.bootstrap((fluxSnapshot) => {
     // Now I do something with this data, perhaps run it through some library and then append the result to node?
-    flux.bootstrap(state);
+    flux.bootstrap(fluxSnapshot);
   });
 
   // Re-render the app when window.location changes

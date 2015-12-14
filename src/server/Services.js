@@ -1,9 +1,9 @@
 import registerService from './services/register';
 import loginService from './services/login';
-import currentuserService from './services/currentuser';
+import currentUserService from './services/currentUser';
 import logoutService from './services/logout';
-import createMachineService from './services/createMachine';
-import createMachineAccessService from './services/createMachineAccess';
+import saveMachineService from './services/saveMachine';
+import saveMachineAccessService from './services/saveMachineAccess';
 import readMachinesService from './services/readMachines';
 
 export default {
@@ -16,20 +16,20 @@ export default {
     return await loginService(email, password, req, res);
   },
 
-  currentuser: async (req) => {
-    return await currentuserService(req);
+  currentUser: async (req) => {
+    return await currentUserService(req);
   },
 
   logout: async (req) => {
     return await logoutService(req);
   },
 
-  createMachine: async (hostname, port, req) => {
-    return await createMachineService(hostname, port, req);
+  saveMachine: async (id, hostname, port, req) => {
+    return await saveMachineService(id, hostname, port, req);
   },
 
-  createMachineAccess: async (machineId, userId, permission, options, req) => {
-    return await createMachineAccessService(machineId, userId, permission, options, req);
+  saveMachineAccess: async (id, machineId, userId, permission, options, req) => {
+    return await saveMachineAccessService(id, machineId, userId, permission, options, req);
   },
 
   readMachines: async (req) => {

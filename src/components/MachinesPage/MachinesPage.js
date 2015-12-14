@@ -13,7 +13,7 @@ class MachinesPage extends Component {
 
   static propTypes = {
     machines: PropTypes.array,
-    isFetching: PropTypes.bool,
+    isFetched: PropTypes.bool,
   };
 
   static contextTypes = {
@@ -23,7 +23,7 @@ class MachinesPage extends Component {
 
   static defaultProps = {
     machines: [],
-    isFetching: true,
+    isFetched: false,
   };
 
   componentWillMount() {
@@ -49,11 +49,11 @@ class MachinesPage extends Component {
       <div className="MachinesPage">
         <div className="MachinesPage-container">
           <h1>{title}</h1>
-          <a className="MachinesPage-link MachinesPage-link-createMachine" href="/createMachine" onClick={Link.handleClick}>Create new</a>
-          {this.props.isFetching ?
-            <p>Loading...</p>
-          :
+          <a className="MachinesPage-link MachinesPage-link-saveMachine" href="/saveMachine" onClick={Link.handleClick}>Create new</a>
+          {this.props.isFetched ?
             <MachinesList machines={this.props.machines} />
+          :
+            <p>Loading...</p>
           }
         </div>
       </div>

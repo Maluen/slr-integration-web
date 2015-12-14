@@ -1,14 +1,14 @@
 import Machine from '../models/Machine';
-import currentuserService from './currentuser';
-import createdMachineAccessService from './createMachineAccess';
+import currentUserService from './currentUser';
+import saveMachineAccessService from './saveMachineAccess';
 
-export default function createMachine(hostname, port, req) {
+export default function saveMachine(id = null, hostname, port, req) {
   return new Promise(async (resolve, reject) => {
     // TODO: validation
 
     let currentUser = null;
     try {
-      const response = await currentuserService(req);
+      const response = await currentUserService(req);
       currentUser = response.user;
       if (!currentUser) {
         return reject({ error: 'Access denied: you must be logged-in.' });
@@ -32,8 +32,8 @@ export default function createMachine(hostname, port, req) {
       }
 
       // add access to machine creator
-      createdMachineAccessService(machine._id, currentUser._id, 'Administrator', { isAfterCreate: true }, req)
-        .then(resolve.bind(null, { machine }), reject);
+      saveMachineAccessService(null, machine._id, currentUser._id, 'Administrator', { isAfterCreate: true }, req)
+        .then(resolve.bind(null, { machine: machine.toObject() }), reject);
     });
   });
 }

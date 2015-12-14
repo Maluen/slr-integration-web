@@ -10,7 +10,9 @@ class MachinesList extends Component {
 
   render() {
     return (
-      <li key={this.props._id}>{this.props.hostname}:{this.props.port}</li>
+      <li key={this.props._id}>
+        <span>{this.props.hostname}</span>:<span>{this.props.port}</span>
+      </li>
     );
   }
 

@@ -126,7 +126,8 @@ server.get('*', async (req, res, next) => {
       res.status(400).send();
     } else {
       const iso = new Iso();
-      iso.add(null, flux.takeSnapshot(), null);
+      const fluxSnapshot = flux.takeSnapshot();
+      iso.add(null, fluxSnapshot, null);
       data.prefetched = iso.render();
 
       const html = ReactDOM.renderToStaticMarkup(<Html {...data} />);
