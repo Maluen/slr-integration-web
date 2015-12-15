@@ -26,8 +26,8 @@ export default {
     return await http.post('/api/saveMachineAccess', { machineId, userId, permission });
   },
 
-  readMachines: async () => {
-    return await http.get('/api/readMachines');
+  readMachines: async (filterObj) => {
+    return await http.get('/api/readMachines', { filterObj: JSON.stringify(filterObj) });
   },
 
 };

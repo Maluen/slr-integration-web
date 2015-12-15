@@ -59,7 +59,7 @@ export default function saveMachineAccess(machineId, userId, permission, options
           machineAccess.permission = permission;
           try {
             await machineAccess.save();
-            return resolve({ machineAccess: machineAccess.toObject() });
+            return resolve({ machineAccess: machineAccess.toObject({ virtuals: true }) });
           } catch (err) {
             return reject({ error: err });
           }
@@ -80,7 +80,7 @@ export default function saveMachineAccess(machineId, userId, permission, options
         return reject({ error: err });
       }
 
-      resolve({ machineAccess: machineAccess.toObject() });
+      resolve({ machineAccess: machineAccess.toObject({ virtuals: true }) });
     });
   });
 }

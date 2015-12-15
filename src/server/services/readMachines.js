@@ -1,7 +1,8 @@
 import MachineAccess from '../models/MachineAccess';
 import currentUserService from './currentUser';
+import filter from 'lodash.filter';
 
-export default function readMachines(req) {
+export default function readMachines(filterObj, req) {
   return new Promise(async (resolve, reject) => {
     // TODO: validation
 
@@ -26,7 +27,12 @@ export default function readMachines(req) {
       return reject({ error: err });
     }
 
-    const machines = machineAccessList.map(machineAccess => machineAccess.machine.toObject());
+    let machines = machineAccessList.map(machineAccess => machineAccess.machine.toObject({ virtuals: true }));
+
+    // filter
+    if (typeof filterObj === 'object' && filterObj !== null) {
+      machines = filter(machines, filterObj);
+    }
 
     resolve({ machines });
   });

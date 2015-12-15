@@ -15,9 +15,10 @@ function getUrl(path) {
 
 const HttpClient = {
 
-  get: path => new Promise((resolve, reject) => {
+  get: (path, data) => new Promise((resolve, reject) => {
     request
       .get(getUrl(path))
+      .query(data)
       .accept('application/json')
       .end((err, res) => {
         if (err) {

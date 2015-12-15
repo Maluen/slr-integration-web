@@ -5,6 +5,8 @@ import AccountActions from './actions/AccountActions';
 import AccountStore from './stores/AccountStore';
 import MachineCreationActions from './actions/MachineCreationActions';
 import MachineCreationStore from './stores/MachineCreationStore';
+import MachineUpdationActions from './actions/MachineUpdationActions';
+import MachineUpdationStore from './stores/MachineUpdationStore';
 import MachinesActions from './actions/MachinesActions';
 import MachinesStore from './stores/MachinesStore';
 
@@ -25,6 +27,9 @@ class Flux extends Alt {
 
     this.addActions('machineCreationActions', MachineCreationActions);
     this.addStore('machineCreationStore', MachineCreationStore);
+
+    this.addActions('machineUpdationActions', MachineUpdationActions);
+    this.addStore('machineUpdationStore', MachineUpdationStore);
 
     this.addActions('machinesActions', MachinesActions);
     this.addStore('machinesStore', MachinesStore);

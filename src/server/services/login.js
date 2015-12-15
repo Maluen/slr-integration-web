@@ -18,7 +18,7 @@ export default function login(email, password, req, res) {
         if (otherErr) {
           return reject({ error: otherErr });
         }
-        resolve({ user: user.toObject() });
+        resolve({ user: user.toObject({ virtuals: true }) });
       });
     })(req, res);
   });

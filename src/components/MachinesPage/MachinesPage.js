@@ -12,8 +12,8 @@ import MachinesList from './MachinesList';
 class MachinesPage extends Component {
 
   static propTypes = {
-    machines: PropTypes.array,
     isFetched: PropTypes.bool,
+    machines: PropTypes.array,
   };
 
   static contextTypes = {
@@ -22,8 +22,8 @@ class MachinesPage extends Component {
   };
 
   static defaultProps = {
-    machines: [],
     isFetched: false,
+    machines: [],
   };
 
   componentWillMount() {

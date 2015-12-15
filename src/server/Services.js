@@ -32,8 +32,8 @@ export default {
     return await saveMachineAccessService(machineId, userId, permission, options, req);
   },
 
-  readMachines: async (req) => {
-    return await readMachinesService(req);
+  readMachines: async (filterObj, req) => {
+    return await readMachinesService(filterObj, req);
   },
 
 };

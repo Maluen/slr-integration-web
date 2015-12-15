@@ -13,9 +13,9 @@ export default class MachinesStore {
 
   getInitialState() {
     return {
-      machines: [],
       isFetching: false,
       isFetched: false,
+      machines: [],
     };
   }
 
@@ -28,9 +28,9 @@ export default class MachinesStore {
 
   onFetch(machines = []) {
     this.setState({
-      machines: machines,
       isFetching: false,
       isFetched: true,
+      machines: machines,
     });
   }
 

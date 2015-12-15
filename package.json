@@ -23,6 +23,7 @@
     "immutable": "^3.7.5",
     "iso": "^4.2.0",
     "jade": "1.11.0",
+    "lodash.filter": "^3.1.1",
     "mongoose": "^4.2.8",
     "normalize.css": "3.0.3",
     "passport": "^0.3.2",

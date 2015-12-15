@@ -58,9 +58,9 @@ export default function saveMachine(id = null, hostname, port, req) {
       if (!id) {
         // add access to machine creator
         saveMachineAccessService(machine._id, currentUser._id, 'Administrator', { isAfterCreate: true }, req)
-          .then(resolve.bind(null, { machine: machine.toObject() }), reject);
+          .then(resolve.bind(null, { machine: machine.toObject({ virtuals: true }) }), reject);
       } else {
-        resolve({ machine: machine.toObject() });
+        resolve({ machine: machine.toObject({ virtuals: true }) });
       }
     });
   });

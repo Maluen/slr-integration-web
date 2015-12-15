@@ -6,7 +6,7 @@ export default class MachinesActions {
     return this.alt.promise(async (resolve) => {
       try {
         this.actions.fetchBefore();
-        const response = await Globals.services.readMachines(this.alt.req);
+        const response = await Globals.services.readMachines(null, this.alt.req);
         this.dispatch(response.machines);
       } catch (err) {
         // no-op
