@@ -32,7 +32,7 @@ export default class MachinesStore {
     this.setState({
       isFetching: false,
       isFetched: true,
-      machines: machines,
+      machines,
     });
   }
 

@@ -9,6 +9,8 @@ import MachineUpdationActions from './actions/MachineUpdationActions';
 import MachineUpdationStore from './stores/MachineUpdationStore';
 import MachinesActions from './actions/MachinesActions';
 import MachinesStore from './stores/MachinesStore';
+import MachineAccessesActions from './actions/MachineAccessesActions';
+import MachineAccessesStore from './stores/MachineAccessesStore';
 
 class Flux extends Alt {
 
@@ -33,6 +35,9 @@ class Flux extends Alt {
 
     this.addActions('machinesActions', MachinesActions);
     this.addStore('machinesStore', MachinesStore);
+
+    this.addActions('machineAccessesActions', MachineAccessesActions);
+    this.addStore('machineAccessesStore', MachineAccessesStore);
   }
 
   promise(fn) {

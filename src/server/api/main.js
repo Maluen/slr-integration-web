@@ -10,5 +10,6 @@ router.use(require('./logout'));
 router.use(require('./saveMachine'));
 router.use(require('./saveMachineAccess'));
 router.use(require('./readMachines'));
+router.use(require('./readMachineAccesses'));
 
 export default router;

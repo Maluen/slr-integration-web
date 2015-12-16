@@ -30,4 +30,8 @@ export default {
     return await http.get('/api/readMachines', { filterObj: JSON.stringify(filterObj) });
   },
 
+  readMachineAccesses: async (machineId) => {
+    return await http.get('/api/readMachineAccesses', { machineId });
+  },
+
 };

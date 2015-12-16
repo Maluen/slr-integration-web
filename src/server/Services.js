@@ -5,6 +5,7 @@ import logoutService from './services/logout';
 import saveMachineService from './services/saveMachine';
 import saveMachineAccessService from './services/saveMachineAccess';
 import readMachinesService from './services/readMachines';
+import readMachineAccessesService from './services/readMachineAccesses';
 
 export default {
 
@@ -34,6 +35,10 @@ export default {
 
   readMachines: async (filterObj, req) => {
     return await readMachinesService(filterObj, req);
+  },
+
+  readMachineAccesses: async (machineId, req) => {
+    return await readMachineAccessesService(machineId, req);
   },
 
 };

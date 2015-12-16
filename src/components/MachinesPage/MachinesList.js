@@ -9,10 +9,6 @@ class MachinesList extends Component {
     machines: PropTypes.array,
   };
 
-  static contextTypes = {
-    onSetTitle: PropTypes.func.isRequired,
-  };
-
   static defaultProps = {
     machines: [],
   };

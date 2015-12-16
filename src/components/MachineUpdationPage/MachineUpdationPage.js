@@ -4,6 +4,7 @@ import React, { PropTypes, Component } from 'react';
 import styles from './MachineUpdationPage.scss';
 import withStyles from '../../decorators/withStyles';
 import connectToStores from 'alt/utils/connectToStores';
+import MachineForm from '../Machine/MachineForm.js';
 
 @withStyles(styles)
 @connectToStores
@@ -11,7 +12,7 @@ class MachineCreationPage extends Component {
 
   static propTypes = {
     isFetched: PropTypes.bool,
-    id: PropTypes.string,
+    id: PropTypes.string.isRequired,
     hostname: PropTypes.string,
     port: PropTypes.string,
     errorMessage: PropTypes.string,
@@ -84,19 +85,13 @@ class MachineCreationPage extends Component {
           {this.props.isFetched ?
             <div>
               <div>{this.props.errorMessage}</div>
-              <form onSubmit={this.handleSubmit.bind(this)}>
-                <p>
-                  <label>Hostname</label>
-                  <input type="text" value={this.props.hostname} onChange={this.handleHostnameChange.bind(this)} />
-                </p>
-
-                <p>
-                  <label>Port</label>
-                  <input type="text" value={this.props.port} onChange={this.handlePortChange.bind(this)} />
-                </p>
-
-                <input type="submit" value="Update" />
-              </form>
+              <MachineForm
+                hostname={this.props.hostname}
+                port={this.props.port}
+                onSubmit={this.handleSubmit.bind(this)}
+                onHostnameChange={this.handleHostnameChange.bind(this)}
+                onPortChange={this.handlePortChange.bind(this)}
+              />
             </div>
           :
             <p>Loading...</p>

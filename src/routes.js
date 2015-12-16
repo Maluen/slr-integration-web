@@ -11,6 +11,7 @@ import LoginPage from './components/LoginPage';
 import MachinesPage from './components/MachinesPage';
 import MachineCreationPage from './components/MachineCreationPage';
 import MachineUpdationPage from './components/MachineUpdationPage';
+import MachineAccessesPage from './components/MachineAccessesPage';
 import ProjectsPage from './components/ProjectsPage';
 import NotFoundPage from './components/NotFoundPage';
 import ErrorPage from './components/ErrorPage';
@@ -70,6 +71,10 @@ const router = new Router(on => {
 
   on('/updateMachine/:id', authenticated, async (state) => {
     return <MachineUpdationPage id={state.params.id} />;
+  });
+
+  on('/machineAccesses/:machineId', authenticated, async (state) => {
+    return <MachineAccessesPage machineId={state.params.machineId} />;
   });
 
   on('/projects', authenticated, async () => {

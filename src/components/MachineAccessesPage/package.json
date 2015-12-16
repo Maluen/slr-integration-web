@@ -1,0 +1,6 @@
+{
+  "name": "MachineAccessesPage",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./MachineAccessesPage.js"
+}
