@@ -25,5 +25,18 @@ export default class MachineAccessesActions {
     return '';
   }
 
+  deleteMachineAccess(id) {
+    return this.alt.promise(async (resolve) => {
+      try {
+        const response = await Globals.services.deleteMachineAccess(id, this.alt.req);
+        this.dispatch(response.machineAccess);
+      } catch (err) {
+        // TODO
+        console.log('deleteMachineAccess error', err);
+      }
+      resolve();
+    });
+  }
+
 
 }

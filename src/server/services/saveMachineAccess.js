@@ -52,7 +52,7 @@ export default function saveMachineAccess(machineId, userId, permission, options
           user: userId,
         });
         if (machineAccess) {
-          if (machineAccess.user === currentUser._id) {
+          if (machineAccess.user.equals(currentUser._id)) {
             return reject({ error: 'You can\'t change your own permission.' });
           }
           // update permission

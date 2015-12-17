@@ -9,10 +9,24 @@ class MachineAccessesListItem extends Component {
     permission: PropTypes.string.isRequired,
   };
 
+  static contextTypes = {
+    flux: PropTypes.object.isRequired,
+  };
+
+  handleDeleteClick() {
+    this.context.flux.getActions('machineAccessesActions').deleteMachineAccess(this.props.id);
+  }
+
   render() {
     return (
       <li key={this.props.id}>
-        <span>{this.props.user.email}</span> <span>({this.props.permission})</span>
+        <span>{this.props.user.email}</span> <span>({this.props.permission})</span>&nbsp;
+        <a
+          className="MachineAccessesListItem-link"
+          href="javascript:void(0);"
+          onClick={this.handleDeleteClick.bind(this)}>
+          Remove
+        </a>
       </li>
     );
   }

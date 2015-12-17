@@ -6,6 +6,7 @@ import saveMachineService from './services/saveMachine';
 import saveMachineAccessService from './services/saveMachineAccess';
 import readMachinesService from './services/readMachines';
 import readMachineAccessesService from './services/readMachineAccesses';
+import deleteMachineAccessService from './services/deleteMachineAccess';
 
 export default {
 
@@ -39,6 +40,10 @@ export default {
 
   readMachineAccesses: async (machineId, req) => {
     return await readMachineAccessesService(machineId, req);
+  },
+
+  deleteMachineAccess: async (id, req) => {
+    return await deleteMachineAccessService(id, req);
   },
 
 };

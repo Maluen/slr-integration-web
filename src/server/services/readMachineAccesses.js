@@ -46,6 +46,7 @@ export default function readMachineAccesses(machineId, req) {
     // TODO: rename to machineUsers
     const machineAccesses = machineAccessList.map(machineAccess => {
       return {
+        id: machineAccess.id,
         user: machineAccess.user.toObject({ virtuals: true }),
         permission: machineAccess.permission,
       };

@@ -34,4 +34,8 @@ export default {
     return await http.get('/api/readMachineAccesses', { machineId });
   },
 
+  deleteMachineAccess: async (id) => {
+    return await http.post('/api/deleteMachineAccess', { id });
+  },
+
 };

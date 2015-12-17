@@ -11,5 +11,6 @@ router.use(require('./saveMachine'));
 router.use(require('./saveMachineAccess'));
 router.use(require('./readMachines'));
 router.use(require('./readMachineAccesses'));
+router.use(require('./deleteMachineAccess'));
 
 export default router;
