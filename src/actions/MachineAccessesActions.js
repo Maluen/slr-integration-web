@@ -11,8 +11,8 @@ export default class MachineAccessesActions {
       try {
         this.actions.fetchBefore();
         const response = await Globals.services.readMachineAccesses(machineId, this.alt.req);
-        const { machine, machineActions } = response;
-        this.dispatch({ machine, machineActions });
+        const { machine, machineAccesses } = response;
+        this.dispatch({ machine, machineAccesses });
       } catch (err) {
         // no-op
         console.log('fetch error', err);
