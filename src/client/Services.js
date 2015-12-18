@@ -22,6 +22,10 @@ export default {
     return await http.post('/api/saveMachine', { id, hostname, port });
   },
 
+  deleteMachine: async (id) => {
+    return await http.post('/api/deleteMachine', { id });
+  },
+
   saveMachineAccess: async (machineId, userId, permission) => {
     return await http.post('/api/saveMachineAccess', { machineId, userId, permission });
   },

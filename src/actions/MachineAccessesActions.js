@@ -15,7 +15,7 @@ export default class MachineAccessesActions {
         this.dispatch({ machine, machineAccesses });
       } catch (err) {
         // no-op
-        console.log('fetch error', err);
+        console.log('fetch error', err.message);
       }
       resolve();
     });
@@ -32,7 +32,7 @@ export default class MachineAccessesActions {
         this.dispatch(response.machineAccess);
       } catch (err) {
         // TODO
-        console.log('deleteMachineAccess error', err);
+        console.log('deleteMachineAccess error', err.message);
       }
       resolve();
     });

@@ -2,7 +2,7 @@ import MachineAccess from '../models/MachineAccess';
 import currentUserService from './currentUser';
 
 export default function deleteMachineAccess(id, req) {
-  return new Promise(async (resolve, reject) => {
+  return Promise.resolve().then(async () => {
     // TODO: validation
 
     let currentUser = null;
@@ -10,20 +10,20 @@ export default function deleteMachineAccess(id, req) {
       const response = await currentUserService(req);
       currentUser = response.user;
       if (!currentUser) {
-        return reject({ error: 'Access denied: you must be logged-in.' });
+        throw new Error('Access denied: you must be logged-in.');
       }
     } catch (err) {
-      return reject({ error: err });
+      throw err;
     }
 
     if (!id) {
-      return reject({error: `The 'id' query parameter cannot be empty.`});
+      throw new Error(`The 'id' query parameter cannot be empty.`);
     }
 
     const machineAccess = await MachineAccess.findById(id);
 
     if (!machineAccess) {
-      return reject({ error: 'The requested machine access does not exists.' });
+      throw new Error('The requested machine access does not exists.');
     }
 
     try {
@@ -33,22 +33,22 @@ export default function deleteMachineAccess(id, req) {
         permission: 'Administrator',
       });
       if (count === 0) {
-        return reject({ error: 'Access denied: you must be an Administrator of this machine to remove access.' });
+        throw new Error('Access denied: you must be an Administrator of this machine to remove access.');
       }
     } catch (err) {
-      return reject({ error: err });
+      throw new Error(err.err);
     }
 
     if (machineAccess.user.equals(currentUser._id)) {
-      return reject({ error: 'You can\'t remove your own access.' });
+      throw new Error('You can\'t remove your own access.');
     }
 
     try {
       await machineAccess.remove();
     } catch (err) {
-      return reject({ error: err });
+      throw new Error(err.err);
     }
 
-    resolve({ machineAccess: machineAccess.toObject({ virtuals: true }) });
+    return { machineAccess: machineAccess.toObject({ virtuals: true }) };
   });
 }

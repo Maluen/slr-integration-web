@@ -6,6 +6,7 @@ export default class MachinesStore {
 
     this.bindAction(machinesActions.fetchBefore, this.onFetchBefore);
     this.bindAction(machinesActions.fetch, this.onFetch);
+    this.bindAction(machinesActions.deleteMachine, this.onDeleteMachine);
 
     this.bindAction(machineCreationActions.createSuccess, this.onMachineCreationSuccess);
     this.bindAction(machineUpdationActions.updateSuccess, this.onMachineUpdationSuccess);
@@ -54,6 +55,18 @@ export default class MachinesStore {
       machines: [
         ...machines.slice(0, machineIndex),
         machine,
+        ...machines.slice(machineIndex + 1),
+      ],
+    });
+  }
+
+  onDeleteMachine(machine) {
+    const machines = this.state.machines;
+    const machineIndex = machines.findIndex(aMachine => aMachine.id === machine.id);
+    if (machineIndex === -1) return;
+    this.setState({
+      machines: [
+        ...machines.slice(0, machineIndex),
         ...machines.slice(machineIndex + 1),
       ],
     });

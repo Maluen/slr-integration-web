@@ -3,7 +3,7 @@ import currentUserService from './currentUser';
 import filter from 'lodash.filter';
 
 export default function readMachines(filterObj, req) {
-  return new Promise(async (resolve, reject) => {
+  return Promise.resolve().then(async () => {
     // TODO: validation
 
     let currentUser = null;
@@ -11,12 +11,11 @@ export default function readMachines(filterObj, req) {
       const response = await currentUserService(req);
       currentUser = response.user;
       if (!currentUser) {
-        return reject({ error: 'Access denied: you must be logged-in.' });
+        throw new Error('Access denied: you must be logged-in.');
       }
     } catch (err) {
-      return reject({ error: err });
+      throw err;
     }
-
 
     let machineAccessList = [];
     try {
@@ -24,7 +23,7 @@ export default function readMachines(filterObj, req) {
         user: currentUser._id,
       }).populate('machine');
     } catch (err) {
-      return reject({ error: err });
+      throw new Error(err.err);
     }
 
     let machines = machineAccessList.map(machineAccess => machineAccess.machine.toObject({ virtuals: true }));
@@ -34,6 +33,6 @@ export default function readMachines(filterObj, req) {
       machines = filter(machines, filterObj);
     }
 
-    resolve({ machines });
+    return { machines };
   });
 }

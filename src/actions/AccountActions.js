@@ -9,7 +9,7 @@ export default class AccountActions {
         this.dispatch(response.user);
       } catch (err) {
         // no-op
-        console.log('fetch error', err);
+        console.log('fetch error', err.message);
       }
       resolve();
     });
@@ -29,7 +29,7 @@ export default class AccountActions {
         const response = await Globals.services.register(email, password, this.alt.req, this.alt.res);
         this.actions.registerSuccess(response.isActivationRequired);
       } catch (err) {
-        this.actions.registerError(err);
+        this.actions.registerError(err.message);
       }
       resolve();
     });
@@ -58,7 +58,7 @@ export default class AccountActions {
         await Globals.services.login(email, password, this.alt.req, this.alt.res);
         this.actions.loginSuccess();
       } catch (err) {
-        this.actions.loginError(err);
+        this.actions.loginError(err.message);
       }
       resolve();
     });
@@ -83,7 +83,7 @@ export default class AccountActions {
         this.alt.redirect('/');
       } catch (err) {
         // no-op
-        console.log('logout error', err);
+        console.log('logout error', err.message);
       }
       resolve();
     });

@@ -1,11 +1,12 @@
 import { Router } from 'express';
-import currentUserService from '../services/currentUser';
+import deleteMachineService from '../services/deleteMachine';
 
 const router = new Router();
 
-router.get('/currentUser', async (req, res) => {
+router.post('/deleteMachine', async (req, res) => {
   try {
-    const response = await currentUserService(req);
+    const { id } = req.body;
+    const response = await deleteMachineService(id, req);
     res.status(200).send(response);
   } catch (err) {
     res.status(400).send({ error: err.message });

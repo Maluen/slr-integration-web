@@ -4,7 +4,7 @@ import currentUserService from './currentUser';
 import saveMachineAccessService from './saveMachineAccess';
 
 export default function saveMachine(id = null, hostname, port, req) {
-  return new Promise(async (resolve, reject) => {
+  return Promise.resolve().then(async () => {
     // TODO: validation
 
     let currentUser = null;
@@ -12,35 +12,47 @@ export default function saveMachine(id = null, hostname, port, req) {
       const response = await currentUserService(req);
       currentUser = response.user;
       if (!currentUser) {
-        return reject({ error: 'Access denied: you must be logged-in.' });
+        throw new Error('Access denied: you must be logged-in.');
       }
     } catch (err) {
-      return reject({ error: err });
+      throw err;
     }
 
     if (!hostname || hostname === 'undefined') {
-      return reject({ error: `The 'hostname' query parameter cannot be empty.` });
+      throw new Error(`The 'hostname' query parameter cannot be empty.`);
     }
 
     if (!port || port === 'undefined') {
-      return reject({ error: `The 'port' query parameter cannot be empty.` });
+      throw new Error(`The 'port' query parameter cannot be empty.`);
     }
 
     let machine;
     if (id) {
       // update
-      machine = await Machine.findOne({ _id: id });
-      if (!machine) {
-        return reject({ error: 'The machine does not exists.' });
+
+      try {
+        machine = await Machine.findOne({ _id: id });
+      } catch (err) {
+        throw new Error(err.err);
       }
 
-      const machineAccess = await MachineAccess.findOne({
-        user: currentUser._id,
-        machine: id,
-        permission: 'Administrator',
-      });
+      if (!machine) {
+        throw new Error('The machine does not exists.');
+      }
+
+      let machineAccess;
+      try {
+        machineAccess = await MachineAccess.findOne({
+          user: currentUser._id,
+          machine: id,
+          permission: 'Administrator',
+        });
+      } catch (err) {
+        throw new Error(err.err);
+      }
+
       if (!machineAccess) {
-        return reject({ error: 'Access denied: you must be an Administrator of this machine to edit it.' });
+        throw new Error('Access denied: you must be an Administrator of this machine to edit it.');
       }
 
       machine.hostname = hostname;
@@ -50,18 +62,21 @@ export default function saveMachine(id = null, hostname, port, req) {
       machine = new Machine({ hostname, port });
     }
 
-    machine.save((err) => {
-      if (err) {
-        return reject({ error: err });
-      }
+    try {
+      await machine.save();
+    } catch (err) {
+      throw new Error(err.err);
+    }
 
-      if (!id) {
-        // add access to machine creator
-        saveMachineAccessService(machine._id, currentUser._id, 'Administrator', { isAfterCreate: true }, req)
-          .then(resolve.bind(null, { machine: machine.toObject({ virtuals: true }) }), reject);
-      } else {
-        resolve({ machine: machine.toObject({ virtuals: true }) });
+    if (!id) {
+      // add access to machine creator
+      try {
+        await saveMachineAccessService(machine._id, currentUser._id, 'Administrator', { isAfterCreate: true }, req);
+      } catch (err) {
+        throw err;
       }
-    });
+    }
+
+    return { machine: machine.toObject({ virtuals: true }) };
   });
 }

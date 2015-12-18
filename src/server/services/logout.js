@@ -1,6 +1,5 @@
 export default function logout(req) {
-  return new Promise((resolve) => {
+  return Promise.resolve().then(async () => {
     req.logout();
-    resolve();
   });
 }

@@ -16,7 +16,7 @@ export default class MachineCreationActions {
         const response = await Globals.services.saveMachine(null, hostname, port, this.alt.req);
         this.actions.createSuccess(response.machine);
       } catch (err) {
-        this.actions.createError(err);
+        this.actions.createError(err.message);
       }
       resolve();
     });

@@ -25,7 +25,7 @@ const HttpClient = {
           if (err.status === 404) {
             resolve(null);
           } else if (err.status === 400) {
-            reject(err.response.body.error);
+            reject(new Error(err.response.body.error));
           } else {
             reject(err);
           }
@@ -45,7 +45,7 @@ const HttpClient = {
           if (err.status === 404) {
             resolve(null);
           } else if (err.status === 400) {
-            reject(err.response.body.error);
+            reject(new Error(err.response.body.error));
           } else {
             reject(err);
           }

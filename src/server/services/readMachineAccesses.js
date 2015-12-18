@@ -3,7 +3,7 @@ import Machine from '../models/Machine';
 import currentUserService from './currentUser';
 
 export default function readMachineAccesses(machineId, req) {
-  return new Promise(async (resolve, reject) => {
+  return Promise.resolve().then(async () => {
     // TODO: validation
 
     let currentUser = null;
@@ -11,14 +11,14 @@ export default function readMachineAccesses(machineId, req) {
       const response = await currentUserService(req);
       currentUser = response.user;
       if (!currentUser) {
-        return reject({ error: 'Access denied: you must be logged-in.' });
+        throw new Error('Access denied: you must be logged-in.');
       }
     } catch (err) {
-      return reject({ error: err });
+      throw err;
     }
 
     if (!machineId) {
-      return reject({error: `The 'machineId' query parameter cannot be empty.`});
+      throw new Error(`The 'machineId' query parameter cannot be empty.`);
     }
 
     try {
@@ -27,10 +27,10 @@ export default function readMachineAccesses(machineId, req) {
         user: currentUser._id,
       });
       if (count === 0) {
-        return reject({ error: 'Access denied: you must have access to this machine (with any permission) to view its users.' });
+        throw new Error('Access denied: you must have access to this machine (with any permission) to view its users.');
       }
     } catch (err) {
-      return reject({ error: err });
+      throw new Error(err.err);
     }
 
     let machineAccessList = [];
@@ -39,7 +39,7 @@ export default function readMachineAccesses(machineId, req) {
         machine: machineId,
       }).populate('user');
     } catch (err) {
-      return reject({ error: err });
+      throw new Error(err.err);
     }
 
     const machine = machineAccessList.length ? await Machine.findById(machineAccessList[0].machine) : undefined;
@@ -52,6 +52,6 @@ export default function readMachineAccesses(machineId, req) {
       };
     });
 
-    resolve({ machine: machine.toObject({ virtuals: true }), machineAccesses });
+    return { machine: machine.toObject({ virtuals: true }), machineAccesses };
   });
 }

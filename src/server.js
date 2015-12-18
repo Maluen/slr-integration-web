@@ -26,8 +26,10 @@ const database = 'slr-integration-web'; // TODO: get value from private config f
 server.set('port', port);
 
 //
-// Connect to the database
+// Configure moongose and connect to the database
 // -----------------------------------------------------------------------------
+
+mongoose.Promise = global.Promise; // Use native promises
 
 mongoose.connect(`mongodb://localhost/${database}`);
 

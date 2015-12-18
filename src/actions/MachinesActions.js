@@ -10,7 +10,7 @@ export default class MachinesActions {
         this.dispatch(response.machines);
       } catch (err) {
         // no-op
-        console.log('fetch error', err);
+        console.log('fetch error', err.message);
       }
       resolve();
     });
@@ -18,6 +18,19 @@ export default class MachinesActions {
 
   fetchBefore() {
     return '';
+  }
+
+  deleteMachine(id) {
+    return this.alt.promise(async (resolve) => {
+      try {
+        const response = await Globals.services.deleteMachine(id, this.alt.req);
+        this.dispatch(response.machine);
+      } catch (err) {
+        // TODO
+        console.log('deleteMachine error', err.message);
+      }
+      resolve();
+    });
   }
 
 }

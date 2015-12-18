@@ -8,7 +8,7 @@ router.get('/logout', async (req, res) => {
     const response = await logoutService(req);
     res.status(200).send(response);
   } catch (err) {
-    res.status(400).send(err);
+    res.status(400).send({ error: err.message });
   }
 });
 

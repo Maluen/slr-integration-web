@@ -8,6 +8,7 @@ router.use(require('./login'));
 router.use(require('./currentUser'));
 router.use(require('./logout'));
 router.use(require('./saveMachine'));
+router.use(require('./deleteMachine'));
 router.use(require('./saveMachineAccess'));
 router.use(require('./readMachines'));
 router.use(require('./readMachineAccesses'));
