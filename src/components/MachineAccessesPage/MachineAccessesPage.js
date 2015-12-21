@@ -62,7 +62,11 @@ class MachineAccessesPage extends Component {
           {this.props.isFetched ?
             <div>
               <h2>Machine {this.props.machine.hostname}:{this.props.machine.port}</h2>
-              <a className="MachineAccessesPage-link MachineAccessesPage-link-createMachineAccess" href={`/createMachineAccess/${this.props.machineId}`} onClick={Link.handleClick}>Add access</a>
+              <a className="MachineAccessesPage-link MachineAccessesPage-link-createMachineAccess"
+                href={`/createMachineAccess/${this.props.machineId}`}
+                onClick={Link.handleClick}>
+                Add access
+              </a>
               <MachineAccessesList machineAccesses={this.props.machineAccesses} />
             </div>
           :

@@ -12,6 +12,7 @@ import MachinesPage from './components/MachinesPage';
 import MachineCreationPage from './components/MachineCreationPage';
 import MachineUpdationPage from './components/MachineUpdationPage';
 import MachineAccessesPage from './components/MachineAccessesPage';
+import MachineAccessCreationPage from './components/MachineAccessCreationPage';
 import ProjectsPage from './components/ProjectsPage';
 import NotFoundPage from './components/NotFoundPage';
 import ErrorPage from './components/ErrorPage';
@@ -75,6 +76,10 @@ const router = new Router(on => {
 
   on('/machineAccesses/:machineId', authenticated, async (state) => {
     return <MachineAccessesPage machineId={state.params.machineId} />;
+  });
+
+  on('/createMachineAccess/:machineId', authenticated, async (state) => {
+    return <MachineAccessCreationPage machineId={state.params.machineId} />;
   });
 
   on('/projects', authenticated, async () => {

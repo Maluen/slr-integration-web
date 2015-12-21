@@ -11,6 +11,8 @@ import MachinesActions from './actions/MachinesActions';
 import MachinesStore from './stores/MachinesStore';
 import MachineAccessesActions from './actions/MachineAccessesActions';
 import MachineAccessesStore from './stores/MachineAccessesStore';
+import MachineAccessCreationActions from './actions/MachineAccessCreationActions';
+import MachineAccessCreationStore from './stores/MachineAccessCreationStore';
 
 class Flux extends Alt {
 
@@ -38,6 +40,9 @@ class Flux extends Alt {
 
     this.addActions('machineAccessesActions', MachineAccessesActions);
     this.addStore('machineAccessesStore', MachineAccessesStore);
+
+    this.addActions('machineAccessCreationActions', MachineAccessCreationActions);
+    this.addStore('machineAccessCreationStore', MachineAccessCreationStore);
   }
 
   promise(fn) {

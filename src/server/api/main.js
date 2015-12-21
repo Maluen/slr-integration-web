@@ -7,6 +7,7 @@ router.use(require('./register'));
 router.use(require('./login'));
 router.use(require('./currentUser'));
 router.use(require('./logout'));
+router.use(require('./readUsers'));
 router.use(require('./saveMachine'));
 router.use(require('./deleteMachine'));
 router.use(require('./saveMachineAccess'));

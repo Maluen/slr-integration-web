@@ -2,6 +2,7 @@ import registerService from './services/register';
 import loginService from './services/login';
 import currentUserService from './services/currentUser';
 import logoutService from './services/logout';
+import readUsersService from './services/readUsers';
 import saveMachineService from './services/saveMachine';
 import deleteMachineService from './services/deleteMachine';
 import saveMachineAccessService from './services/saveMachineAccess';
@@ -27,6 +28,10 @@ export default {
     return await logoutService(req);
   },
 
+  readUsers: async (filterObj, req) => {
+    return await readUsersService(req);
+  },
+
   saveMachine: async (id, hostname, port, req) => {
     return await saveMachineService(id, hostname, port, req);
   },
@@ -35,8 +40,8 @@ export default {
     return await deleteMachineService(id, req);
   },
 
-  saveMachineAccess: async (machineId, userId, permission, options, req) => {
-    return await saveMachineAccessService(machineId, userId, permission, options, req);
+  saveMachineAccess: async (machineId, userId, permission, req) => {
+    return await saveMachineAccessService(machineId, userId, permission, undefined, req);
   },
 
   readMachines: async (filterObj, req) => {

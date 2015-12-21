@@ -18,6 +18,10 @@ export default {
     return await http.get('/api/logout');
   },
 
+  readUsers: async (filterObj) => {
+    return await http.get('/api/readUsers', { filterObj: JSON.stringify(filterObj) });
+  },
+
   saveMachine: async (id, hostname, port) => {
     return await http.post('/api/saveMachine', { id, hostname, port });
   },
