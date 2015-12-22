@@ -9,6 +9,12 @@ import saveMachineAccessService from './services/saveMachineAccess';
 import readMachinesService from './services/readMachines';
 import readMachineAccessesService from './services/readMachineAccesses';
 import deleteMachineAccessService from './services/deleteMachineAccess';
+import saveProjectService from './services/saveProject';
+import deleteProjectService from './services/deleteProject';
+import saveProjectAccessService from './services/saveProjectAccess';
+import readProjectsService from './services/readProjects';
+import readProjectAccessesService from './services/readProjectAccesses';
+import deleteProjectAccessService from './services/deleteProjectAccess';
 
 export default {
 
@@ -54,6 +60,30 @@ export default {
 
   deleteMachineAccess: async (id, req) => {
     return await deleteMachineAccessService(id, req);
+  },
+
+  saveProject: async (id, name, req) => {
+    return await saveProjectService(id, name, req);
+  },
+
+  deleteProject: async (id, req) => {
+    return await deleteProjectService(id, req);
+  },
+
+  saveProjectAccess: async (projectId, userId, permission, req) => {
+    return await saveProjectAccessService(projectId, userId, permission, undefined, req);
+  },
+
+  readProjects: async (filterObj, req) => {
+    return await readProjectsService(filterObj, req);
+  },
+
+  readProjectAccesses: async (projectId, req) => {
+    return await readProjectAccessesService(projectId, req);
+  },
+
+  deleteProjectAccess: async (id, req) => {
+    return await deleteProjectAccessService(id, req);
   },
 
 };

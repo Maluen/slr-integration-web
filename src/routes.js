@@ -14,6 +14,10 @@ import MachineUpdationPage from './components/MachineUpdationPage';
 import MachineAccessesPage from './components/MachineAccessesPage';
 import MachineAccessCreationPage from './components/MachineAccessCreationPage';
 import ProjectsPage from './components/ProjectsPage';
+import ProjectCreationPage from './components/ProjectCreationPage';
+import ProjectUpdationPage from './components/ProjectUpdationPage';
+import ProjectAccessesPage from './components/ProjectAccessesPage';
+import ProjectAccessCreationPage from './components/ProjectAccessCreationPage';
 import NotFoundPage from './components/NotFoundPage';
 import ErrorPage from './components/ErrorPage';
 import NullComponent from './components/NullComponent';
@@ -84,6 +88,22 @@ const router = new Router(on => {
 
   on('/projects', authenticated, async () => {
     return <ProjectsPage />;
+  });
+
+  on('/createProject', authenticated, async () => {
+    return <ProjectCreationPage />;
+  });
+
+  on('/updateProject/:id', authenticated, async (state) => {
+    return <ProjectUpdationPage id={state.params.id} />;
+  });
+
+  on('/projectAccesses/:projectId', authenticated, async (state) => {
+    return <ProjectAccessesPage projectId={state.params.projectId} />;
+  });
+
+  on('/createProjectAccess/:projectId', authenticated, async (state) => {
+    return <ProjectAccessCreationPage projectId={state.params.projectId} />;
   });
 
   on('*', async (state) => {

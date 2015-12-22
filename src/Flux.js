@@ -13,6 +13,16 @@ import MachineAccessesActions from './actions/MachineAccessesActions';
 import MachineAccessesStore from './stores/MachineAccessesStore';
 import MachineAccessCreationActions from './actions/MachineAccessCreationActions';
 import MachineAccessCreationStore from './stores/MachineAccessCreationStore';
+import ProjectCreationActions from './actions/ProjectCreationActions';
+import ProjectCreationStore from './stores/ProjectCreationStore';
+import ProjectUpdationActions from './actions/ProjectUpdationActions';
+import ProjectUpdationStore from './stores/ProjectUpdationStore';
+import ProjectsActions from './actions/ProjectsActions';
+import ProjectsStore from './stores/ProjectsStore';
+import ProjectAccessesActions from './actions/ProjectAccessesActions';
+import ProjectAccessesStore from './stores/ProjectAccessesStore';
+import ProjectAccessCreationActions from './actions/ProjectAccessCreationActions';
+import ProjectAccessCreationStore from './stores/ProjectAccessCreationStore';
 
 class Flux extends Alt {
 
@@ -43,6 +53,21 @@ class Flux extends Alt {
 
     this.addActions('machineAccessCreationActions', MachineAccessCreationActions);
     this.addStore('machineAccessCreationStore', MachineAccessCreationStore);
+
+    this.addActions('projectCreationActions', ProjectCreationActions);
+    this.addStore('projectCreationStore', ProjectCreationStore);
+
+    this.addActions('projectUpdationActions', ProjectUpdationActions);
+    this.addStore('projectUpdationStore', ProjectUpdationStore);
+
+    this.addActions('projectsActions', ProjectsActions);
+    this.addStore('projectsStore', ProjectsStore);
+
+    this.addActions('projectAccessesActions', ProjectAccessesActions);
+    this.addStore('projectAccessesStore', ProjectAccessesStore);
+
+    this.addActions('projectAccessCreationActions', ProjectAccessCreationActions);
+    this.addStore('projectAccessCreationStore', ProjectAccessCreationStore);
   }
 
   promise(fn) {

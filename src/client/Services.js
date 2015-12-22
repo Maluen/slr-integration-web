@@ -46,4 +46,28 @@ export default {
     return await http.post('/api/deleteMachineAccess', { id });
   },
 
+  saveProject: async (id, name) => {
+    return await http.post('/api/saveProject', { id, name });
+  },
+
+  deleteProject: async (id) => {
+    return await http.post('/api/deleteProject', { id });
+  },
+
+  saveProjectAccess: async (projectId, userId, permission) => {
+    return await http.post('/api/saveProjectAccess', { projectId, userId, permission });
+  },
+
+  readProjects: async (filterObj) => {
+    return await http.get('/api/readProjects', { filterObj: JSON.stringify(filterObj) });
+  },
+
+  readProjectAccesses: async (projectId) => {
+    return await http.get('/api/readProjectAccesses', { projectId });
+  },
+
+  deleteProjectAccess: async (id) => {
+    return await http.post('/api/deleteProjectAccess', { id });
+  },
+
 };
