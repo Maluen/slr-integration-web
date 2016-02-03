@@ -5,6 +5,7 @@ export default class MachineUpdationStore {
     this.bindAction(machineUpdationActions.reset, this.onReset);
     this.bindAction(machineUpdationActions.fetchBefore, this.onFetchBefore);
     this.bindAction(machineUpdationActions.fetch, this.onFetch);
+    this.bindAction(machineUpdationActions.updateName, this.onUpdateName);
     this.bindAction(machineUpdationActions.updateHostname, this.onUpdateHostname);
     this.bindAction(machineUpdationActions.updatePort, this.onUpdatePort);
     this.bindAction(machineUpdationActions.updateError, this.onUpdateError);
@@ -18,6 +19,7 @@ export default class MachineUpdationStore {
       isFetching: false,
       isFetched: false,
       'id': '',
+      'name': '',
       'hostname': '',
       'port': '',
       'errorMessage': '',
@@ -42,6 +44,10 @@ export default class MachineUpdationStore {
       ...machine,
       errorMessage: '',
     });
+  }
+
+  onUpdateName(name) {
+    this.setState({ name });
   }
 
   onUpdateHostname(hostname) {

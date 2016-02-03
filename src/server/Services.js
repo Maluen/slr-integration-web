@@ -38,8 +38,8 @@ export default {
     return await readUsersService(req);
   },
 
-  saveMachine: async (id, hostname, port, req) => {
-    return await saveMachineService(id, hostname, port, req);
+  saveMachine: async (id, name, hostname, port, req) => {
+    return await saveMachineService(id, name, hostname, port, req);
   },
 
   deleteMachine: async (id, req) => {

@@ -2,6 +2,10 @@ import Globals from '../core/Globals';
 
 export default class MachineCreationActions {
 
+  updateName(name) {
+    return name;
+  }
+
   updateHostname(hostname) {
     return hostname;
   }
@@ -10,10 +14,10 @@ export default class MachineCreationActions {
     return port;
   }
 
-  create(hostname, port) {
+  create(name, hostname, port) {
     return this.alt.promise(async (resolve) => {
       try {
-        const response = await Globals.services.saveMachine(null, hostname, port, this.alt.req);
+        const response = await Globals.services.saveMachine(null, name, hostname, port, this.alt.req);
         this.actions.createSuccess(response.machine);
       } catch (err) {
         this.actions.createError(err.message);

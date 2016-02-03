@@ -2,6 +2,7 @@ export default class MachineCreationStore {
   constructor() {
     const machineCreationActions = this.alt.getActions('machineCreationActions');
 
+    this.bindAction(machineCreationActions.updateName, this.onUpdateName);
     this.bindAction(machineCreationActions.updateHostname, this.onUpdateHostname);
     this.bindAction(machineCreationActions.updatePort, this.onUpdatePort);
     this.bindAction(machineCreationActions.createError, this.onCreateError);
@@ -12,10 +13,15 @@ export default class MachineCreationStore {
 
   getInitialState() {
     return {
+      'name': '',
       'hostname': '',
       'port': '',
       'errorMessage': '',
     };
+  }
+
+  onUpdateName(name) {
+    this.setState({ name });
   }
 
   onUpdateHostname(hostname) {

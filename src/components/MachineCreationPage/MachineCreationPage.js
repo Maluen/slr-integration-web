@@ -11,6 +11,7 @@ import MachineForm from '../Machine/MachineForm.js';
 class MachineCreationPage extends Component {
 
   static propTypes = {
+    name: PropTypes.string,
     hostname: PropTypes.string,
     port: PropTypes.string,
     errorMessage: PropTypes.string,
@@ -22,6 +23,7 @@ class MachineCreationPage extends Component {
   };
 
   static defaultProps = {
+    name: '',
     hostname: '',
     port: '',
     errorMessage: '',
@@ -41,6 +43,11 @@ class MachineCreationPage extends Component {
     return context.flux.getStore('machineCreationStore').getState();
   }
 
+  handleNameChange(event) {
+    const name = event.currentTarget.value.trim();
+    this.machineCreationActions.updateName(name);
+  }
+
   handleHostnameChange(event) {
     const hostname = event.currentTarget.value.trim();
     this.machineCreationActions.updateHostname(hostname);
@@ -53,7 +60,7 @@ class MachineCreationPage extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    this.machineCreationActions.create(this.props.hostname, this.props.port);
+    this.machineCreationActions.create(this.props.name, this.props.hostname, this.props.port);
   }
 
   render() {
@@ -65,9 +72,11 @@ class MachineCreationPage extends Component {
           <h1>{title}</h1>
           <div>{this.props.errorMessage}</div>
           <MachineForm
+            name={this.props.name}
             hostname={this.props.hostname}
             port={this.props.port}
             onSubmit={this.handleSubmit.bind(this)}
+            onNameChange={this.handleNameChange.bind(this)}
             onHostnameChange={this.handleHostnameChange.bind(this)}
             onPortChange={this.handlePortChange.bind(this)}
           />

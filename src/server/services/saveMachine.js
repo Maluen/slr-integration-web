@@ -3,7 +3,7 @@ import MachineAccess from '../models/MachineAccess';
 import currentUserService from './currentUser';
 import saveMachineAccessService from './saveMachineAccess';
 
-export default function saveMachine(id = null, hostname, port, req) {
+export default function saveMachine(id = null, name, hostname, port, req) {
   return Promise.resolve().then(async () => {
     // TODO: validation
 
@@ -16,6 +16,10 @@ export default function saveMachine(id = null, hostname, port, req) {
       }
     } catch (err) {
       throw err;
+    }
+
+    if (!name || name === 'undefined') {
+      throw new Error(`The 'name' query parameter cannot be empty.`);
     }
 
     if (!hostname || hostname === 'undefined') {
@@ -55,11 +59,12 @@ export default function saveMachine(id = null, hostname, port, req) {
         throw new Error('Access denied: you must be an Administrator of this machine to edit it.');
       }
 
+      machine.name = name;
       machine.hostname = hostname;
       machine.port = port;
     } else {
       // create
-      machine = new Machine({ hostname, port });
+      machine = new Machine({ name, hostname, port });
     }
 
     try {
