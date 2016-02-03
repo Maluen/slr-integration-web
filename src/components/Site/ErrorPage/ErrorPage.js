@@ -1,11 +1,11 @@
 /*! React Starter Kit | MIT License | http://www.reactstarterkit.com/ */
 
 import React, { PropTypes, Component } from 'react';
-import withStyles from '../../decorators/withStyles';
-import styles from './NotFoundPage.scss';
+import withStyles from '../../../decorators/withStyles';
+import styles from './ErrorPage.scss';
 
 @withStyles(styles)
-class NotFoundPage extends Component {
+class ErrorPage extends Component {
 
   static contextTypes = {
     onSetTitle: PropTypes.func.isRequired,
@@ -13,17 +13,16 @@ class NotFoundPage extends Component {
   };
 
   render() {
-    const title = 'Page Not Found';
+    const title = 'Error';
     this.context.onSetTitle(title);
-    this.context.onPageNotFound();
     return (
       <div>
         <h1>{title}</h1>
-        <p>Sorry, but the page you were trying to view does not exist.</p>
+        <p>Sorry, an critical error occurred on this page.</p>
       </div>
     );
   }
 
 }
 
-export default NotFoundPage;
+export default ErrorPage;

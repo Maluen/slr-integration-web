@@ -4,8 +4,8 @@ import React from 'react';
 import Router from 'react-routing/src/Router';
 import http from './core/HttpClient';
 import App from './components/App';
-import ContentPage from './components/ContentPage';
-import ContactPage from './components/ContactPage';
+import ContentPage from './components/Site/ContentPage';
+import ContactPage from './components/Site/ContactPage';
 import RegisterPage from './components/RegisterPage';
 import LoginPage from './components/LoginPage';
 import MachinesPage from './components/Machine/MachinesPage';
@@ -18,8 +18,8 @@ import ProjectCreationPage from './components/Project/ProjectCreationPage';
 import ProjectUpdationPage from './components/Project/ProjectUpdationPage';
 import ProjectAccessesPage from './components/Project/ProjectAccessesPage';
 import ProjectAccessCreationPage from './components/Project/ProjectAccessCreationPage';
-import NotFoundPage from './components/NotFoundPage';
-import ErrorPage from './components/ErrorPage';
+import NotFoundPage from './components/Site/NotFoundPage';
+import ErrorPage from './components/Site/ErrorPage';
 import NullComponent from './components/NullComponent';
 
 const authenticated = (state, next) => {

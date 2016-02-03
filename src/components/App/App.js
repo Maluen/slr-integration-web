@@ -4,9 +4,9 @@ import React, { PropTypes, Component } from 'react';
 import styles from './App.scss';
 import withContext from '../../decorators/withContext';
 import withStyles from '../../decorators/withStyles';
-import Header from '../Header';
-import Feedback from '../Feedback';
-import Footer from '../Footer';
+import Header from '../Site/Header';
+import Feedback from '../Site/Feedback';
+import Footer from '../Site/Footer';
 
 @withContext
 @withStyles(styles)

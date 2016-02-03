@@ -3,9 +3,9 @@
 import React, { PropTypes, Component } from 'react';
 import classNames from 'classnames';
 import styles from './Navigation.scss';
-import withStyles from '../../decorators/withStyles';
+import withStyles from '../../../decorators/withStyles';
 import connectToStores from 'alt/utils/connectToStores';
-import Link from '../Link';
+import Link from '../../Link';
 import NavigationUser from './NavigationUser';
 
 @withStyles(styles)

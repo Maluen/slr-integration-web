@@ -2,9 +2,9 @@
 
 import React, { PropTypes, Component } from 'react';
 import styles from './Footer.scss';
-import withViewport from '../../decorators/withViewport';
-import withStyles from '../../decorators/withStyles';
-import Link from '../Link';
+import withViewport from '../../../decorators/withViewport';
+import withStyles from '../../../decorators/withStyles';
+import Link from '../../Link';
 
 @withViewport
 @withStyles(styles)

@@ -2,7 +2,7 @@
 
 import React, { PropTypes, Component } from 'react';
 import styles from './ContactPage.scss';
-import withStyles from '../../decorators/withStyles';
+import withStyles from '../../../decorators/withStyles';
 
 @withStyles(styles)
 class ContactPage extends Component {

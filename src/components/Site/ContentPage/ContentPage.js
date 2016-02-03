@@ -2,7 +2,7 @@
 
 import React, { PropTypes, Component } from 'react';
 import styles from './ContentPage.scss';
-import withStyles from '../../decorators/withStyles';
+import withStyles from '../../../decorators/withStyles';
 
 @withStyles(styles)
 class ContentPage extends Component {

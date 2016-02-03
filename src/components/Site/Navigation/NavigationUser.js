@@ -1,7 +1,7 @@
 /*! React Starter Kit | MIT License | http://www.reactstarterkit.com/ */
 
 import React, { PropTypes, Component } from 'react';
-import Link from '../Link';
+import Link from '../../Link';
 
 class NavigationUser extends Component {
 
