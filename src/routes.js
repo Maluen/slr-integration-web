@@ -18,6 +18,9 @@ import ProjectCreationPage from './components/Project/ProjectCreationPage';
 import ProjectUpdationPage from './components/Project/ProjectUpdationPage';
 import ProjectAccessesPage from './components/Project/ProjectAccessesPage';
 import ProjectAccessCreationPage from './components/Project/ProjectAccessCreationPage';
+import SearchesPage from './components/Search/SearchesPage';
+import SearchCreationPage from './components/Search/SearchCreationPage';
+import SearchUpdationPage from './components/Search/SearchUpdationPage';
 import NotFoundPage from './components/Site/NotFoundPage';
 import ErrorPage from './components/Site/ErrorPage';
 import NullComponent from './components/NullComponent';
@@ -104,6 +107,18 @@ const router = new Router(on => {
 
   on('/createProjectAccess/:projectId', authenticated, async (state) => {
     return <ProjectAccessCreationPage projectId={state.params.projectId} />;
+  });
+
+  on('/searches/:projectId', authenticated, async (state) => {
+    return <SearchesPage projectId={state.params.projectId} />;
+  });
+
+  on('/createSearch/:projectId', authenticated, async (state) => {
+    return <SearchCreationPage projectId={state.params.projectId} />;
+  });
+
+  on('/updateSearch/:projectId/:id', authenticated, async (state) => {
+    return <SearchUpdationPage projectId={state.params.projectId} id={state.params.id} />;
   });
 
   on('*', async (state) => {

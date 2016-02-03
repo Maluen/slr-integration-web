@@ -70,4 +70,16 @@ export default {
     return await http.post('/api/deleteProjectAccess', { id });
   },
 
+  saveSearch: async (projectId, id, name) => {
+    return await http.post('/api/saveSearch', { projectId, id, name });
+  },
+
+  deleteSearch: async (id) => {
+    return await http.post('/api/deleteSearch', { id });
+  },
+
+  readSearches: async (projectId, filterObj) => {
+    return await http.get('/api/readSearches', { projectId, filterObj: JSON.stringify(filterObj) });
+  },
+
 };

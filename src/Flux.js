@@ -1,8 +1,10 @@
 import Alt from 'alt';
 import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
 import Location from './core/Location';
+
 import AccountActions from './actions/AccountActions';
 import AccountStore from './stores/AccountStore';
+
 import MachineCreationActions from './actions/MachineCreationActions';
 import MachineCreationStore from './stores/MachineCreationStore';
 import MachineUpdationActions from './actions/MachineUpdationActions';
@@ -13,6 +15,7 @@ import MachineAccessesActions from './actions/MachineAccessesActions';
 import MachineAccessesStore from './stores/MachineAccessesStore';
 import MachineAccessCreationActions from './actions/MachineAccessCreationActions';
 import MachineAccessCreationStore from './stores/MachineAccessCreationStore';
+
 import ProjectCreationActions from './actions/ProjectCreationActions';
 import ProjectCreationStore from './stores/ProjectCreationStore';
 import ProjectUpdationActions from './actions/ProjectUpdationActions';
@@ -23,6 +26,13 @@ import ProjectAccessesActions from './actions/ProjectAccessesActions';
 import ProjectAccessesStore from './stores/ProjectAccessesStore';
 import ProjectAccessCreationActions from './actions/ProjectAccessCreationActions';
 import ProjectAccessCreationStore from './stores/ProjectAccessCreationStore';
+
+import SearchCreationActions from './actions/Search/SearchCreationActions';
+import SearchCreationStore from './stores/Search/SearchCreationStore';
+import SearchUpdationActions from './actions/Search/SearchUpdationActions';
+import SearchUpdationStore from './stores/Search/SearchUpdationStore';
+import SearchesActions from './actions/Search/SearchesActions';
+import SearchesStore from './stores/Search/SearchesStore';
 
 class Flux extends Alt {
 
@@ -68,6 +78,15 @@ class Flux extends Alt {
 
     this.addActions('projectAccessCreationActions', ProjectAccessCreationActions);
     this.addStore('projectAccessCreationStore', ProjectAccessCreationStore);
+
+    this.addActions('searchCreationActions', SearchCreationActions);
+    this.addStore('searchCreationStore', SearchCreationStore);
+
+    this.addActions('searchUpdationActions', SearchUpdationActions);
+    this.addStore('searchUpdationStore', SearchUpdationStore);
+
+    this.addActions('searchesActions', SearchesActions);
+    this.addStore('searchesStore', SearchesStore);
   }
 
   promise(fn) {

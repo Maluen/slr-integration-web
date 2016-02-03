@@ -39,7 +39,7 @@ export default class MachineUpdationStore {
   }
 
   onDeleteMachineAccess(machineAccess) {
-    // update the machine in the array accordingly
+    // update the machine access in the array accordingly
     const machineAccesses = this.state.machineAccesses;
     const machineAccessIndex = machineAccesses.findIndex(aMachineAccess => aMachineAccess.id === machineAccess.id);
     if (machineAccessIndex === -1) return;

@@ -15,6 +15,9 @@ import saveProjectAccessService from './services/saveProjectAccess';
 import readProjectsService from './services/readProjects';
 import readProjectAccessesService from './services/readProjectAccesses';
 import deleteProjectAccessService from './services/deleteProjectAccess';
+import saveSearchService from './services/saveSearch';
+import deleteSearchService from './services/deleteSearch';
+import readSearchesService from './services/readSearches';
 
 export default {
 
@@ -85,5 +88,18 @@ export default {
   deleteProjectAccess: async (id, req) => {
     return await deleteProjectAccessService(id, req);
   },
+
+  saveSearch: async (projectId, id, name, req) => {
+    return await saveSearchService(projectId, id, name, req);
+  },
+
+  deleteSearch: async (id, req) => {
+    return await deleteSearchService(id, req);
+  },
+
+  readSearches: async (projectId, filterObj, req) => {
+    return await readSearchesService(projectId, filterObj, req);
+  },
+
 
 };
