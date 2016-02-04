@@ -1,8 +1,9 @@
 import Search from '../models/Search';
 import currentUserService from './currentUser';
 import ProjectAccess from '../models/ProjectAccess';
+import searchSettings from '../../constants/searchSettings';
 
-export default function saveSearch(projectId, id = null, name, req) {
+export default function saveSearch(projectId, id = null, name, settings, req) {
   return Promise.resolve().then(async () => {
     // TODO: validation
 
@@ -23,6 +24,31 @@ export default function saveSearch(projectId, id = null, name, req) {
 
     if (!name || name === 'undefined') {
       throw new Error(`The 'name' query parameter cannot be empty.`);
+    }
+
+    const validSettingNames = Object.keys(searchSettings);
+    const cleanSettings = [];
+
+    for (const setting of settings) {
+      if (typeof setting !== 'object' || setting === null) {
+        throw new Error(`Each setting must be an object.`);
+      }
+
+      const settingName = setting.name;
+      if (typeof settingName !== 'string') {
+        throw new Error(`Each setting must have a name as a String.`);
+      }
+
+      const settingValue = setting.value;
+      if (typeof settingValue !== 'string') {
+        throw new Error(`Each setting must have a value as a String.`);
+      }
+
+      if (validSettingNames.indexOf(settingName) === -1) {
+        throw new Error(`'${settingName}' is not a valid setting name.`);
+      }
+
+      cleanSettings.push({ name: settingName, value: settingValue });
     }
 
     try {
@@ -55,9 +81,10 @@ export default function saveSearch(projectId, id = null, name, req) {
       }
 
       search.name = name;
+      search.settings = cleanSettings;
     } else {
       // create
-      search = new Search({ project: projectId, name });
+      search = new Search({ project: projectId, name, settings: cleanSettings });
     }
 
     try {

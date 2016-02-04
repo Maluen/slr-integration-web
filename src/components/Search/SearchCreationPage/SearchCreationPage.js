@@ -5,6 +5,11 @@ import styles from './SearchCreationPage.scss';
 import withStyles from '../../../decorators/withStyles';
 import connectToStores from 'alt/utils/connectToStores';
 import SearchForm from '../SearchForm.js';
+import searchSettings from '../../../constants/searchSettings';
+
+const defaultSettings = Object.keys(searchSettings).map((settingName) => {
+  return { name: settingName, value: searchSettings[settingName].defaultValue };
+});
 
 @withStyles(styles)
 @connectToStores
@@ -13,6 +18,7 @@ class SearchCreationPage extends Component {
   static propTypes = {
     projectId: PropTypes.string.isRequired,
     name: PropTypes.string,
+    settings: PropTypes.array,
     errorMessage: PropTypes.string,
   };
 
@@ -23,6 +29,7 @@ class SearchCreationPage extends Component {
 
   static defaultProps = {
     name: '',
+    settings: [ ...defaultSettings ],
     errorMessage: '',
   };
 
@@ -48,9 +55,29 @@ class SearchCreationPage extends Component {
     this.searchCreationActions.updateName(name);
   }
 
+  handleSettingsChange(event) {
+    const name = event.currentTarget.name.trim();
+    const value = event.currentTarget.value.trim();
+
+    let found = false;
+    const settings = this.props.settings.map(setting => {
+      const result = { ...setting };
+      if (setting.name === name) {
+        result.value = value;
+        found = true;
+      }
+      return result;
+    });
+    if (!found) {
+      settings.push({ name, value });
+    }
+
+    this.searchCreationActions.updateSettings(settings);
+  }
+
   handleSubmit(event) {
     event.preventDefault();
-    this.searchCreationActions.create(this.props.projectId, this.props.name);
+    this.searchCreationActions.create(this.props.projectId, this.props.name, this.props.settings);
   }
 
   render() {
@@ -63,8 +90,10 @@ class SearchCreationPage extends Component {
           <div>{this.props.errorMessage}</div>
           <SearchForm
             name={this.props.name}
+            settings={this.props.settings}
             onSubmit={this.handleSubmit.bind(this)}
             onNameChange={this.handleNameChange.bind(this)}
+            onSettingsChange={this.handleSettingsChange.bind(this)}
           />
         </div>
       </div>

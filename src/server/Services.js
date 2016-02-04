@@ -89,8 +89,8 @@ export default {
     return await deleteProjectAccessService(id, req);
   },
 
-  saveSearch: async (projectId, id, name, req) => {
-    return await saveSearchService(projectId, id, name, req);
+  saveSearch: async (projectId, id, name, settings, req) => {
+    return await saveSearchService(projectId, id, name, settings, req);
   },
 
   deleteSearch: async (id, req) => {

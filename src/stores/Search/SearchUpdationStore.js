@@ -1,3 +1,9 @@
+import searchSettings from '../../constants/searchSettings';
+
+const defaultSettings = Object.keys(searchSettings).map((settingName) => {
+  return { name: settingName, value: searchSettings[settingName].defaultValue };
+});
+
 export default class SearchUpdationStore {
   constructor() {
     const searchUpdationActions = this.alt.getActions('searchUpdationActions');
@@ -6,6 +12,7 @@ export default class SearchUpdationStore {
     this.bindAction(searchUpdationActions.fetchBefore, this.onFetchBefore);
     this.bindAction(searchUpdationActions.fetch, this.onFetch);
     this.bindAction(searchUpdationActions.updateName, this.onUpdateName);
+    this.bindAction(searchUpdationActions.updateSettings, this.onUpdateSettings);
     this.bindAction(searchUpdationActions.updateError, this.onUpdateError);
     this.bindAction(searchUpdationActions.updateSuccess, this.onUpdateSuccess);
 
@@ -18,6 +25,7 @@ export default class SearchUpdationStore {
       isFetched: false,
       'id': '',
       'name': '',
+      'settings': [ ...defaultSettings ],
       'errorMessage': '',
     };
   }
@@ -44,6 +52,10 @@ export default class SearchUpdationStore {
 
   onUpdateName(name) {
     this.setState({ name });
+  }
+
+  onUpdateSettings(settings) {
+    this.setState({ settings });
   }
 
   onUpdateError(errorMessage) {

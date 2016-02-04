@@ -6,6 +6,10 @@ export default class SearchUpdationActions {
     return '';
   }
 
+  updateSettings(settings) {
+    return settings;
+  }
+
   fetch(projectId, id) {
     return this.alt.promise(async (resolve) => {
       try {
@@ -29,10 +33,10 @@ export default class SearchUpdationActions {
     return name;
   }
 
-  update(projectId, id, name) {
+  update(projectId, id, name, settings) {
     return this.alt.promise(async (resolve) => {
       try {
-        const response = await Globals.services.saveSearch(projectId, id, name, this.alt.req);
+        const response = await Globals.services.saveSearch(projectId, id, name, settings, this.alt.req);
         this.actions.updateSuccess(response.search);
       } catch (err) {
         this.actions.updateError(err);

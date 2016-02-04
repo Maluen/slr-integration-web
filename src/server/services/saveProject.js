@@ -49,10 +49,6 @@ export default function saveProject(id = null, name, settings, req) {
         throw new Error(`'${settingName}' is not a valid setting name.`);
       }
 
-      if (settingValue === '') {
-        throw new Error(`The '${settingName}' setting cannot be empty.`);
-      }
-
       cleanSettings.push({ name: settingName, value: settingValue });
     }
 

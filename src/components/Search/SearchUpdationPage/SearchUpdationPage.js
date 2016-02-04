@@ -5,16 +5,22 @@ import styles from './SearchUpdationPage.scss';
 import withStyles from '../../../decorators/withStyles';
 import connectToStores from 'alt/utils/connectToStores';
 import SearchForm from '../SearchForm.js';
+import searchSettings from '../../../constants/searchSettings';
+
+const defaultSettings = Object.keys(searchSettings).map((settingName) => {
+  return { name: settingName, value: searchSettings[settingName].defaultValue };
+});
 
 @withStyles(styles)
 @connectToStores
-class SearchCreationPage extends Component {
+class SearchUpdationPage extends Component {
 
   static propTypes = {
     isFetched: PropTypes.bool,
     projectId: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     name: PropTypes.string,
+    settings: PropTypes.array,
     errorMessage: PropTypes.string,
   };
 
@@ -26,6 +32,7 @@ class SearchCreationPage extends Component {
   static defaultProps = {
     isFetched: false,
     name: '',
+    settings: [ ...defaultSettings ],
     errorMessage: '',
   };
 
@@ -65,9 +72,29 @@ class SearchCreationPage extends Component {
     this.searchUpdationActions.updateName(name);
   }
 
+  handleSettingsChange(event) {
+    const name = event.currentTarget.name.trim();
+    const value = event.currentTarget.value.trim();
+
+    let found = false;
+    const settings = this.props.settings.map(setting => {
+      const result = { ...setting };
+      if (setting.name === name) {
+        result.value = value;
+        found = true;
+      }
+      return result;
+    });
+    if (!found) {
+      settings.push({ name, value });
+    }
+
+    this.searchUpdationActions.updateSettings(settings);
+  }
+
   handleSubmit(event) {
     event.preventDefault();
-    this.searchUpdationActions.update(this.props.projectId, this.props.id, this.props.name);
+    this.searchUpdationActions.update(this.props.projectId, this.props.id, this.props.name, this.props.settings);
   }
 
   render() {
@@ -82,8 +109,10 @@ class SearchCreationPage extends Component {
               <div>{this.props.errorMessage}</div>
               <SearchForm
                 name={this.props.name}
+                settings={this.props.settings}
                 onSubmit={this.handleSubmit.bind(this)}
                 onNameChange={this.handleNameChange.bind(this)}
+                onSettingsChange={this.handleSettingsChange.bind(this)}
               />
             </div>
           :
@@ -96,4 +125,4 @@ class SearchCreationPage extends Component {
 
 }
 
-export default SearchCreationPage;
+export default SearchUpdationPage;
