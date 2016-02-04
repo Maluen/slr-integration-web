@@ -65,8 +65,8 @@ export default {
     return await deleteMachineAccessService(id, req);
   },
 
-  saveProject: async (id, name, req) => {
-    return await saveProjectService(id, name, req);
+  saveProject: async (id, name, settings, req) => {
+    return await saveProjectService(id, name, settings, req);
   },
 
   deleteProject: async (id, req) => {

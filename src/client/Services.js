@@ -46,8 +46,8 @@ export default {
     return await http.post('/api/deleteMachineAccess', { id });
   },
 
-  saveProject: async (id, name) => {
-    return await http.post('/api/saveProject', { id, name });
+  saveProject: async (id, name, settings) => {
+    return await http.post('/api/saveProject', { id, name, settings });
   },
 
   deleteProject: async (id) => {

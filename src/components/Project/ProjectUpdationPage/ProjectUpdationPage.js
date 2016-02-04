@@ -5,15 +5,21 @@ import styles from './ProjectUpdationPage.scss';
 import withStyles from '../../../decorators/withStyles';
 import connectToStores from 'alt/utils/connectToStores';
 import ProjectForm from '../ProjectForm.js';
+import projectSettings from '../../../constants/projectSettings';
+
+const defaultSettings = Object.keys(projectSettings).map((settingName) => {
+  return { name: settingName, value: projectSettings[settingName].defaultValue };
+});
 
 @withStyles(styles)
 @connectToStores
-class ProjectCreationPage extends Component {
+class ProjectUpdationPage extends Component {
 
   static propTypes = {
     isFetched: PropTypes.bool,
     id: PropTypes.string.isRequired,
     name: PropTypes.string,
+    settings: PropTypes.array,
     errorMessage: PropTypes.string,
   };
 
@@ -25,6 +31,7 @@ class ProjectCreationPage extends Component {
   static defaultProps = {
     isFetched: false,
     name: '',
+    settings: [ ...defaultSettings ],
     errorMessage: '',
   };
 
@@ -63,9 +70,29 @@ class ProjectCreationPage extends Component {
     this.projectUpdationActions.updateName(name);
   }
 
+  handleSettingsChange(event) {
+    const name = event.currentTarget.name.trim();
+    const value = event.currentTarget.value.trim();
+
+    let found = false;
+    const settings = this.props.settings.map(setting => {
+      const result = { ...setting };
+      if (setting.name === name) {
+        result.value = value;
+        found = true;
+      }
+      return result;
+    });
+    if (!found) {
+      settings.push({ name, value });
+    }
+
+    this.projectUpdationActions.updateSettings(settings);
+  }
+
   handleSubmit(event) {
     event.preventDefault();
-    this.projectUpdationActions.update(this.props.id, this.props.name);
+    this.projectUpdationActions.update(this.props.id, this.props.name, this.props.settings);
   }
 
   render() {
@@ -80,8 +107,10 @@ class ProjectCreationPage extends Component {
               <div>{this.props.errorMessage}</div>
               <ProjectForm
                 name={this.props.name}
+                settings={this.props.settings}
                 onSubmit={this.handleSubmit.bind(this)}
                 onNameChange={this.handleNameChange.bind(this)}
+                onSettingsChange={this.handleSettingsChange.bind(this)}
               />
             </div>
           :
@@ -94,4 +123,4 @@ class ProjectCreationPage extends Component {
 
 }
 
-export default ProjectCreationPage;
+export default ProjectUpdationPage;

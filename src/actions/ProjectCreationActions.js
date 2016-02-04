@@ -6,10 +6,14 @@ export default class ProjectCreationActions {
     return name;
   }
 
-  create(name) {
+  updateSettings(settings) {
+    return settings;
+  }
+
+  create(name, settings) {
     return this.alt.promise(async (resolve) => {
       try {
-        const response = await Globals.services.saveProject(null, name, this.alt.req);
+        const response = await Globals.services.saveProject(null, name, settings, this.alt.req);
         this.actions.createSuccess(response.project);
       } catch (err) {
         this.actions.createError(err.message);

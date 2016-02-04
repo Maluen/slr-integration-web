@@ -29,10 +29,14 @@ export default class ProjectUpdationActions {
     return name;
   }
 
-  update(id, name) {
+  updateSettings(settings) {
+    return settings;
+  }
+
+  update(id, name, settings) {
     return this.alt.promise(async (resolve) => {
       try {
-        const response = await Globals.services.saveProject(id, name, this.alt.req);
+        const response = await Globals.services.saveProject(id, name, settings, this.alt.req);
         this.actions.updateSuccess(response.project);
       } catch (err) {
         this.actions.updateError(err);

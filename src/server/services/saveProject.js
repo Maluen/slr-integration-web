@@ -2,8 +2,9 @@ import Project from '../models/Project';
 import ProjectAccess from '../models/ProjectAccess';
 import currentUserService from './currentUser';
 import saveProjectAccessService from './saveProjectAccess';
+import projectSettings from '../../constants/projectSettings';
 
-export default function saveProject(id = null, name, req) {
+export default function saveProject(id = null, name, settings, req) {
   return Promise.resolve().then(async () => {
     // TODO: validation
 
@@ -20,6 +21,39 @@ export default function saveProject(id = null, name, req) {
 
     if (!name || name === 'undefined') {
       throw new Error(`The 'name' query parameter cannot be empty.`);
+    }
+
+    if (Array.isArray(settings) === false) {
+      throw new Error(`The 'settings' query parameter must be an Array.`);
+    }
+
+    const validSettingNames = Object.keys(projectSettings);
+    const cleanSettings = [];
+
+    for (const setting of settings) {
+      if (typeof setting !== 'object' || setting === null) {
+        throw new Error(`Each setting must be an object.`);
+      }
+
+      const settingName = setting.name;
+      if (typeof settingName !== 'string') {
+        throw new Error(`Each setting must have a name as a String.`);
+      }
+
+      const settingValue = setting.value;
+      if (typeof settingValue !== 'string') {
+        throw new Error(`Each setting must have a value as a String.`);
+      }
+
+      if (validSettingNames.indexOf(settingName) === -1) {
+        throw new Error(`'${settingName}' is not a valid setting name.`);
+      }
+
+      if (settingValue === '') {
+        throw new Error(`The '${settingName}' setting cannot be empty.`);
+      }
+
+      cleanSettings.push({ name: settingName, value: settingValue });
     }
 
     let project;
@@ -52,9 +86,10 @@ export default function saveProject(id = null, name, req) {
       }
 
       project.name = name;
+      project.settings = cleanSettings;
     } else {
       // create
-      project = new Project({ name });
+      project = new Project({ name, settings: cleanSettings });
     }
 
     try {

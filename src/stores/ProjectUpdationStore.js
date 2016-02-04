@@ -1,3 +1,9 @@
+import projectSettings from '../constants/projectSettings';
+
+const defaultSettings = Object.keys(projectSettings).map((settingName) => {
+  return { name: settingName, value: projectSettings[settingName].defaultValue };
+});
+
 export default class ProjectUpdationStore {
   constructor() {
     const projectUpdationActions = this.alt.getActions('projectUpdationActions');
@@ -6,6 +12,7 @@ export default class ProjectUpdationStore {
     this.bindAction(projectUpdationActions.fetchBefore, this.onFetchBefore);
     this.bindAction(projectUpdationActions.fetch, this.onFetch);
     this.bindAction(projectUpdationActions.updateName, this.onUpdateName);
+    this.bindAction(projectUpdationActions.updateSettings, this.onUpdateSettings);
     this.bindAction(projectUpdationActions.updateError, this.onUpdateError);
     this.bindAction(projectUpdationActions.updateSuccess, this.onUpdateSuccess);
 
@@ -18,6 +25,7 @@ export default class ProjectUpdationStore {
       isFetched: false,
       'id': '',
       'name': '',
+      'settings': [ ...defaultSettings ],
       'errorMessage': '',
     };
   }
@@ -44,6 +52,10 @@ export default class ProjectUpdationStore {
 
   onUpdateName(name) {
     this.setState({ name });
+  }
+
+  onUpdateSettings(settings) {
+    this.setState({ settings });
   }
 
   onUpdateError(errorMessage) {
