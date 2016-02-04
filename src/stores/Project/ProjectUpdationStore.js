@@ -1,4 +1,4 @@
-import projectSettings from '../constants/projectSettings';
+import projectSettings from '../../constants/projectSettings';
 
 const defaultSettings = Object.keys(projectSettings).map((settingName) => {
   return { name: settingName, value: projectSettings[settingName].defaultValue };

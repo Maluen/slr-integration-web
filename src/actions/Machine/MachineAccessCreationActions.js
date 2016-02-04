@@ -1,6 +1,6 @@
-import Globals from '../core/Globals';
+import Globals from '../../core/Globals';
 
-export default class ProjectAccessCreationActions {
+export default class MachineAccessCreationActions {
 
   updateEmail(email) {
     return email;
@@ -10,7 +10,7 @@ export default class ProjectAccessCreationActions {
     return permission;
   }
 
-  create(projectId, email, permission) {
+  create(machineId, email, permission) {
     return this.alt.promise(async (resolve) => {
       try {
         const readUsersResponse = await Globals.services.readUsers({ email });
@@ -20,8 +20,8 @@ export default class ProjectAccessCreationActions {
         }
         const userId = users[0].id;
 
-        const response = await Globals.services.saveProjectAccess(projectId, userId, permission, this.alt.req);
-        this.actions.createSuccess(response.projectAccess);
+        const response = await Globals.services.saveMachineAccess(machineId, userId, permission, this.alt.req);
+        this.actions.createSuccess(response.machineAccess);
       } catch (err) {
         this.actions.createError(err.message);
       }
@@ -29,10 +29,10 @@ export default class ProjectAccessCreationActions {
     });
   }
 
-  createSuccess(projectAccess) {
+  createSuccess(machineAccess) {
     return (dispatch) => {
-      dispatch(projectAccess);
-      this.alt.redirect(`/projectAccesses/${projectAccess.project}`);
+      dispatch(machineAccess);
+      this.alt.redirect(`/machineAccesses/${machineAccess.machine}`);
     };
   }
 

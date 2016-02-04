@@ -1,4 +1,4 @@
-import Globals from '../core/Globals';
+import Globals from '../../core/Globals';
 
 export default class MachineCreationActions {
 
