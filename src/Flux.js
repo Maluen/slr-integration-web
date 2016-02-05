@@ -15,6 +15,8 @@ import MachineAccessesActions from './actions/Machine/MachineAccessesActions';
 import MachineAccessesStore from './stores/Machine/MachineAccessesStore';
 import MachineAccessCreationActions from './actions/Machine/MachineAccessCreationActions';
 import MachineAccessCreationStore from './stores/Machine/MachineAccessCreationStore';
+import SearchMachinesActions from './actions/Machine/SearchMachinesActions';
+import SearchMachinesStore from './stores/Machine/SearchMachinesStore';
 
 import ProjectCreationActions from './actions/Project/ProjectCreationActions';
 import ProjectCreationStore from './stores/Project/ProjectCreationStore';
@@ -33,6 +35,8 @@ import SearchUpdationActions from './actions/Search/SearchUpdationActions';
 import SearchUpdationStore from './stores/Search/SearchUpdationStore';
 import SearchesActions from './actions/Search/SearchesActions';
 import SearchesStore from './stores/Search/SearchesStore';
+import SearchActions from './actions/Search/SearchActions';
+import SearchStore from './stores/Search/SearchStore';
 
 class Flux extends Alt {
 
@@ -49,6 +53,7 @@ class Flux extends Alt {
     this.addActions('accountActions', AccountActions);
     this.addStore('accountStore', AccountStore);
 
+
     this.addActions('machineCreationActions', MachineCreationActions);
     this.addStore('machineCreationStore', MachineCreationStore);
 
@@ -63,6 +68,10 @@ class Flux extends Alt {
 
     this.addActions('machineAccessCreationActions', MachineAccessCreationActions);
     this.addStore('machineAccessCreationStore', MachineAccessCreationStore);
+
+    this.addActions('searchMachinesActions', SearchMachinesActions);
+    this.addStore('searchMachinesStore', SearchMachinesStore);
+
 
     this.addActions('projectCreationActions', ProjectCreationActions);
     this.addStore('projectCreationStore', ProjectCreationStore);
@@ -79,6 +88,7 @@ class Flux extends Alt {
     this.addActions('projectAccessCreationActions', ProjectAccessCreationActions);
     this.addStore('projectAccessCreationStore', ProjectAccessCreationStore);
 
+
     this.addActions('searchCreationActions', SearchCreationActions);
     this.addStore('searchCreationStore', SearchCreationStore);
 
@@ -87,6 +97,9 @@ class Flux extends Alt {
 
     this.addActions('searchesActions', SearchesActions);
     this.addStore('searchesStore', SearchesStore);
+
+    this.addActions('searchActions', SearchActions);
+    this.addStore('searchStore', SearchStore);
   }
 
   promise(fn) {

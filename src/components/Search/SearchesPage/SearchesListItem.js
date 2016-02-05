@@ -21,7 +21,7 @@ class SearchListItem extends Component {
     return (
       <li key={this.props.id}>
         <span>{this.props.name}</span>&nbsp;
-        <a className="SearchListItem-link" href={`/search/${this.props.id}`} onClick={Link.handleClick}>Open</a>&nbsp;
+        <a className="SearchListItem-link" href={`/search/${this.props.projectId}/${this.props.id}`} onClick={Link.handleClick}>Open</a>&nbsp;
         <a className="SearchListItem-link" href={`/updateSearch/${this.props.projectId}/${this.props.id}`} onClick={Link.handleClick}>Edit</a>&nbsp;
         <a className="SearchListItem-link" href="javascript:void(0);" onClick={this.handleDeleteClick.bind(this)}>Remove</a>
       </li>

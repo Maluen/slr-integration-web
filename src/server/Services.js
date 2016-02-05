@@ -3,18 +3,22 @@ import loginService from './services/login';
 import currentUserService from './services/currentUser';
 import logoutService from './services/logout';
 import readUsersService from './services/readUsers';
+
 import saveMachineService from './services/saveMachine';
 import deleteMachineService from './services/deleteMachine';
 import saveMachineAccessService from './services/saveMachineAccess';
 import readMachinesService from './services/readMachines';
 import readMachineAccessesService from './services/readMachineAccesses';
 import deleteMachineAccessService from './services/deleteMachineAccess';
+import readSearchMachinesService from './services/readSearchMachines';
+
 import saveProjectService from './services/saveProject';
 import deleteProjectService from './services/deleteProject';
 import saveProjectAccessService from './services/saveProjectAccess';
 import readProjectsService from './services/readProjects';
 import readProjectAccessesService from './services/readProjectAccesses';
 import deleteProjectAccessService from './services/deleteProjectAccess';
+
 import saveSearchService from './services/saveSearch';
 import deleteSearchService from './services/deleteSearch';
 import readSearchesService from './services/readSearches';
@@ -63,6 +67,10 @@ export default {
 
   deleteMachineAccess: async (id, req) => {
     return await deleteMachineAccessService(id, req);
+  },
+
+  readSearchMachines: async (searchId, req) => {
+    return await readSearchMachinesService(searchId, req);
   },
 
   saveProject: async (id, name, settings, req) => {

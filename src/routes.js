@@ -21,6 +21,7 @@ import ProjectAccessCreationPage from './components/Project/ProjectAccessCreatio
 import SearchesPage from './components/Search/SearchesPage';
 import SearchCreationPage from './components/Search/SearchCreationPage';
 import SearchUpdationPage from './components/Search/SearchUpdationPage';
+import SearchPage from './components/Search/SearchPage';
 import NotFoundPage from './components/Site/NotFoundPage';
 import ErrorPage from './components/Site/ErrorPage';
 import NullComponent from './components/NullComponent';
@@ -120,6 +121,11 @@ const router = new Router(on => {
   on('/updateSearch/:projectId/:id', authenticated, async (state) => {
     return <SearchUpdationPage projectId={state.params.projectId} id={state.params.id} />;
   });
+
+  on('/search/:projectId/:id', authenticated, async (state) => {
+    return <SearchPage projectId={state.params.projectId} id={state.params.id} />;
+  });
+
 
   on('*', async (state) => {
     const content = await http.get(`/api/content?path=${state.path}`);

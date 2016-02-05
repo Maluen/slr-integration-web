@@ -46,6 +46,10 @@ export default {
     return await http.post('/api/deleteMachineAccess', { id });
   },
 
+  readSearchMachines: async (searchId) => {
+    return await http.get('/api/readSearchMachines', { searchId });
+  },
+
   saveProject: async (id, name, settings) => {
     return await http.post('/api/saveProject', { id, name, settings });
   },

@@ -14,6 +14,7 @@ router.use(require('./saveMachineAccess'));
 router.use(require('./readMachines'));
 router.use(require('./readMachineAccesses'));
 router.use(require('./deleteMachineAccess'));
+router.use(require('./readSearchMachines'));
 router.use(require('./saveProject'));
 router.use(require('./deleteProject'));
 router.use(require('./saveProjectAccess'));
