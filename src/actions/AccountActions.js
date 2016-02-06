@@ -3,7 +3,7 @@ import Globals from '../core/Globals';
 export default class AccountActions {
 
   fetch() {
-    return this.alt.promise(async (resolve) => {
+    return this.alt.defer(async (resolve) => {
       try {
         const response = await Globals.services.currentUser(this.alt.req);
         this.actions.fetchSuccess(response.user);

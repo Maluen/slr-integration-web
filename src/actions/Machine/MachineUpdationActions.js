@@ -7,7 +7,7 @@ export default class MachineUpdationActions {
   }
 
   fetch(id) {
-    return this.alt.promise(async (resolve) => {
+    return this.alt.defer(async (resolve) => {
       try {
         //this.actions.fetchBefore();
         const response = await Globals.services.readMachines({ id }, this.alt.req);

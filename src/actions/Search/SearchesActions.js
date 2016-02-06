@@ -7,7 +7,7 @@ export default class SearchesActions {
   }
 
   fetch(projectId) {
-    return this.alt.promise(async (resolve) => {
+    return this.alt.defer(async (resolve) => {
       try {
         //this.actions.fetchBefore();
         const response = await Globals.services.readSearches(projectId, null, this.alt.req);
