@@ -14,7 +14,8 @@ export default class MachineUpdationStore {
 
     this.bindAction(machineAccessesActions.reset, this.onReset);
     this.bindAction(machineAccessesActions.fetchBefore, this.onFetchBefore);
-    this.bindAction(machineAccessesActions.fetch, this.onFetch);
+    this.bindAction(machineAccessesActions.fetchSuccess, this.onFetchSuccess);
+    this.bindAction(machineAccessesActions.fetchError, this.onFetchError);
     this.bindAction(machineAccessesActions.deleteMachineAccess, this.onDeleteMachineAccess);
     this.state = this.getInitialState();
   }
@@ -23,6 +24,7 @@ export default class MachineUpdationStore {
     return {
       isFetching: false,
       isFetched: false,
+      fetchErrorMessage: '',
       machine: null,
       machineAccesses: [],
     };
@@ -49,15 +51,24 @@ export default class MachineUpdationStore {
     this.setState({
       isFetching: true,
       isFetched: false,
+      fetchErrorMessage: '',
     });
   }
 
-  onFetch({ machine, machineAccesses }) {
+  onFetchSuccess({ machine, machineAccesses }) {
     this.setState({
       isFetching: false,
       isFetched: true,
       machine,
       machineAccesses,
+    });
+  }
+
+  onFetchError(errorMessage) {
+    this.setState({
+      isFetching: false,
+      isFetched: true,
+      fetchErrorMessage: errorMessage,
     });
   }
 

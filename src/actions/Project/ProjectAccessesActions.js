@@ -12,10 +12,9 @@ export default class ProjectAccessesActions {
         //this.actions.fetchBefore();
         const response = await Globals.services.readProjectAccesses(projectId, this.alt.req);
         const { project, projectAccesses } = response;
-        this.dispatch({ project, projectAccesses });
+        this.actions.fetchSuccess({ project, projectAccesses });
       } catch (err) {
-        // no-op
-        console.log('fetch error', err.message);
+        this.actions.fetchError(err.message);
       }
       resolve();
     });
@@ -23,6 +22,15 @@ export default class ProjectAccessesActions {
 
   fetchBefore() {
     return '';
+  }
+
+  fetchError(errorMessage) {
+    console.log('fetch error', errorMessage);
+    return errorMessage;
+  }
+
+  fetchSuccess(result) {
+    return result;
   }
 
   deleteProjectAccess(id) {

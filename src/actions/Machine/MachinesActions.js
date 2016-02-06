@@ -7,10 +7,9 @@ export default class MachinesActions {
       try {
         //this.actions.fetchBefore();
         const response = await Globals.services.readMachines(null, this.alt.req);
-        this.dispatch(response.machines);
+        this.actions.fetchSuccess(response.machines);
       } catch (err) {
-        // no-op
-        console.log('fetch error', err.message);
+        this.actions.fetchError(err.message);
       }
       resolve();
     });
@@ -18,6 +17,15 @@ export default class MachinesActions {
 
   fetchBefore() {
     return '';
+  }
+
+  fetchError(errorMessage) {
+    console.log('fetch error', errorMessage);
+    return errorMessage;
+  }
+
+  fetchSuccess(machines) {
+    return machines;
   }
 
   deleteMachine(id) {

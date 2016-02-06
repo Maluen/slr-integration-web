@@ -16,10 +16,9 @@ export default class SearchUpdationActions {
         //this.actions.fetchBefore();
         const response = await Globals.services.readSearches(projectId, { id }, this.alt.req);
         const search = response.searches ? response.searches[0] : null;
-        this.dispatch(search);
+        this.actions.fetchSuccess(search);
       } catch (err) {
-        // no-op
-        console.log('fetch error', err);
+        this.actions.fetchError(err.message);
       }
       resolve();
     });
@@ -27,6 +26,15 @@ export default class SearchUpdationActions {
 
   fetchBefore() {
     return '';
+  }
+
+  fetchError(errorMessage) {
+    console.log('fetch error', errorMessage);
+    return errorMessage;
+  }
+
+  fetchSuccess(search) {
+    return search;
   }
 
   updateName(name) {

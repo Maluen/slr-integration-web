@@ -11,10 +11,9 @@ export default class SearchMachinesActions {
       try {
         //this.actions.fetchBefore();
         const response = await Globals.services.readSearchMachines(searchId, this.alt.req);
-        this.dispatch(response.machines);
+        this.actions.fetchSuccess(response.machines);
       } catch (err) {
-        // no-op
-        console.log('fetch error', err);
+        this.actions.fetchError(err.message);
       }
       resolve();
     });
@@ -22,6 +21,15 @@ export default class SearchMachinesActions {
 
   fetchBefore() {
     return '';
+  }
+
+  fetchError(errorMessage) {
+    console.log('fetch error', errorMessage);
+    return errorMessage;
+  }
+
+  fetchSuccess(machines) {
+    return machines;
   }
 
 }

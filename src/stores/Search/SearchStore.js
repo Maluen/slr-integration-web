@@ -20,7 +20,8 @@ export default class SearchUpdationStore {
 
     this.bindAction(searchActions.reset, this.onReset);
     this.bindAction(searchActions.fetchBefore, this.onFetchBefore);
-    this.bindAction(searchActions.fetch, this.onFetch);
+    this.bindAction(searchActions.fetchSuccess, this.onFetchSuccess);
+    this.bindAction(searchActions.fetchError, this.onFetchError);
     this.bindAction(searchActions.selectMachine, this.onSelectMachine);
 
     this.state = this.getInitialState();
@@ -30,6 +31,7 @@ export default class SearchUpdationStore {
     return {
       isFetching: false,
       isFetched: false,
+      fetchErrorMessage: '',
       'id': '',
       'name': '',
       'settings': [ ...defaultSettings ],
@@ -59,16 +61,25 @@ export default class SearchUpdationStore {
     this.setState({
       isFetching: true,
       isFetched: false,
+      fetchErrorMessage: '',
     });
   }
 
-  onFetch(search) {
+  onFetchSuccess(search) {
     this.setState({
       isFetching: false,
       isFetched: true,
       ...search,
       errorMessage: '',
       machineId: null,
+    });
+  }
+
+  onFetchError(errorMessage) {
+    this.setState({
+      isFetching: false,
+      isFetched: true,
+      fetchErrorMessage: errorMessage,
     });
   }
 

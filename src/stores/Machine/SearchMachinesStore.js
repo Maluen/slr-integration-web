@@ -14,7 +14,8 @@ export default class searchMachinesStore {
 
     this.bindAction(searchMachinesActions.reset, this.onReset);
     this.bindAction(searchMachinesActions.fetchBefore, this.onFetchBefore);
-    this.bindAction(searchMachinesActions.fetch, this.onFetch);
+    this.bindAction(searchMachinesActions.fetchSuccess, this.onFetchSuccess);
+    this.bindAction(searchMachinesActions.fetchError, this.onFetchError);
 
     this.state = this.getInitialState();
   }
@@ -23,6 +24,7 @@ export default class searchMachinesStore {
     return {
       isFetching: false,
       isFetched: false,
+      fetchErrorMessage: '',
       machines: [],
     };
   }
@@ -48,14 +50,23 @@ export default class searchMachinesStore {
     this.setState({
       isFetching: true,
       isFetched: false,
+      fetchErrorMessage: '',
     });
   }
 
-  onFetch(machines = []) {
+  onFetchSuccess(machines = []) {
     this.setState({
       isFetching: false,
       isFetched: true,
       machines,
+    });
+  }
+
+  onFetchError(errorMessage) {
+    this.setState({
+      isFetching: false,
+      isFetched: true,
+      fetchErrorMessage: errorMessage,
     });
   }
 

@@ -6,13 +6,21 @@ export default class AccountActions {
     return this.alt.promise(async (resolve) => {
       try {
         const response = await Globals.services.currentUser(this.alt.req);
-        this.dispatch(response.user);
+        this.actions.fetchSuccess(response.user);
       } catch (err) {
-        // no-op
-        console.log('fetch error', err.message);
+        this.actions.fetchError(err.message);
       }
       resolve();
     });
+  }
+
+  fetchError(errorMessage) {
+    console.log('fetch error', errorMessage);
+    return errorMessage;
+  }
+
+  fetchSuccess(user) {
+    return user;
   }
 
   updateEmail(email) {

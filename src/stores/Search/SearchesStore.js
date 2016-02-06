@@ -17,7 +17,8 @@ export default class SearchesStore {
     this.bindAction(searchesActions.reset, this.onReset);
 
     this.bindAction(searchesActions.fetchBefore, this.onFetchBefore);
-    this.bindAction(searchesActions.fetch, this.onFetch);
+    this.bindAction(searchesActions.fetchSuccess, this.onFetchSuccess);
+    this.bindAction(searchesActions.fetchError, this.onFetchError);
     this.bindAction(searchesActions.deleteSearch, this.onDeleteSearch);
 
     this.bindAction(searchCreationActions.createSuccess, this.onSearchCreationSuccess);
@@ -30,6 +31,7 @@ export default class SearchesStore {
     return {
       isFetching: false,
       isFetched: false,
+      fetchErrorMessage: '',
       searches: [],
     };
   }
@@ -55,14 +57,23 @@ export default class SearchesStore {
     this.setState({
       isFetching: true,
       isFetched: false,
+      fetchErrorMessage: '',
     });
   }
 
-  onFetch(searches = []) {
+  onFetchSuccess(searches = []) {
     this.setState({
       isFetching: false,
       isFetched: true,
       searches,
+    });
+  }
+
+  onFetchError(errorMessage) {
+    this.setState({
+      isFetching: false,
+      isFetched: true,
+      fetchErrorMessage: errorMessage,
     });
   }
 

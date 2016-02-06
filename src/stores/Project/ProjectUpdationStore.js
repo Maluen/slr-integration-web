@@ -20,7 +20,8 @@ export default class ProjectUpdationStore {
 
     this.bindAction(projectUpdationActions.reset, this.onReset);
     this.bindAction(projectUpdationActions.fetchBefore, this.onFetchBefore);
-    this.bindAction(projectUpdationActions.fetch, this.onFetch);
+    this.bindAction(projectUpdationActions.fetchSuccess, this.onFetchSuccess);
+    this.bindAction(projectUpdationActions.fetchError, this.onFetchError);
     this.bindAction(projectUpdationActions.updateName, this.onUpdateName);
     this.bindAction(projectUpdationActions.updateSettings, this.onUpdateSettings);
     this.bindAction(projectUpdationActions.updateError, this.onUpdateError);
@@ -33,6 +34,7 @@ export default class ProjectUpdationStore {
     return {
       isFetching: false,
       isFetched: false,
+      fetchErrorMessage: '',
       'id': '',
       'name': '',
       'settings': [ ...defaultSettings ],
@@ -61,15 +63,24 @@ export default class ProjectUpdationStore {
     this.setState({
       isFetching: true,
       isFetched: false,
+      fetchErrorMessage: '',
     });
   }
 
-  onFetch(project) {
+  onFetchSuccess(project) {
     this.setState({
       isFetching: false,
       isFetched: true,
       ...project,
       errorMessage: '',
+    });
+  }
+
+  onFetchError(errorMessage) {
+    this.setState({
+      isFetching: false,
+      isFetched: true,
+      fetchErrorMessage: errorMessage,
     });
   }
 

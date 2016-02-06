@@ -14,7 +14,8 @@ export default class ProjectUpdationStore {
 
     this.bindAction(projectAccessesActions.reset, this.onReset);
     this.bindAction(projectAccessesActions.fetchBefore, this.onFetchBefore);
-    this.bindAction(projectAccessesActions.fetch, this.onFetch);
+    this.bindAction(projectAccessesActions.fetchSuccess, this.onFetchSuccess);
+    this.bindAction(projectAccessesActions.fetchError, this.onFetchError);
     this.bindAction(projectAccessesActions.deleteProjectAccess, this.onDeleteProjectAccess);
     this.state = this.getInitialState();
   }
@@ -23,6 +24,7 @@ export default class ProjectUpdationStore {
     return {
       isFetching: false,
       isFetched: false,
+      fetchErrorMessage: '',
       project: null,
       projectAccesses: [],
     };
@@ -49,15 +51,24 @@ export default class ProjectUpdationStore {
     this.setState({
       isFetching: true,
       isFetched: false,
+      fetchErrorMessage: '',
     });
   }
 
-  onFetch({ project, projectAccesses }) {
+  onFetchSuccess({ project, projectAccesses }) {
     this.setState({
       isFetching: false,
       isFetched: true,
       project,
       projectAccesses,
+    });
+  }
+
+  onFetchError(errorMessage) {
+    this.setState({
+      isFetching: false,
+      isFetched: true,
+      fetchErrorMessage: errorMessage,
     });
   }
 

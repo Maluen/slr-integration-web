@@ -13,7 +13,8 @@ export default class ProjectsStore {
     const projectUpdationActions = this.alt.getActions('projectUpdationActions');
 
     this.bindAction(projectsActions.fetchBefore, this.onFetchBefore);
-    this.bindAction(projectsActions.fetch, this.onFetch);
+    this.bindAction(projectsActions.fetchSuccess, this.onFetchSuccess);
+    this.bindAction(projectsActions.fetchError, this.onFetchError);
     this.bindAction(projectsActions.deleteProject, this.onDeleteProject);
 
     this.bindAction(projectCreationActions.createSuccess, this.onProjectCreationSuccess);
@@ -26,6 +27,7 @@ export default class ProjectsStore {
     return {
       isFetching: false,
       isFetched: false,
+      fetchErrorMessage: '',
       projects: [],
     };
   }
@@ -43,14 +45,23 @@ export default class ProjectsStore {
     this.setState({
       isFetching: true,
       isFetched: false,
+      fetchErrorMessage: '',
     });
   }
 
-  onFetch(projects = []) {
+  onFetchSuccess(projects = []) {
     this.setState({
       isFetching: false,
       isFetched: true,
       projects,
+    });
+  }
+
+  onFetchError(errorMessage) {
+    this.setState({
+      isFetching: false,
+      isFetched: true,
+      fetchErrorMessage: errorMessage,
     });
   }
 

@@ -11,10 +11,9 @@ export default class SearchesActions {
       try {
         //this.actions.fetchBefore();
         const response = await Globals.services.readSearches(projectId, null, this.alt.req);
-        this.dispatch(response.searches);
+        this.actions.fetchSuccess(response.searches);
       } catch (err) {
-        // no-op
-        console.log('fetch error', err.message);
+        this.actions.fetchError(err.message);
       }
       resolve();
     });
@@ -22,6 +21,15 @@ export default class SearchesActions {
 
   fetchBefore() {
     return '';
+  }
+
+  fetchError(errorMessage) {
+    console.log('fetch error', errorMessage);
+    return errorMessage;
+  }
+
+  fetchSuccess(searches) {
+    return searches;
   }
 
   deleteSearch(id) {

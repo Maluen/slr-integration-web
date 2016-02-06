@@ -12,10 +12,9 @@ export default class MachineAccessesActions {
         //this.actions.fetchBefore();
         const response = await Globals.services.readMachineAccesses(machineId, this.alt.req);
         const { machine, machineAccesses } = response;
-        this.dispatch({ machine, machineAccesses });
+        this.actions.fetchSuccess({ machine, machineAccesses });
       } catch (err) {
-        // no-op
-        console.log('fetch error', err.message);
+        this.actions.fetchError(err.message);
       }
       resolve();
     });
@@ -23,6 +22,15 @@ export default class MachineAccessesActions {
 
   fetchBefore() {
     return '';
+  }
+
+  fetchError(errorMessage) {
+    console.log('fetch error', errorMessage);
+    return errorMessage;
+  }
+
+  fetchSuccess(result) {
+    return result;
   }
 
   deleteMachineAccess(id) {

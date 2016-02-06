@@ -7,10 +7,9 @@ export default class ProjectsActions {
       try {
         //this.actions.fetchBefore();
         const response = await Globals.services.readProjects(null, this.alt.req);
-        this.dispatch(response.projects);
+        this.actions.fetchSuccess(response.projects);
       } catch (err) {
-        // no-op
-        console.log('fetch error', err.message);
+        this.actions.fetchError(err.message);
       }
       resolve();
     });
@@ -18,6 +17,15 @@ export default class ProjectsActions {
 
   fetchBefore() {
     return '';
+  }
+
+  fetchError(errorMessage) {
+    console.log('fetch error', errorMessage);
+    return errorMessage;
+  }
+
+  fetchSuccess(projects) {
+    return projects;
   }
 
   deleteProject(id) {

@@ -12,13 +12,21 @@ export default class MachineUpdationActions {
         //this.actions.fetchBefore();
         const response = await Globals.services.readMachines({ id }, this.alt.req);
         const machine = response.machines ? response.machines[0] : null;
-        this.dispatch(machine);
+        this.actions.fetchSuccess(machine);
       } catch (err) {
-        // no-op
-        console.log('fetch error', err);
+        this.actions.fetchError(err.message);
       }
       resolve();
     });
+  }
+
+  fetchError(errorMessage) {
+    console.log('fetch error', errorMessage);
+    return errorMessage;
+  }
+
+  fetchSuccess(machine) {
+    return machine;
   }
 
   fetchBefore() {

@@ -6,7 +6,8 @@ export default class AccountStore {
 
     const accountActions = this.alt.getActions('accountActions');
 
-    this.bindAction(accountActions.fetch, this.onFetch);
+    this.bindAction(accountActions.fetchSuccess, this.onFetchSuccess);
+    this.bindAction(accountActions.fetchError, this.onFetchError);
     this.bindAction(accountActions.updateEmail, this.onUpdateEmail);
     this.bindAction(accountActions.updatePassword, this.onUpdatePassword);
     this.bindAction(accountActions.registerError, this.onRegisterError);
@@ -32,7 +33,7 @@ export default class AccountStore {
     return this.alt.getActions('accountActions').fetch(...args);
   }
 
-  onFetch(currentUser) {
+  onFetchSuccess(currentUser) {
     if (!currentUser) {
       this.setState(this.getInitialState());
     } else {
@@ -44,6 +45,10 @@ export default class AccountStore {
         isAuthenticated: true,
       });
     }
+  }
+
+  onFetchError(errorMessage) {
+    // no-op
   }
 
   onUpdateEmail(email) {

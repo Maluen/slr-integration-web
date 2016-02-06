@@ -13,7 +13,8 @@ export default class MachinesStore {
     const machineUpdationActions = this.alt.getActions('machineUpdationActions');
 
     this.bindAction(machinesActions.fetchBefore, this.onFetchBefore);
-    this.bindAction(machinesActions.fetch, this.onFetch);
+    this.bindAction(machinesActions.fetchSuccess, this.onFetchSuccess);
+    this.bindAction(machinesActions.fetchError, this.onFetchError);
     this.bindAction(machinesActions.deleteMachine, this.onDeleteMachine);
 
     this.bindAction(machineCreationActions.createSuccess, this.onMachineCreationSuccess);
@@ -26,6 +27,7 @@ export default class MachinesStore {
     return {
       isFetching: false,
       isFetched: false,
+      fetchErrorMessage: '',
       machines: [],
     };
   }
@@ -43,14 +45,23 @@ export default class MachinesStore {
     this.setState({
       isFetching: true,
       isFetched: false,
+      fetchErrorMessage: '',
     });
   }
 
-  onFetch(machines = []) {
+  onFetchSuccess(machines = []) {
     this.setState({
       isFetching: false,
       isFetched: true,
       machines,
+    });
+  }
+
+  onFetchError(errorMessage) {
+    this.setState({
+      isFetching: false,
+      isFetched: true,
+      fetchErrorMessage: errorMessage,
     });
   }
 

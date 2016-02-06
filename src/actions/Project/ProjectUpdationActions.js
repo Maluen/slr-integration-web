@@ -12,10 +12,9 @@ export default class ProjectUpdationActions {
         //this.actions.fetchBefore();
         const response = await Globals.services.readProjects({ id }, this.alt.req);
         const project = response.projects ? response.projects[0] : null;
-        this.dispatch(project);
+        this.actions.fetchSuccess(project);
       } catch (err) {
-        // no-op
-        console.log('fetch error', err);
+        this.actions.fetchError(err.message);
       }
       resolve();
     });
@@ -23,6 +22,15 @@ export default class ProjectUpdationActions {
 
   fetchBefore() {
     return '';
+  }
+
+  fetchError(errorMessage) {
+    console.log('fetch error', errorMessage);
+    return errorMessage;
+  }
+
+  fetchSuccess(project) {
+    return project;
   }
 
   updateName(name) {
