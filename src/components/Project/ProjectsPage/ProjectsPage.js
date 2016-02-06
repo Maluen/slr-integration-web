@@ -52,14 +52,20 @@ class ProjectsPage extends Component {
     return <p><b>Load error</b>: {this.props.fetchErrorMessage}</p>;
   }
 
-  renderFetched(el) {
+  renderFetchSuccess() {
+    return (
+      <ProjectsList projects={this.props.projects} />
+    );
+  }
+
+  renderFetch() {
     if (!this.props.isFetched) {
       return this.renderLoading();
     }
     if (this.props.fetchErrorMessage) {
       return this.renderFetchError();
     }
-    return el;
+    return this.renderFetchSuccess();
   }
 
   render() {
@@ -70,9 +76,7 @@ class ProjectsPage extends Component {
         <div className="ProjectsPage-container">
           <h1>{title}</h1>
           <a className="ProjectsPage-link ProjectsPage-link-createProject" href="/createProject" onClick={Link.handleClick}>Create new</a>
-          {this.renderFetched(
-            <ProjectsList projects={this.props.projects} />
-          )}
+          {this.renderFetch()}
         </div>
       </div>
     );

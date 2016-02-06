@@ -105,14 +105,29 @@ class ProjectUpdationPage extends Component {
     return <p><b>Load error</b>: {this.props.fetchErrorMessage}</p>;
   }
 
-  renderFetched(el) {
+  renderFetchSuccess() {
+    return (
+      <div>
+        <div>{this.props.errorMessage}</div>
+        <ProjectForm
+          name={this.props.name}
+          settings={this.props.settings}
+          onSubmit={this.handleSubmit.bind(this)}
+          onNameChange={this.handleNameChange.bind(this)}
+          onSettingsChange={this.handleSettingsChange.bind(this)}
+        />
+      </div>
+    );
+  }
+
+  renderFetch() {
     if (!this.props.isFetched) {
       return this.renderLoading();
     }
     if (this.props.fetchErrorMessage) {
       return this.renderFetchError();
     }
-    return el;
+    return this.renderFetchSuccess();
   }
 
   render() {
@@ -122,18 +137,7 @@ class ProjectUpdationPage extends Component {
       <div className="ProjectUpdationPage">
         <div className="ProjectUpdationPage-container">
           <h1>{title}</h1>
-          {this.renderFetched(
-            <div>
-              <div>{this.props.errorMessage}</div>
-              <ProjectForm
-                name={this.props.name}
-                settings={this.props.settings}
-                onSubmit={this.handleSubmit.bind(this)}
-                onNameChange={this.handleNameChange.bind(this)}
-                onSettingsChange={this.handleSettingsChange.bind(this)}
-              />
-            </div>
-          )}
+          {this.renderFetch()}
         </div>
       </div>
     );

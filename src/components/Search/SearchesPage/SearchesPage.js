@@ -60,14 +60,20 @@ class SearchesPage extends Component {
     return <p><b>Load error</b>: {this.props.fetchErrorMessage}</p>;
   }
 
-  renderFetched(el) {
+  renderFetchSuccess() {
+    return (
+      <SearchesList projectId={this.props.projectId} searches={this.props.searches} />
+    );
+  }
+
+  renderFetch() {
     if (!this.props.isFetched) {
       return this.renderLoading();
     }
     if (this.props.fetchErrorMessage) {
       return this.renderFetchError();
     }
-    return el;
+    return this.renderFetchSuccess();
   }
 
   render() {
@@ -78,9 +84,7 @@ class SearchesPage extends Component {
         <div className="SearchesPage-container">
           <h1>{title}</h1>
           <a className="SearchesPage-link SearchesPage-link-createSearch" href={`/createSearch/${this.props.projectId}`} onClick={Link.handleClick}>Create new</a>
-          {this.renderFetched(
-            <SearchesList projectId={this.props.projectId} searches={this.props.searches} />
-          )}
+          {this.renderFetch()}
         </div>
       </div>
     );

@@ -55,27 +55,31 @@ class SearchMachinesList extends Component {
     return <p><b>Load error</b>: {this.props.fetchErrorMessage}</p>;
   }
 
-  renderFetched(el) {
+  renderFetchSuccess() {
+    return (
+      <ul>
+        {this.props.machines.map((machine) =>
+          <SearchMachinesListItem key={machine.id} {...machine} />
+        )}
+      </ul>
+    );
+  }
+
+  renderFetch() {
     if (!this.props.isFetched) {
       return this.renderLoading();
     }
     if (this.props.fetchErrorMessage) {
       return this.renderFetchError();
     }
-    return el;
+    return this.renderFetchSuccess();
   }
 
   render() {
     return (
       <div className="SearchMachinesList">
         <div className="SearchMachinesList-container">
-          {this.renderFetched(
-            <ul>
-              {this.props.machines.map((machine) =>
-                <SearchMachinesListItem key={machine.id} {...machine} />
-              )}
-            </ul>
-          )}
+          {this.renderFetch()}
         </div>
       </div>
     );

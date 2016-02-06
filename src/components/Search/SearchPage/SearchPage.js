@@ -61,14 +61,24 @@ class SearchPage extends Component {
     return <p><b>Load error</b>: {this.props.fetchErrorMessage}</p>;
   }
 
-  renderFetched(el) {
+  renderFetchSuccess() {
+    return (
+      <div>
+        <span>Choose the machine:</span>
+        <SearchMachinesList searchId={this.props.id} />
+        <button disabled={this.props.machineId === null}>Start</button>
+      </div>
+    );
+  }
+
+  renderFetch() {
     if (!this.props.isFetched) {
       return this.renderLoading();
     }
     if (this.props.fetchErrorMessage) {
       return this.renderFetchError();
     }
-    return el;
+    return this.renderFetchSuccess();
   }
 
   render() {
@@ -78,13 +88,7 @@ class SearchPage extends Component {
       <div className="SearchPage">
         <div className="SearchPage-container">
           <h1>{title}</h1>
-          {this.renderFetched(
-            <div>
-              <span>Choose the machine:</span>
-              <SearchMachinesList searchId={this.props.id} />
-              <button disabled={this.props.machineId === null}>Start</button>
-            </div>
-          )}
+          {this.renderFetch()}
         </div>
       </div>
     );

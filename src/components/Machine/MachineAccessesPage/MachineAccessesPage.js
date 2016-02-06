@@ -62,14 +62,28 @@ class MachineAccessesPage extends Component {
     return <p><b>Load error</b>: {this.props.fetchErrorMessage}</p>;
   }
 
-  renderFetched(el) {
+  renderFetchSuccess() {
+    return (
+      <div>
+        <h2>Machine {this.props.machine.hostname}:{this.props.machine.port}</h2>
+        <a className="MachineAccessesPage-link MachineAccessesPage-link-createMachineAccess"
+          href={`/createMachineAccess/${this.props.machineId}`}
+          onClick={Link.handleClick}>
+          Add access
+        </a>
+        <MachineAccessesList machineAccesses={this.props.machineAccesses} />
+      </div>
+    );
+  }
+
+  renderFetch() {
     if (!this.props.isFetched) {
       return this.renderLoading();
     }
     if (this.props.fetchErrorMessage) {
       return this.renderFetchError();
     }
-    return el;
+    return this.renderFetchSuccess();
   }
 
   render() {
@@ -79,17 +93,7 @@ class MachineAccessesPage extends Component {
       <div className="MachineAccessesPage">
         <div className="MachineAccessesPage-container">
           <h1>{title}</h1>
-          {this.renderFetched(
-            <div>
-              <h2>Machine {this.props.machine.hostname}:{this.props.machine.port}</h2>
-              <a className="MachineAccessesPage-link MachineAccessesPage-link-createMachineAccess"
-                href={`/createMachineAccess/${this.props.machineId}`}
-                onClick={Link.handleClick}>
-                Add access
-              </a>
-              <MachineAccessesList machineAccesses={this.props.machineAccesses} />
-            </div>
-          )}
+          {this.renderFetch()}
         </div>
       </div>
     );

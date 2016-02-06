@@ -62,14 +62,28 @@ class ProjectAccessesPage extends Component {
     return <p><b>Load error</b>: {this.props.fetchErrorMessage}</p>;
   }
 
-  renderFetched(el) {
+  renderFetchSuccess() {
+    return (
+      <div>
+        <h2>Project {this.props.project.name}</h2>
+        <a className="ProjectAccessesPage-link ProjectAccessesPage-link-createProjectAccess"
+          href={`/createProjectAccess/${this.props.projectId}`}
+          onClick={Link.handleClick}>
+          Add access
+        </a>
+        <ProjectAccessesList projectAccesses={this.props.projectAccesses} />
+      </div>
+    );
+  }
+
+  renderFetch() {
     if (!this.props.isFetched) {
       return this.renderLoading();
     }
     if (this.props.fetchErrorMessage) {
       return this.renderFetchError();
     }
-    return el;
+    return this.renderFetchSuccess();
   }
 
   render() {
@@ -79,17 +93,7 @@ class ProjectAccessesPage extends Component {
       <div className="ProjectAccessesPage">
         <div className="ProjectAccessesPage-container">
           <h1>{title}</h1>
-          {this.renderFetched(
-            <div>
-              <h2>Project {this.props.project.name}</h2>
-              <a className="ProjectAccessesPage-link ProjectAccessesPage-link-createProjectAccess"
-                href={`/createProjectAccess/${this.props.projectId}`}
-                onClick={Link.handleClick}>
-                Add access
-              </a>
-              <ProjectAccessesList projectAccesses={this.props.projectAccesses} />
-            </div>
-          )}
+          {this.renderFetch()}
         </div>
       </div>
     );

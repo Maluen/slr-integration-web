@@ -52,14 +52,20 @@ class MachinesPage extends Component {
     return <p><b>Load error</b>: {this.props.fetchErrorMessage}</p>;
   }
 
-  renderFetched(el) {
+  renderFetchSuccess() {
+    return (
+      <MachinesList machines={this.props.machines} />
+    );
+  }
+
+  renderFetch() {
     if (!this.props.isFetched) {
       return this.renderLoading();
     }
     if (this.props.fetchErrorMessage) {
       return this.renderFetchError();
     }
-    return el;
+    return this.renderFetchSuccess();
   }
 
   render() {
@@ -70,9 +76,7 @@ class MachinesPage extends Component {
         <div className="MachinesPage-container">
           <h1>{title}</h1>
           <a className="MachinesPage-link MachinesPage-link-createMachine" href="/createMachine" onClick={Link.handleClick}>Create new</a>
-          {this.renderFetched(
-            <MachinesList machines={this.props.machines} />
-          )}
+          {this.renderFetch()}
         </div>
       </div>
     );
