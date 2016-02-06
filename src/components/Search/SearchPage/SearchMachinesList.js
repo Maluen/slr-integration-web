@@ -9,6 +9,7 @@ class SearchMachinesList extends Component {
 
   static propTypes = {
     isFetched: PropTypes.bool,
+    fetchErrorMessage: PropTypes.string,
     searchId: PropTypes.string.isRequired,
     machines: PropTypes.array,
   };
@@ -19,6 +20,7 @@ class SearchMachinesList extends Component {
 
   static defaultProps = {
     isFetched: false,
+    fetchErrorMessage: '',
     machines: [],
   };
 
@@ -45,19 +47,35 @@ class SearchMachinesList extends Component {
     };
   }
 
+  renderLoading() {
+    return <p>Loading...</p>;
+  }
+
+  renderFetchError() {
+    return <p><b>Load error</b>: {this.props.fetchErrorMessage}</p>;
+  }
+
+  renderFetched(el) {
+    if (!this.props.isFetched) {
+      return this.renderLoading();
+    }
+    if (this.props.fetchErrorMessage) {
+      return this.renderFetchError();
+    }
+    return el;
+  }
+
   render() {
     return (
       <div className="SearchMachinesList">
         <div className="SearchMachinesList-container">
-          {this.props.isFetched ?
+          {this.renderFetched(
             <ul>
               {this.props.machines.map((machine) =>
                 <SearchMachinesListItem key={machine.id} {...machine} />
               )}
             </ul>
-          :
-            <p>Loading...</p>
-          }
+          )}
         </div>
       </div>
     );

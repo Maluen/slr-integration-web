@@ -13,6 +13,7 @@ class MachinesPage extends Component {
 
   static propTypes = {
     isFetched: PropTypes.bool,
+    fetchErrorMessage: PropTypes.string,
     machines: PropTypes.array,
   };
 
@@ -23,6 +24,7 @@ class MachinesPage extends Component {
 
   static defaultProps = {
     isFetched: false,
+    fetchErrorMessage: '',
     machines: [],
   };
 
@@ -42,6 +44,24 @@ class MachinesPage extends Component {
     return context.flux.getStore('machinesStore').getState();
   }
 
+  renderLoading() {
+    return <p>Loading...</p>;
+  }
+
+  renderFetchError() {
+    return <p><b>Load error</b>: {this.props.fetchErrorMessage}</p>;
+  }
+
+  renderFetched(el) {
+    if (!this.props.isFetched) {
+      return this.renderLoading();
+    }
+    if (this.props.fetchErrorMessage) {
+      return this.renderFetchError();
+    }
+    return el;
+  }
+
   render() {
     const title = 'Machines Manager';
     this.context.onSetTitle(title);
@@ -50,11 +70,9 @@ class MachinesPage extends Component {
         <div className="MachinesPage-container">
           <h1>{title}</h1>
           <a className="MachinesPage-link MachinesPage-link-createMachine" href="/createMachine" onClick={Link.handleClick}>Create new</a>
-          {this.props.isFetched ?
+          {this.renderFetched(
             <MachinesList machines={this.props.machines} />
-          :
-            <p>Loading...</p>
-          }
+          )}
         </div>
       </div>
     );

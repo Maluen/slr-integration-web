@@ -12,6 +12,7 @@ class MachineCreationPage extends Component {
 
   static propTypes = {
     isFetched: PropTypes.bool,
+    fetchErrorMessage: PropTypes.string,
     id: PropTypes.string.isRequired,
     name: PropTypes.string,
     hostname: PropTypes.string,
@@ -26,6 +27,7 @@ class MachineCreationPage extends Component {
 
   static defaultProps = {
     isFetched: false,
+    fetchErrorMessage: '',
     name: '',
     hostname: '',
     port: '',
@@ -82,6 +84,24 @@ class MachineCreationPage extends Component {
     this.machineUpdationActions.update(this.props.id, this.props.name, this.props.hostname, this.props.port);
   }
 
+  renderLoading() {
+    return <p>Loading...</p>;
+  }
+
+  renderFetchError() {
+    return <p><b>Load error</b>: {this.props.fetchErrorMessage}</p>;
+  }
+
+  renderFetched(el) {
+    if (!this.props.isFetched) {
+      return this.renderLoading();
+    }
+    if (this.props.fetchErrorMessage) {
+      return this.renderFetchError();
+    }
+    return el;
+  }
+
   render() {
     const title = 'Update machine';
     this.context.onSetTitle(title);
@@ -89,7 +109,7 @@ class MachineCreationPage extends Component {
       <div className="MachineUpdationPage">
         <div className="MachineUpdationPage-container">
           <h1>{title}</h1>
-          {this.props.isFetched ?
+          {this.renderFetched(
             <div>
               <div>{this.props.errorMessage}</div>
               <MachineForm
@@ -102,9 +122,7 @@ class MachineCreationPage extends Component {
                 onPortChange={this.handlePortChange.bind(this)}
               />
             </div>
-          :
-            <p>Loading...</p>
-          }
+          )}
         </div>
       </div>
     );

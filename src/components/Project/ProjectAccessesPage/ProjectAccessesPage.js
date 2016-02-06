@@ -13,6 +13,7 @@ class ProjectAccessesPage extends Component {
 
   static propTypes = {
     isFetched: PropTypes.bool,
+    fetchErrorMessage: PropTypes.string,
     projectId: PropTypes.string.isRequired,
     project: PropTypes.object,
     projectAccesses: PropTypes.array,
@@ -25,6 +26,7 @@ class ProjectAccessesPage extends Component {
 
   static defaultProps = {
     isFetched: false,
+    fetchErrorMessage: '',
     project: null,
     projectAccesses: [],
   };
@@ -52,6 +54,24 @@ class ProjectAccessesPage extends Component {
     };
   }
 
+  renderLoading() {
+    return <p>Loading...</p>;
+  }
+
+  renderFetchError() {
+    return <p><b>Load error</b>: {this.props.fetchErrorMessage}</p>;
+  }
+
+  renderFetched(el) {
+    if (!this.props.isFetched) {
+      return this.renderLoading();
+    }
+    if (this.props.fetchErrorMessage) {
+      return this.renderFetchError();
+    }
+    return el;
+  }
+
   render() {
     const title = 'Project Users';
     this.context.onSetTitle(title);
@@ -59,7 +79,7 @@ class ProjectAccessesPage extends Component {
       <div className="ProjectAccessesPage">
         <div className="ProjectAccessesPage-container">
           <h1>{title}</h1>
-          {this.props.isFetched ?
+          {this.renderFetched(
             <div>
               <h2>Project {this.props.project.name}</h2>
               <a className="ProjectAccessesPage-link ProjectAccessesPage-link-createProjectAccess"
@@ -69,9 +89,7 @@ class ProjectAccessesPage extends Component {
               </a>
               <ProjectAccessesList projectAccesses={this.props.projectAccesses} />
             </div>
-          :
-            <p>Loading...</p>
-          }
+          )}
         </div>
       </div>
     );

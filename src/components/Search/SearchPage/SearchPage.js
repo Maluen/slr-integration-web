@@ -13,6 +13,7 @@ class SearchPage extends Component {
 
   static propTypes = {
     isFetched: PropTypes.bool,
+    fetchErrorMessage: PropTypes.string,
     projectId: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     machineId: PropTypes.string,
@@ -25,6 +26,7 @@ class SearchPage extends Component {
 
   static defaultProps = {
     isFetched: false,
+    fetchErrorMessage: '',
   };
 
   componentWillMount() {
@@ -51,6 +53,24 @@ class SearchPage extends Component {
     };
   }
 
+  renderLoading() {
+    return <p>Loading...</p>;
+  }
+
+  renderFetchError() {
+    return <p><b>Load error</b>: {this.props.fetchErrorMessage}</p>;
+  }
+
+  renderFetched(el) {
+    if (!this.props.isFetched) {
+      return this.renderLoading();
+    }
+    if (this.props.fetchErrorMessage) {
+      return this.renderFetchError();
+    }
+    return el;
+  }
+
   render() {
     const title = 'Search Manager';
     this.context.onSetTitle(title);
@@ -58,15 +78,13 @@ class SearchPage extends Component {
       <div className="SearchPage">
         <div className="SearchPage-container">
           <h1>{title}</h1>
-          {this.props.isFetched ?
+          {this.renderFetched(
             <div>
               <span>Choose the machine:</span>
               <SearchMachinesList searchId={this.props.id} />
               <button disabled={this.props.machineId === null}>Start</button>
             </div>
-          :
-            <p>Loading...</p>
-          }
+          )}
         </div>
       </div>
     );

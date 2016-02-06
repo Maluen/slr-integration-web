@@ -13,6 +13,7 @@ class ProjectsPage extends Component {
 
   static propTypes = {
     isFetched: PropTypes.bool,
+    fetchErrorMessage: PropTypes.string,
     projects: PropTypes.array,
   };
 
@@ -23,6 +24,7 @@ class ProjectsPage extends Component {
 
   static defaultProps = {
     isFetched: false,
+    fetchErrorMessage: '',
     projects: [],
   };
 
@@ -42,6 +44,24 @@ class ProjectsPage extends Component {
     return context.flux.getStore('projectsStore').getState();
   }
 
+  renderLoading() {
+    return <p>Loading...</p>;
+  }
+
+  renderFetchError() {
+    return <p><b>Load error</b>: {this.props.fetchErrorMessage}</p>;
+  }
+
+  renderFetched(el) {
+    if (!this.props.isFetched) {
+      return this.renderLoading();
+    }
+    if (this.props.fetchErrorMessage) {
+      return this.renderFetchError();
+    }
+    return el;
+  }
+
   render() {
     const title = 'Projects Manager';
     this.context.onSetTitle(title);
@@ -50,11 +70,9 @@ class ProjectsPage extends Component {
         <div className="ProjectsPage-container">
           <h1>{title}</h1>
           <a className="ProjectsPage-link ProjectsPage-link-createProject" href="/createProject" onClick={Link.handleClick}>Create new</a>
-          {this.props.isFetched ?
+          {this.renderFetched(
             <ProjectsList projects={this.props.projects} />
-          :
-            <p>Loading...</p>
-          }
+          )}
         </div>
       </div>
     );

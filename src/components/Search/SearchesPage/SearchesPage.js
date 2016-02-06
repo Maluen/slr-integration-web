@@ -13,6 +13,7 @@ class SearchesPage extends Component {
 
   static propTypes = {
     isFetched: PropTypes.bool,
+    fetchErrorMessage: PropTypes.string,
     projectId: PropTypes.string.isRequired,
     searches: PropTypes.array,
   };
@@ -24,6 +25,7 @@ class SearchesPage extends Component {
 
   static defaultProps = {
     isFetched: false,
+    fetchErrorMessage: '',
     searches: [],
   };
 
@@ -50,6 +52,24 @@ class SearchesPage extends Component {
     };
   }
 
+  renderLoading() {
+    return <p>Loading...</p>;
+  }
+
+  renderFetchError() {
+    return <p><b>Load error</b>: {this.props.fetchErrorMessage}</p>;
+  }
+
+  renderFetched(el) {
+    if (!this.props.isFetched) {
+      return this.renderLoading();
+    }
+    if (this.props.fetchErrorMessage) {
+      return this.renderFetchError();
+    }
+    return el;
+  }
+
   render() {
     const title = 'Searches Manager';
     this.context.onSetTitle(title);
@@ -58,11 +78,9 @@ class SearchesPage extends Component {
         <div className="SearchesPage-container">
           <h1>{title}</h1>
           <a className="SearchesPage-link SearchesPage-link-createSearch" href={`/createSearch/${this.props.projectId}`} onClick={Link.handleClick}>Create new</a>
-          {this.props.isFetched ?
+          {this.renderFetched(
             <SearchesList projectId={this.props.projectId} searches={this.props.searches} />
-          :
-            <p>Loading...</p>
-          }
+          )}
         </div>
       </div>
     );

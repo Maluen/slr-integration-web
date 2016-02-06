@@ -17,6 +17,7 @@ class ProjectUpdationPage extends Component {
 
   static propTypes = {
     isFetched: PropTypes.bool,
+    fetchErrorMessage: PropTypes.string,
     id: PropTypes.string.isRequired,
     name: PropTypes.string,
     settings: PropTypes.array,
@@ -30,6 +31,7 @@ class ProjectUpdationPage extends Component {
 
   static defaultProps = {
     isFetched: false,
+    fetchErrorMessage: '',
     name: '',
     settings: [ ...defaultSettings ],
     errorMessage: '',
@@ -95,6 +97,24 @@ class ProjectUpdationPage extends Component {
     this.projectUpdationActions.update(this.props.id, this.props.name, this.props.settings);
   }
 
+  renderLoading() {
+    return <p>Loading...</p>;
+  }
+
+  renderFetchError() {
+    return <p><b>Load error</b>: {this.props.fetchErrorMessage}</p>;
+  }
+
+  renderFetched(el) {
+    if (!this.props.isFetched) {
+      return this.renderLoading();
+    }
+    if (this.props.fetchErrorMessage) {
+      return this.renderFetchError();
+    }
+    return el;
+  }
+
   render() {
     const title = 'Update project';
     this.context.onSetTitle(title);
@@ -102,7 +122,7 @@ class ProjectUpdationPage extends Component {
       <div className="ProjectUpdationPage">
         <div className="ProjectUpdationPage-container">
           <h1>{title}</h1>
-          {this.props.isFetched ?
+          {this.renderFetched(
             <div>
               <div>{this.props.errorMessage}</div>
               <ProjectForm
@@ -113,9 +133,7 @@ class ProjectUpdationPage extends Component {
                 onSettingsChange={this.handleSettingsChange.bind(this)}
               />
             </div>
-          :
-            <p>Loading...</p>
-          }
+          )}
         </div>
       </div>
     );

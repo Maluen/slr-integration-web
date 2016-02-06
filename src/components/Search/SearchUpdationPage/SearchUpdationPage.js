@@ -17,6 +17,7 @@ class SearchUpdationPage extends Component {
 
   static propTypes = {
     isFetched: PropTypes.bool,
+    fetchErrorMessage: PropTypes.string,
     projectId: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     name: PropTypes.string,
@@ -31,6 +32,7 @@ class SearchUpdationPage extends Component {
 
   static defaultProps = {
     isFetched: false,
+    fetchErrorMessage: '',
     name: '',
     settings: [ ...defaultSettings ],
     errorMessage: '',
@@ -97,6 +99,24 @@ class SearchUpdationPage extends Component {
     this.searchUpdationActions.update(this.props.projectId, this.props.id, this.props.name, this.props.settings);
   }
 
+  renderLoading() {
+    return <p>Loading...</p>;
+  }
+
+  renderFetchError() {
+    return <p><b>Load error</b>: {this.props.fetchErrorMessage}</p>;
+  }
+
+  renderFetched(el) {
+    if (!this.props.isFetched) {
+      return this.renderLoading();
+    }
+    if (this.props.fetchErrorMessage) {
+      return this.renderFetchError();
+    }
+    return el;
+  }
+
   render() {
     const title = 'Update search';
     this.context.onSetTitle(title);
@@ -104,7 +124,7 @@ class SearchUpdationPage extends Component {
       <div className="SearchUpdationPage">
         <div className="SearchUpdationPage-container">
           <h1>{title}</h1>
-          {this.props.isFetched ?
+          {this.renderFetched(
             <div>
               <div>{this.props.errorMessage}</div>
               <SearchForm
@@ -115,9 +135,7 @@ class SearchUpdationPage extends Component {
                 onSettingsChange={this.handleSettingsChange.bind(this)}
               />
             </div>
-          :
-            <p>Loading...</p>
-          }
+          )}
         </div>
       </div>
     );

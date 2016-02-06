@@ -13,6 +13,7 @@ class MachineAccessesPage extends Component {
 
   static propTypes = {
     isFetched: PropTypes.bool,
+    fetchErrorMessage: PropTypes.string,
     machineId: PropTypes.string.isRequired,
     machine: PropTypes.object,
     machineAccesses: PropTypes.array,
@@ -25,6 +26,7 @@ class MachineAccessesPage extends Component {
 
   static defaultProps = {
     isFetched: false,
+    fetchErrorMessage: '',
     machine: null,
     machineAccesses: [],
   };
@@ -52,6 +54,24 @@ class MachineAccessesPage extends Component {
     };
   }
 
+  renderLoading() {
+    return <p>Loading...</p>;
+  }
+
+  renderFetchError() {
+    return <p><b>Load error</b>: {this.props.fetchErrorMessage}</p>;
+  }
+
+  renderFetched(el) {
+    if (!this.props.isFetched) {
+      return this.renderLoading();
+    }
+    if (this.props.fetchErrorMessage) {
+      return this.renderFetchError();
+    }
+    return el;
+  }
+
   render() {
     const title = 'Machine Users';
     this.context.onSetTitle(title);
@@ -59,7 +79,7 @@ class MachineAccessesPage extends Component {
       <div className="MachineAccessesPage">
         <div className="MachineAccessesPage-container">
           <h1>{title}</h1>
-          {this.props.isFetched ?
+          {this.renderFetched(
             <div>
               <h2>Machine {this.props.machine.hostname}:{this.props.machine.port}</h2>
               <a className="MachineAccessesPage-link MachineAccessesPage-link-createMachineAccess"
@@ -69,9 +89,7 @@ class MachineAccessesPage extends Component {
               </a>
               <MachineAccessesList machineAccesses={this.props.machineAccesses} />
             </div>
-          :
-            <p>Loading...</p>
-          }
+          )}
         </div>
       </div>
     );
