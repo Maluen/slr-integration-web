@@ -3,8 +3,10 @@ export default class ProjectsStore {
     this.exportPublicMethods({
       setState: this.setState,
       getInitialState: this.getInitialState,
+      reset: this.reset,
       fetchBefore: this.fetchBefore,
       fetch: this.fetch,
+      onReset: this.onReset,
       onFetchBefore: this.onFetchBefore,
     });
 
@@ -12,6 +14,7 @@ export default class ProjectsStore {
     const projectCreationActions = this.alt.getActions('projectCreationActions');
     const projectUpdationActions = this.alt.getActions('projectUpdationActions');
 
+    this.bindAction(projectsActions.reset, this.onReset);
     this.bindAction(projectsActions.fetchBefore, this.onFetchBefore);
     this.bindAction(projectsActions.fetchSuccess, this.onFetchSuccess);
     this.bindAction(projectsActions.fetchError, this.onFetchError);
@@ -32,6 +35,10 @@ export default class ProjectsStore {
     };
   }
 
+  reset() {
+    this.onReset();
+  }
+
   fetchBefore() {
     this.onFetchBefore();
   }
@@ -39,6 +46,10 @@ export default class ProjectsStore {
   fetch(...args) {
     this.fetchBefore();
     return this.alt.getActions('projectsActions').fetch(...args);
+  }
+
+  onReset() {
+    this.setState(this.getInitialState());
   }
 
   onFetchBefore() {

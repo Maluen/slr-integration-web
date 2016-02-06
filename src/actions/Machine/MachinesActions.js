@@ -2,6 +2,10 @@ import Globals from '../../core/Globals';
 
 export default class MachinesActions {
 
+  reset() {
+    return '';
+  }
+
   fetch() {
     return this.alt.defer(async (resolve) => {
       try {

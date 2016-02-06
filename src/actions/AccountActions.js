@@ -2,9 +2,14 @@ import Globals from '../core/Globals';
 
 export default class AccountActions {
 
+  reset() {
+    return '';
+  }
+
   fetch() {
     return this.alt.defer(async (resolve) => {
       try {
+        //this.actions.fetchBefore();
         const response = await Globals.services.currentUser(this.alt.req);
         this.actions.fetchSuccess(response.user);
       } catch (err) {
@@ -12,6 +17,10 @@ export default class AccountActions {
       }
       resolve();
     });
+  }
+
+  fetchBefore() {
+    return '';
   }
 
   fetchError(errorMessage) {

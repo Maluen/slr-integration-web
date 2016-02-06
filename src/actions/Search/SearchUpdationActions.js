@@ -6,10 +6,6 @@ export default class SearchUpdationActions {
     return '';
   }
 
-  updateSettings(settings) {
-    return settings;
-  }
-
   fetch(projectId, id) {
     return this.alt.defer(async (resolve) => {
       try {
@@ -39,6 +35,10 @@ export default class SearchUpdationActions {
 
   updateName(name) {
     return name;
+  }
+
+  updateSettings(settings) {
+    return settings;
   }
 
   update(projectId, id, name, settings) {

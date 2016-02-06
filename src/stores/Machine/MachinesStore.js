@@ -3,8 +3,10 @@ export default class MachinesStore {
     this.exportPublicMethods({
       setState: this.setState,
       getInitialState: this.getInitialState,
+      reset: this.reset,
       fetchBefore: this.fetchBefore,
       fetch: this.fetch,
+      onReset: this.onReset,
       onFetchBefore: this.onFetchBefore,
     });
 
@@ -12,6 +14,7 @@ export default class MachinesStore {
     const machineCreationActions = this.alt.getActions('machineCreationActions');
     const machineUpdationActions = this.alt.getActions('machineUpdationActions');
 
+    this.bindAction(machinesActions.reset, this.onReset);
     this.bindAction(machinesActions.fetchBefore, this.onFetchBefore);
     this.bindAction(machinesActions.fetchSuccess, this.onFetchSuccess);
     this.bindAction(machinesActions.fetchError, this.onFetchError);
@@ -32,6 +35,10 @@ export default class MachinesStore {
     };
   }
 
+  reset() {
+    this.onReset();
+  }
+
   fetchBefore() {
     this.onFetchBefore();
   }
@@ -39,6 +46,10 @@ export default class MachinesStore {
   fetch(...args) {
     this.fetchBefore();
     return this.alt.getActions('machinesActions').fetch(...args);
+  }
+
+  onReset() {
+    this.setState(this.getInitialState());
   }
 
   onFetchBefore() {

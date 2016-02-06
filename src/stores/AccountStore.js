@@ -1,11 +1,19 @@
 export default class AccountStore {
   constructor() {
     this.exportPublicMethods({
+      setState: this.setState,
+      getInitialState: this.getInitialState,
+      reset: this.reset,
+      fetchBefore: this.fetchBefore,
       fetch: this.fetch,
+      onReset: this.onReset,
+      onFetchBefore: this.onFetchBefore,
     });
 
     const accountActions = this.alt.getActions('accountActions');
 
+    this.bindAction(accountActions.reset, this.onReset);
+    this.bindAction(accountActions.fetchBefore, this.onFetchBefore);
     this.bindAction(accountActions.fetchSuccess, this.onFetchSuccess);
     this.bindAction(accountActions.fetchError, this.onFetchError);
     this.bindAction(accountActions.updateEmail, this.onUpdateEmail);
@@ -21,6 +29,9 @@ export default class AccountStore {
 
   getInitialState() {
     return {
+      isFetching: false,
+      isFetched: false,
+      fetchErrorMessage: '',
       email: '',
       password: '',
       registerErrorMessage: '',
@@ -29,26 +40,57 @@ export default class AccountStore {
     };
   }
 
+  reset() {
+    this.onReset();
+  }
+
+  fetchBefore() {
+    this.onFetchBefore();
+  }
+
   fetch(...args) {
+    this.fetchBefore();
     return this.alt.getActions('accountActions').fetch(...args);
   }
 
+  onReset() {
+    this.setState(this.getInitialState());
+  }
+
+  onFetchBefore() {
+    this.setState({
+      isFetching: true,
+      isFetched: false,
+      fetchErrorMessage: '',
+    });
+  }
+
   onFetchSuccess(currentUser) {
+    let newState;
     if (!currentUser) {
-      this.setState(this.getInitialState());
+      newState = this.getInitialState();
     } else {
-      this.setState({
+      newState = {
         email: currentUser.email,
         password: '',
         registerErrorMessage: '',
         loginErrorMessage: '',
         isAuthenticated: true,
-      });
+      };
     }
+    this.setState({
+      ...newState,
+      isFetching: false,
+      isFetched: true,
+    });
   }
 
   onFetchError(errorMessage) {
-    // no-op
+    this.setState({
+      isFetching: false,
+      isFetched: true,
+      fetchErrorMessage: errorMessage,
+    });
   }
 
   onUpdateEmail(email) {
