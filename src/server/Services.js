@@ -1,27 +1,27 @@
-import registerService from './services/register';
-import loginService from './services/login';
-import currentUserService from './services/currentUser';
-import logoutService from './services/logout';
-import readUsersService from './services/readUsers';
+import registerService from './services/User/register';
+import loginService from './services/User/login';
+import currentUserService from './services/User/currentUser';
+import logoutService from './services/User/logout';
+import readUsersService from './services/User/readUsers';
 
-import saveMachineService from './services/saveMachine';
-import deleteMachineService from './services/deleteMachine';
-import saveMachineAccessService from './services/saveMachineAccess';
-import readMachinesService from './services/readMachines';
-import readMachineAccessesService from './services/readMachineAccesses';
-import deleteMachineAccessService from './services/deleteMachineAccess';
-import readSearchMachinesService from './services/readSearchMachines';
+import saveMachineService from './services/Machine/saveMachine';
+import deleteMachineService from './services/Machine/deleteMachine';
+import saveMachineAccessService from './services/Machine/saveMachineAccess';
+import readMachinesService from './services/Machine/readMachines';
+import readMachineAccessesService from './services/Machine/readMachineAccesses';
+import deleteMachineAccessService from './services/Machine/deleteMachineAccess';
+import readSearchMachinesService from './services/Machine/readSearchMachines';
 
-import saveProjectService from './services/saveProject';
-import deleteProjectService from './services/deleteProject';
-import saveProjectAccessService from './services/saveProjectAccess';
-import readProjectsService from './services/readProjects';
-import readProjectAccessesService from './services/readProjectAccesses';
-import deleteProjectAccessService from './services/deleteProjectAccess';
+import saveProjectService from './services/Project/saveProject';
+import deleteProjectService from './services/Project/deleteProject';
+import saveProjectAccessService from './services/Project/saveProjectAccess';
+import readProjectsService from './services/Project/readProjects';
+import readProjectAccessesService from './services/Project/readProjectAccesses';
+import deleteProjectAccessService from './services/Project/deleteProjectAccess';
 
-import saveSearchService from './services/saveSearch';
-import deleteSearchService from './services/deleteSearch';
-import readSearchesService from './services/readSearches';
+import saveSearchService from './services/Search/saveSearch';
+import deleteSearchService from './services/Search/deleteSearch';
+import readSearchesService from './services/Search/readSearches';
 
 function deferService(target, key, descriptor) {
   const fn = descriptor.value;

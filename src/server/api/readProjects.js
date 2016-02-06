@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import readProjectsService from '../services/readProjects';
+import readProjectsService from '../services/Project/readProjects';
 
 const router = new Router();
 

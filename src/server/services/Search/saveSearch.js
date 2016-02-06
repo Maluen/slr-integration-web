@@ -1,7 +1,7 @@
-import Search from '../models/Search';
-import currentUserService from './currentUser';
-import ProjectAccess from '../models/ProjectAccess';
-import searchSettings from '../../constants/searchSettings';
+import Search from '../../models/Search';
+import currentUserService from '../User/currentUser';
+import ProjectAccess from '../../models/ProjectAccess';
+import searchSettings from '../../../constants/searchSettings';
 
 export default function saveSearch(projectId, id = null, name, settings, req) {
   return Promise.resolve().then(async () => {

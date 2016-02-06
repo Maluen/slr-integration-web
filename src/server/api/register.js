@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import registerService from '../services/register';
+import registerService from '../services/User/register';
 
 const router = new Router();
 

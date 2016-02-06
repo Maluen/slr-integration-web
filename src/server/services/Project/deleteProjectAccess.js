@@ -1,5 +1,5 @@
-import ProjectAccess from '../models/ProjectAccess';
-import currentUserService from './currentUser';
+import ProjectAccess from '../../models/ProjectAccess';
+import currentUserService from '../User/currentUser';
 
 export default function deleteProjectAccess(id, req) {
   return Promise.resolve().then(async () => {

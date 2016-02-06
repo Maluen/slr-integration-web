@@ -1,6 +1,6 @@
-import currentUserService from './currentUser';
-import Search from '../models/Search';
-import ProjectAccess from '../models/ProjectAccess';
+import currentUserService from '../User/currentUser';
+import Search from '../../models/Search';
+import ProjectAccess from '../../models/ProjectAccess';
 import readMachinesService from './readMachines';
 
 export default function readSearchMachines(searchId, req) {

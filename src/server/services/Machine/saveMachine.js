@@ -1,6 +1,6 @@
-import Machine from '../models/Machine';
-import MachineAccess from '../models/MachineAccess';
-import currentUserService from './currentUser';
+import Machine from '../../models/Machine';
+import MachineAccess from '../../models/MachineAccess';
+import currentUserService from '../User/currentUser';
 import saveMachineAccessService from './saveMachineAccess';
 
 export default function saveMachine(id = null, name, hostname, port, req) {

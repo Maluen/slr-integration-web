@@ -1,5 +1,5 @@
-import ProjectAccess from '../models/ProjectAccess';
-import currentUserService from './currentUser';
+import ProjectAccess from '../../models/ProjectAccess';
+import currentUserService from '../User/currentUser';
 import filter from 'lodash.filter';
 
 export default function readProjects(filterObj, req) {

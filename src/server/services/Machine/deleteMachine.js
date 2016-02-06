@@ -1,6 +1,6 @@
-import Machine from '../models/Machine';
-import MachineAccess from '../models/MachineAccess';
-import currentUserService from './currentUser';
+import Machine from '../../models/Machine';
+import MachineAccess from '../../models/MachineAccess';
+import currentUserService from '../User/currentUser';
 
 export default function deleteMachine(id, req) {
   return Promise.resolve().then(async () => {

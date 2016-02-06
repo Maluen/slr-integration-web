@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import deleteProjectService from '../services/deleteProject';
+import deleteProjectService from '../services/Project/deleteProject';
 
 const router = new Router();
 

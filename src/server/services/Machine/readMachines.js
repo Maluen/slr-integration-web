@@ -1,5 +1,5 @@
-import MachineAccess from '../models/MachineAccess';
-import currentUserService from './currentUser';
+import MachineAccess from '../../models/MachineAccess';
+import currentUserService from '../User/currentUser';
 import filter from 'lodash.filter';
 
 export default function readMachines(filterObj, req) {

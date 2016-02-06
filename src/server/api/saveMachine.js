@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import saveMachineService from '../services/saveMachine';
+import saveMachineService from '../services/Machine/saveMachine';
 
 const router = new Router();
 

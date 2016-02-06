@@ -1,8 +1,8 @@
-import Project from '../models/Project';
-import ProjectAccess from '../models/ProjectAccess';
-import currentUserService from './currentUser';
+import Project from '../../models/Project';
+import ProjectAccess from '../../models/ProjectAccess';
+import currentUserService from '../User/currentUser';
 import saveProjectAccessService from './saveProjectAccess';
-import projectSettings from '../../constants/projectSettings';
+import projectSettings from '../../../constants/projectSettings';
 
 export default function saveProject(id = null, name, settings, req) {
   return Promise.resolve().then(async () => {

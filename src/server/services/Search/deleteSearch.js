@@ -1,6 +1,6 @@
-import Search from '../models/Search';
-import ProjectAccess from '../models/ProjectAccess';
-import currentUserService from './currentUser';
+import Search from '../../models/Search';
+import ProjectAccess from '../../models/ProjectAccess';
+import currentUserService from '../User/currentUser';
 
 export default function deleteSearch(id, req) {
   return Promise.resolve().then(async () => {

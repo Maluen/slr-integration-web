@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import saveProjectAccessService from '../services/saveProjectAccess';
+import saveProjectAccessService from '../services/Project/saveProjectAccess';
 
 const router = new Router();
 

@@ -1,6 +1,6 @@
-import MachineAccess from '../models/MachineAccess';
-import Machine from '../models/Machine';
-import currentUserService from './currentUser';
+import MachineAccess from '../../models/MachineAccess';
+import Machine from '../../models/Machine';
+import currentUserService from '../User/currentUser';
 
 export default function readMachineAccesses(machineId, req) {
   return Promise.resolve().then(async () => {

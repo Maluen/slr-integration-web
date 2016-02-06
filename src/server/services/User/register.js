@@ -1,5 +1,5 @@
-import User from '../models/User';
-import serverConfig from '../config';
+import User from '../../models/User';
+import serverConfig from '../../config';
 import loginService from './login';
 
 function userRegister(user, password) {

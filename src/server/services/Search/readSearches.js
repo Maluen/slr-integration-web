@@ -1,6 +1,6 @@
-import Search from '../models/Search';
-import ProjectAccess from '../models/ProjectAccess';
-import currentUserService from './currentUser';
+import Search from '../../models/Search';
+import ProjectAccess from '../../models/ProjectAccess';
+import currentUserService from '../User/currentUser';
 import filter from 'lodash.filter';
 
 export default function readSearches(projectId, filterObj, req) {

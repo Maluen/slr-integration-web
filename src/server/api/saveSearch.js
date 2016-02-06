@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import saveSearchService from '../services/saveSearch';
+import saveSearchService from '../services/Search/saveSearch';
 
 const router = new Router();
 

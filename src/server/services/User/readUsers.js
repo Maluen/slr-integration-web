@@ -1,4 +1,4 @@
-import User from '../models/User';
+import User from '../../models/User';
 
 export default function readUsers(filterObj, req) {
   return Promise.resolve().then(async () => {

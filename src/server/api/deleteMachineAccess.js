@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import deleteMachineAccessService from '../services/deleteMachineAccess';
+import deleteMachineAccessService from '../services/Machine/deleteMachineAccess';
 
 const router = new Router();
 

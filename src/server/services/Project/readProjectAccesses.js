@@ -1,6 +1,6 @@
-import ProjectAccess from '../models/ProjectAccess';
-import Project from '../models/Project';
-import currentUserService from './currentUser';
+import ProjectAccess from '../../models/ProjectAccess';
+import Project from '../../models/Project';
+import currentUserService from '../User/currentUser';
 
 export default function readProjectAccesses(projectId, req) {
   return Promise.resolve().then(async () => {

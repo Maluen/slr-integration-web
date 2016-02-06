@@ -1,5 +1,5 @@
-import MachineAccess from '../models/MachineAccess';
-import currentUserService from './currentUser';
+import MachineAccess from '../../models/MachineAccess';
+import currentUserService from '../User/currentUser';
 
 export default function deleteMachineAccess(id, req) {
   return Promise.resolve().then(async () => {

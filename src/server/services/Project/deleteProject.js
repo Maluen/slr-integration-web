@@ -1,6 +1,6 @@
-import Project from '../models/Project';
-import ProjectAccess from '../models/ProjectAccess';
-import currentUserService from './currentUser';
+import Project from '../../models/Project';
+import ProjectAccess from '../../models/ProjectAccess';
+import currentUserService from '../User/currentUser';
 
 export default function deleteProject(id, req) {
   return Promise.resolve().then(async () => {

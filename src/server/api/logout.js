@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import logoutService from '../services/logout';
+import logoutService from '../services/User/logout';
 
 const router = new Router();
 

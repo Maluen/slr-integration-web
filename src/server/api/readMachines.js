@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import readMachinesService from '../services/readMachines';
+import readMachinesService from '../services/Machine/readMachines';
 
 const router = new Router();
 
