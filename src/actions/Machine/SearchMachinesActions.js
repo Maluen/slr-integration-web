@@ -7,9 +7,9 @@ export default class SearchMachinesActions {
   }
 
   fetch(searchId) {
-    return this.alt.promise(async (resolve) => {
+    return this.alt.defer(async (resolve) => {
       try {
-        this.actions.fetchBefore();
+        //this.actions.fetchBefore();
         const response = await Globals.services.readSearchMachines(searchId, this.alt.req);
         this.dispatch(response.machines);
       } catch (err) {

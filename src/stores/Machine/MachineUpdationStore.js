@@ -1,5 +1,15 @@
 export default class MachineUpdationStore {
   constructor() {
+    this.exportPublicMethods({
+      setState: this.setState,
+      getInitialState: this.getInitialState,
+      reset: this.reset,
+      fetchBefore: this.fetchBefore,
+      fetch: this.fetch,
+      onReset: this.onReset,
+      onFetchBefore: this.onFetchBefore,
+    });
+
     const machineUpdationActions = this.alt.getActions('machineUpdationActions');
 
     this.bindAction(machineUpdationActions.reset, this.onReset);
@@ -24,6 +34,19 @@ export default class MachineUpdationStore {
       'port': '',
       'errorMessage': '',
     };
+  }
+
+  reset() {
+    this.onReset();
+  }
+
+  fetchBefore() {
+    this.onFetchBefore();
+  }
+
+  fetch(...args) {
+    this.fetchBefore();
+    return this.alt.getActions('machineUpdationActions').fetch(...args);
   }
 
   onReset() {

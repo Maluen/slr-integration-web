@@ -1,5 +1,15 @@
 export default class SearchesStore {
   constructor() {
+    this.exportPublicMethods({
+      setState: this.setState,
+      getInitialState: this.getInitialState,
+      reset: this.reset,
+      fetchBefore: this.fetchBefore,
+      fetch: this.fetch,
+      onReset: this.onReset,
+      onFetchBefore: this.onFetchBefore,
+    });
+
     const searchesActions = this.alt.getActions('searchesActions');
     const searchCreationActions = this.alt.getActions('searchCreationActions');
     const searchUpdationActions = this.alt.getActions('searchUpdationActions');
@@ -22,6 +32,19 @@ export default class SearchesStore {
       isFetched: false,
       searches: [],
     };
+  }
+
+  reset() {
+    this.onReset();
+  }
+
+  fetchBefore() {
+    this.onFetchBefore();
+  }
+
+  fetch(...args) {
+    this.fetchBefore();
+    return this.alt.getActions('searchesActions').fetch(...args);
   }
 
   onReset() {

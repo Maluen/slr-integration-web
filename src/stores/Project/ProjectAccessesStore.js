@@ -1,5 +1,15 @@
 export default class ProjectUpdationStore {
   constructor() {
+    this.exportPublicMethods({
+      setState: this.setState,
+      getInitialState: this.getInitialState,
+      reset: this.reset,
+      fetchBefore: this.fetchBefore,
+      fetch: this.fetch,
+      onReset: this.onReset,
+      onFetchBefore: this.onFetchBefore,
+    });
+
     const projectAccessesActions = this.alt.getActions('projectAccessesActions');
 
     this.bindAction(projectAccessesActions.reset, this.onReset);
@@ -16,6 +26,19 @@ export default class ProjectUpdationStore {
       project: null,
       projectAccesses: [],
     };
+  }
+
+  reset() {
+    this.onReset();
+  }
+
+  fetchBefore() {
+    this.onFetchBefore();
+  }
+
+  fetch(...args) {
+    this.fetchBefore();
+    return this.alt.getActions('projectAccessesActions').fetch(...args);
   }
 
   onReset() {

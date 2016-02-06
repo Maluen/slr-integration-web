@@ -5,7 +5,7 @@ export default class ProjectsActions {
   fetch() {
     return this.alt.promise(async (resolve) => {
       try {
-        this.actions.fetchBefore();
+        //this.actions.fetchBefore();
         const response = await Globals.services.readProjects(null, this.alt.req);
         this.dispatch(response.projects);
       } catch (err) {

@@ -14,10 +14,20 @@ class UserMachineListItem extends Component {
     flux: PropTypes.object.isRequired,
   };
 
+  handleSearchMachineChange(event) {
+    const machineId = event.currentTarget.value.trim();
+    this.context.flux.getActions('searchActions').selectMachine(machineId);
+  }
+
   render() {
     return (
       <li key={this.props.id}>
-        <input type="radio" name="searchMachine" value="{this.props.id}" />
+        <input
+          type="radio"
+          name="searchMachine"
+          value={this.props.id}
+          onChange={this.handleSearchMachineChange.bind(this)}
+        />
         <span>{this.props.name}</span> <span>{this.props.hostname}</span>:<span>{this.props.port}</span>
       </li>
     );

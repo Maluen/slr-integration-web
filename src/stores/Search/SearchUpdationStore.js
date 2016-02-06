@@ -6,6 +6,16 @@ const defaultSettings = Object.keys(searchSettings).map((settingName) => {
 
 export default class SearchUpdationStore {
   constructor() {
+    this.exportPublicMethods({
+      setState: this.setState,
+      getInitialState: this.getInitialState,
+      reset: this.reset,
+      fetchBefore: this.fetchBefore,
+      fetch: this.fetch,
+      onReset: this.onReset,
+      onFetchBefore: this.onFetchBefore,
+    });
+
     const searchUpdationActions = this.alt.getActions('searchUpdationActions');
 
     this.bindAction(searchUpdationActions.reset, this.onReset);
@@ -28,6 +38,19 @@ export default class SearchUpdationStore {
       'settings': [ ...defaultSettings ],
       'errorMessage': '',
     };
+  }
+
+  reset() {
+    this.onReset();
+  }
+
+  fetchBefore() {
+    this.onFetchBefore();
+  }
+
+  fetch(...args) {
+    this.fetchBefore();
+    return this.alt.getActions('searchUpdationActions').fetch(...args);
   }
 
   onReset() {

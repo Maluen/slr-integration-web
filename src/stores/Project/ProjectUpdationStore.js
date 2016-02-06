@@ -6,6 +6,16 @@ const defaultSettings = Object.keys(projectSettings).map((settingName) => {
 
 export default class ProjectUpdationStore {
   constructor() {
+    this.exportPublicMethods({
+      setState: this.setState,
+      getInitialState: this.getInitialState,
+      reset: this.reset,
+      fetchBefore: this.fetchBefore,
+      fetch: this.fetch,
+      onReset: this.onReset,
+      onFetchBefore: this.onFetchBefore,
+    });
+
     const projectUpdationActions = this.alt.getActions('projectUpdationActions');
 
     this.bindAction(projectUpdationActions.reset, this.onReset);
@@ -28,6 +38,19 @@ export default class ProjectUpdationStore {
       'settings': [ ...defaultSettings ],
       'errorMessage': '',
     };
+  }
+
+  reset() {
+    this.onReset();
+  }
+
+  fetchBefore() {
+    this.onFetchBefore();
+  }
+
+  fetch(...args) {
+    this.fetchBefore();
+    return this.alt.getActions('projectUpdationActions').fetch(...args);
   }
 
   onReset() {

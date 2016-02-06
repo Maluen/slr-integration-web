@@ -31,12 +31,12 @@ class SearchesPage extends Component {
     // TODO: don't fetch if it's already loading
     const { isFetched, isFetching } = this.context.flux.getStore('searchesStore').getState();
     if (!isFetched && !isFetching) {
-      this.context.flux.getActions('searchesActions').fetch(this.props.projectId);
+      this.context.flux.getStore('searchesStore').fetch(this.props.projectId);
     }
   }
 
   componentWillUnmount() {
-    this.context.flux.getActions('searchesActions').reset();
+    this.context.flux.getStore('searchesStore').reset();
   }
 
   static getStores(props, context) {

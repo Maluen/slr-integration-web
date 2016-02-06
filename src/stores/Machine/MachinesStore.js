@@ -1,5 +1,13 @@
 export default class MachinesStore {
   constructor() {
+    this.exportPublicMethods({
+      setState: this.setState,
+      getInitialState: this.getInitialState,
+      fetchBefore: this.fetchBefore,
+      fetch: this.fetch,
+      onFetchBefore: this.onFetchBefore,
+    });
+
     const machinesActions = this.alt.getActions('machinesActions');
     const machineCreationActions = this.alt.getActions('machineCreationActions');
     const machineUpdationActions = this.alt.getActions('machineUpdationActions');
@@ -20,6 +28,15 @@ export default class MachinesStore {
       isFetched: false,
       machines: [],
     };
+  }
+
+  fetchBefore() {
+    this.onFetchBefore();
+  }
+
+  fetch(...args) {
+    this.fetchBefore();
+    return this.alt.getActions('machinesActions').fetch(...args);
   }
 
   onFetchBefore() {

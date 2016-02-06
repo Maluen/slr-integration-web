@@ -1,5 +1,15 @@
 export default class searchMachinesStore {
   constructor() {
+    this.exportPublicMethods({
+      setState: this.setState,
+      getInitialState: this.getInitialState,
+      reset: this.reset,
+      fetchBefore: this.fetchBefore,
+      fetch: this.fetch,
+      onReset: this.onReset,
+      onFetchBefore: this.onFetchBefore,
+    });
+
     const searchMachinesActions = this.alt.getActions('searchMachinesActions');
 
     this.bindAction(searchMachinesActions.reset, this.onReset);
@@ -15,6 +25,19 @@ export default class searchMachinesStore {
       isFetched: false,
       machines: [],
     };
+  }
+
+  reset() {
+    this.onReset();
+  }
+
+  fetchBefore() {
+    this.onFetchBefore();
+  }
+
+  fetch(...args) {
+    this.fetchBefore();
+    return this.alt.getActions('searchMachinesActions').fetch(...args);
   }
 
   onReset() {

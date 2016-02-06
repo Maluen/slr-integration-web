@@ -45,12 +45,12 @@ class ProjectUpdationPage extends Component {
     // TODO: don't fetch if it's already loading
     const { isFetched, isFetching } = this.context.flux.getStore('projectUpdationStore').getState();
     if (!isFetched && !isFetching) {
-      this.context.flux.getActions('projectUpdationActions').fetch(this.props.id);
+      this.context.flux.getStore('projectUpdationStore').fetch(this.props.id);
     }
   }
 
   componentWillUnmount() {
-    this.projectUpdationActions.reset();
+    this.context.flux.getStore('projectUpdationStore').reset();
   }
 
   static getStores(props, context) {

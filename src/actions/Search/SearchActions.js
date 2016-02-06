@@ -9,7 +9,7 @@ export default class SearchActions {
   fetch(projectId, id) {
     return this.alt.promise(async (resolve) => {
       try {
-        this.actions.fetchBefore();
+        //this.actions.fetchBefore();
         const response = await Globals.services.readSearches(projectId, { id }, this.alt.req);
         const search = response.searches ? response.searches[0] : null;
         this.dispatch(search);
@@ -23,6 +23,10 @@ export default class SearchActions {
 
   fetchBefore() {
     return '';
+  }
+
+  selectMachine(machineId) {
+    return machineId;
   }
 
 }

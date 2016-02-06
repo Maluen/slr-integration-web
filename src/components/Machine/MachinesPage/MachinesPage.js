@@ -30,7 +30,7 @@ class MachinesPage extends Component {
     // TODO: don't fetch if it's already loading
     const { isFetched, isFetching } = this.context.flux.getStore('machinesStore').getState();
     if (!isFetched && !isFetching) {
-      this.context.flux.getActions('machinesActions').fetch();
+      this.context.flux.getStore('machinesStore').fetch();
     }
   }
 

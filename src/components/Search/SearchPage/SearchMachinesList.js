@@ -18,6 +18,7 @@ class SearchMachinesList extends Component {
   };
 
   static defaultProps = {
+    isFetched: false,
     machines: [],
   };
 
@@ -25,12 +26,12 @@ class SearchMachinesList extends Component {
     // TODO: don't fetch if it's already loading
     const { isFetched, isFetching } = this.context.flux.getStore('searchMachinesStore').getState();
     if (!isFetched && !isFetching) {
-      this.context.flux.getActions('searchMachinesActions').fetch(this.props.searchId);
+      this.context.flux.getStore('searchMachinesStore').fetch(this.props.searchId);
     }
   }
 
   componentWillUnmount() {
-    this.context.flux.getActions('searchMachinesActions').reset();
+    this.context.flux.getStore('searchMachinesStore').reset();
   }
 
   static getStores(props, context) {
@@ -53,10 +54,6 @@ class SearchMachinesList extends Component {
               {this.props.machines.map((machine) =>
                 <SearchMachinesListItem key={machine.id} {...machine} />
               )}
-              <li>
-                <input type="radio" name="searchMachine" value="local" />
-                <span>My local machine</span>
-              </li>
             </ul>
           :
             <p>Loading...</p>

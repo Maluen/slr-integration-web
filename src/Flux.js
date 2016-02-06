@@ -113,6 +113,16 @@ class Flux extends Alt {
     return promise;
   }
 
+  // This method is mostly useful for preventing multiple action dispatches,
+  // by making the action (always) asynchronous.
+  defer(fn, time = 0) {
+    return this.promise((resolve, reject) => {
+      setTimeout(() => {
+        fn(resolve, reject);
+      }, time);
+    });
+  }
+
   redirect(location) {
     if (!canUseDOM) {
       this.location = location;

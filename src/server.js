@@ -95,7 +95,7 @@ server.get('*', async (req, res, next) => {
       flux: flux,
     };
 
-    await flux.getActions('accountActions').fetch();
+    await flux.getStore('accountStore').fetch();
     const user = flux.getStore('accountStore').getState();
 
     let componentToRender = null;

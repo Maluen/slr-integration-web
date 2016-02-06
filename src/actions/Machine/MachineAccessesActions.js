@@ -9,7 +9,7 @@ export default class MachineAccessesActions {
   fetch(machineId) {
     return this.alt.promise(async (resolve) => {
       try {
-        this.actions.fetchBefore();
+        //this.actions.fetchBefore();
         const response = await Globals.services.readMachineAccesses(machineId, this.alt.req);
         const { machine, machineAccesses } = response;
         this.dispatch({ machine, machineAccesses });

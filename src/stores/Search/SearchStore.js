@@ -6,11 +6,22 @@ const defaultSettings = Object.keys(searchSettings).map((settingName) => {
 
 export default class SearchUpdationStore {
   constructor() {
+    this.exportPublicMethods({
+      setState: this.setState,
+      getInitialState: this.getInitialState,
+      reset: this.reset,
+      fetchBefore: this.fetchBefore,
+      fetch: this.fetch,
+      onReset: this.onReset,
+      onFetchBefore: this.onFetchBefore,
+    });
+
     const searchActions = this.alt.getActions('searchActions');
 
     this.bindAction(searchActions.reset, this.onReset);
     this.bindAction(searchActions.fetchBefore, this.onFetchBefore);
     this.bindAction(searchActions.fetch, this.onFetch);
+    this.bindAction(searchActions.selectMachine, this.onSelectMachine);
 
     this.state = this.getInitialState();
   }
@@ -23,7 +34,21 @@ export default class SearchUpdationStore {
       'name': '',
       'settings': [ ...defaultSettings ],
       'errorMessage': '',
+      machineId: null,
     };
+  }
+
+  reset() {
+    this.onReset();
+  }
+
+  fetchBefore() {
+    this.onFetchBefore();
+  }
+
+  fetch(...args) {
+    this.fetchBefore();
+    return this.alt.getActions('searchActions').fetch(...args);
   }
 
   onReset() {
@@ -43,7 +68,12 @@ export default class SearchUpdationStore {
       isFetched: true,
       ...search,
       errorMessage: '',
+      machineId: null,
     });
+  }
+
+  onSelectMachine(machineId) {
+    this.setState({ machineId });
   }
 }
 

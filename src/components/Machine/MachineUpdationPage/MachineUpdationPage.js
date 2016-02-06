@@ -42,12 +42,12 @@ class MachineCreationPage extends Component {
     // TODO: don't fetch if it's already loading
     const { isFetched, isFetching } = this.context.flux.getStore('machineUpdationStore').getState();
     if (!isFetched && !isFetching) {
-      this.context.flux.getActions('machineUpdationActions').fetch(this.props.id);
+      this.context.flux.getStore('machineUpdationStore').fetch(this.props.id);
     }
   }
 
   componentWillUnmount() {
-    this.machineUpdationActions.reset();
+    this.context.flux.getStore('machineUpdationStore').reset();
   }
 
   static getStores(props, context) {

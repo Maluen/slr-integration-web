@@ -1,5 +1,13 @@
 export default class ProjectsStore {
   constructor() {
+    this.exportPublicMethods({
+      setState: this.setState,
+      getInitialState: this.getInitialState,
+      fetchBefore: this.fetchBefore,
+      fetch: this.fetch,
+      onFetchBefore: this.onFetchBefore,
+    });
+
     const projectsActions = this.alt.getActions('projectsActions');
     const projectCreationActions = this.alt.getActions('projectCreationActions');
     const projectUpdationActions = this.alt.getActions('projectUpdationActions');
@@ -20,6 +28,15 @@ export default class ProjectsStore {
       isFetched: false,
       projects: [],
     };
+  }
+
+  fetchBefore() {
+    this.onFetchBefore();
+  }
+
+  fetch(...args) {
+    this.fetchBefore();
+    return this.alt.getActions('projectsActions').fetch(...args);
   }
 
   onFetchBefore() {

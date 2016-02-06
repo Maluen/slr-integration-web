@@ -1,5 +1,9 @@
 export default class AccountStore {
   constructor() {
+    this.exportPublicMethods({
+      fetch: this.fetch,
+    });
+
     const accountActions = this.alt.getActions('accountActions');
 
     this.bindAction(accountActions.fetch, this.onFetch);
@@ -22,6 +26,10 @@ export default class AccountStore {
       loginErrorMessage: '',
       isAuthenticated: false,
     };
+  }
+
+  fetch(...args) {
+    return this.alt.getActions('accountActions').fetch(...args);
   }
 
   onFetch(currentUser) {

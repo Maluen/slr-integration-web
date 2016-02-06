@@ -30,7 +30,7 @@ class ProjectsPage extends Component {
     // TODO: don't fetch if it's already loading
     const { isFetched, isFetching } = this.context.flux.getStore('projectsStore').getState();
     if (!isFetched && !isFetching) {
-      this.context.flux.getActions('projectsActions').fetch();
+      this.context.flux.getStore('projectsStore').fetch();
     }
   }
 

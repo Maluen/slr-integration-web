@@ -15,6 +15,7 @@ class SearchPage extends Component {
     isFetched: PropTypes.bool,
     projectId: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
+    machineId: PropTypes.string,
   };
 
   static contextTypes = {
@@ -30,12 +31,12 @@ class SearchPage extends Component {
     // TODO: don't fetch if it's already loading
     const { isFetched, isFetching } = this.context.flux.getStore('searchStore').getState();
     if (!isFetched && !isFetching) {
-      this.context.flux.getActions('searchActions').fetch(this.props.projectId, this.props.id);
+      this.context.flux.getStore('searchStore').fetch(this.props.projectId, this.props.id);
     }
   }
 
   componentWillUnmount() {
-    this.context.flux.getActions('searchActions').reset();
+    this.context.flux.getStore('searchStore').reset();
   }
 
   static getStores(props, context) {
@@ -61,6 +62,7 @@ class SearchPage extends Component {
             <div>
               <span>Choose the machine:</span>
               <SearchMachinesList searchId={this.props.id} />
+              <button disabled={this.props.machineId === null}>Start</button>
             </div>
           :
             <p>Loading...</p>

@@ -33,12 +33,12 @@ class MachineAccessesPage extends Component {
     // TODO: don't fetch if it's already loading
     const { isFetched, isFetching } = this.context.flux.getStore('machineAccessesStore').getState();
     if (!isFetched && !isFetching) {
-      this.context.flux.getActions('machineAccessesActions').fetch(this.props.machineId);
+      this.context.flux.getStore('machineAccessesStore').fetch(this.props.machineId);
     }
   }
 
   componentWillUnmount() {
-    this.context.flux.getActions('machineAccessesActions').reset();
+    this.context.flux.getStore('machineAccessesStore').reset();
   }
 
   static getStores(props, context) {

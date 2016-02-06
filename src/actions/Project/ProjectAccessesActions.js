@@ -9,7 +9,7 @@ export default class ProjectAccessesActions {
   fetch(projectId) {
     return this.alt.promise(async (resolve) => {
       try {
-        this.actions.fetchBefore();
+        //this.actions.fetchBefore();
         const response = await Globals.services.readProjectAccesses(projectId, this.alt.req);
         const { project, projectAccesses } = response;
         this.dispatch({ project, projectAccesses });

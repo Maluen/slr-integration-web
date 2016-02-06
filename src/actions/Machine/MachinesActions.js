@@ -5,7 +5,7 @@ export default class MachinesActions {
   fetch() {
     return this.alt.promise(async (resolve) => {
       try {
-        this.actions.fetchBefore();
+        //this.actions.fetchBefore();
         const response = await Globals.services.readMachines(null, this.alt.req);
         this.dispatch(response.machines);
       } catch (err) {
