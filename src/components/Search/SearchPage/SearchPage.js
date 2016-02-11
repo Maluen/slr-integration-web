@@ -53,6 +53,10 @@ class SearchPage extends Component {
     };
   }
 
+  startSearch() {
+    this.context.flux.getActions('searchActions').startSearch(this.props.projectId, this.props.id, this.props.machineId);
+  }
+
   renderLoading() {
     return <p>Loading...</p>;
   }
@@ -66,7 +70,7 @@ class SearchPage extends Component {
       <div>
         <span>Choose the machine:</span>
         <SearchMachinesList searchId={this.props.id} />
-        <button disabled={this.props.machineId === null}>Start</button>
+        <button disabled={this.props.machineId === null} onClick={this.startSearch.bind(this)}>Start</button>
       </div>
     );
   }

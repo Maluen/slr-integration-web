@@ -33,7 +33,8 @@
     "react-dom": "0.14.2",
     "react-routing": "0.0.5",
     "source-map-support": "0.3.3",
-    "superagent": "1.4.0"
+    "superagent": "1.4.0",
+    "ws": "^1.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^6.1.0",

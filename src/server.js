@@ -9,6 +9,7 @@ import expressSession from 'express-session';
 import connectMongo from 'connect-mongo';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
+import WebSocketServer from './webSocketServer';
 import Globals from './core/Globals';
 import mongoose from 'mongoose';
 import React from 'react';
@@ -157,3 +158,10 @@ server.listen(port, () => {
   /* eslint-disable no-console */
   console.log(`The server is running at http://localhost:${port}/`);
 });
+
+//
+// Launch the websocket server
+// -----------------------------------------------------------------------------
+const webSocketServer = new WebSocketServer(server);
+Globals.webSocketServer = webSocketServer;
+webSocketServer.start();

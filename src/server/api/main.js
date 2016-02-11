@@ -24,5 +24,6 @@ router.use(require('./deleteProjectAccess'));
 router.use(require('./saveSearch'));
 router.use(require('./deleteSearch'));
 router.use(require('./readSearches'));
+router.use(require('./startSearch'));
 
 export default router;

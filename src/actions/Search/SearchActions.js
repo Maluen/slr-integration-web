@@ -37,4 +37,16 @@ export default class SearchActions {
     return machineId;
   }
 
+  startSearch(projectId, id, machineId) {
+    return this.alt.promise(async (resolve) => {
+      try {
+        await Globals.services.startSearch(projectId, id, machineId, this.alt.req);
+      } catch (err) {
+        // TODO
+        console.log('startSearch error', err.message);
+      }
+      resolve();
+    });
+  }
+
 }

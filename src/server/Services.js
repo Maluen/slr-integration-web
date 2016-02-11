@@ -22,6 +22,7 @@ import deleteProjectAccessService from './services/Project/deleteProjectAccess';
 import saveSearchService from './services/Search/saveSearch';
 import deleteSearchService from './services/Search/deleteSearch';
 import readSearchesService from './services/Search/readSearches';
+import startSearchService from './services/Search/startSearch';
 
 function deferService(target, key, descriptor) {
   const fn = descriptor.value;
@@ -140,6 +141,10 @@ export default new class Services {
 
   async readSearches(projectId, filterObj, req) {
     return await readSearchesService(projectId, filterObj, req);
+  }
+
+  async startSearch(projectId, id, machineId, req) {
+    return await startSearchService(projectId, id, machineId, req);
   }
 
 };

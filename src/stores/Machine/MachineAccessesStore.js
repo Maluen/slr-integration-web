@@ -1,5 +1,9 @@
+import withFetchStore from '../withFetchStore';
+
 export default class MachineUpdationStore {
   constructor() {
+    this.fetchActionsName = 'machineAccessesActions';
+
     this.exportPublicMethods({
       setState: this.setState,
       getInitialState: this.getInitialState,
