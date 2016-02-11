@@ -15,6 +15,7 @@ class MachineCreationPage extends Component {
     fetchErrorMessage: PropTypes.string,
     id: PropTypes.string.isRequired,
     name: PropTypes.string,
+    password: PropTypes.string,
     hostname: PropTypes.string,
     port: PropTypes.string,
     errorMessage: PropTypes.string,
@@ -29,6 +30,7 @@ class MachineCreationPage extends Component {
     isFetched: false,
     fetchErrorMessage: '',
     name: '',
+    password: '',
     hostname: '',
     port: '',
     errorMessage: '',
@@ -69,6 +71,11 @@ class MachineCreationPage extends Component {
     this.machineUpdationActions.updateName(name);
   }
 
+  handlePasswordChange(event) {
+    const password = event.currentTarget.value.trim();
+    this.machineUpdationActions.updatePassword(password);
+  }
+
   handleHostnameChange(event) {
     const hostname = event.currentTarget.value.trim();
     this.machineUpdationActions.updateHostname(hostname);
@@ -81,7 +88,7 @@ class MachineCreationPage extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    this.machineUpdationActions.update(this.props.id, this.props.name, this.props.hostname, this.props.port);
+    this.machineUpdationActions.update(this.props.id, this.props.name, this.props.password, this.props.hostname, this.props.port);
   }
 
   renderLoading() {
@@ -98,10 +105,12 @@ class MachineCreationPage extends Component {
         <div>{this.props.errorMessage}</div>
         <MachineForm
           name={this.props.name}
+          password={this.props.password}
           hostname={this.props.hostname}
           port={this.props.port}
           onSubmit={this.handleSubmit.bind(this)}
           onNameChange={this.handleNameChange.bind(this)}
+          onPasswordChange={this.handlePasswordChange.bind(this)}
           onHostnameChange={this.handleHostnameChange.bind(this)}
           onPortChange={this.handlePortChange.bind(this)}
         />

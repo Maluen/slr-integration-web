@@ -17,6 +17,7 @@ export default class MachineUpdationStore {
     this.bindAction(machineUpdationActions.fetchSuccess, this.onFetchSuccess);
     this.bindAction(machineUpdationActions.fetchError, this.onFetchError);
     this.bindAction(machineUpdationActions.updateName, this.onUpdateName);
+    this.bindAction(machineUpdationActions.updatePassword, this.onUpdatePassword);
     this.bindAction(machineUpdationActions.updateHostname, this.onUpdateHostname);
     this.bindAction(machineUpdationActions.updatePort, this.onUpdatePort);
     this.bindAction(machineUpdationActions.updateError, this.onUpdateError);
@@ -32,6 +33,7 @@ export default class MachineUpdationStore {
       fetchErrorMessage: '',
       'id': '',
       'name': '',
+      'password': '',
       'hostname': '',
       'port': '',
       'errorMessage': '',
@@ -82,6 +84,10 @@ export default class MachineUpdationStore {
 
   onUpdateName(name) {
     this.setState({ name });
+  }
+
+  onUpdatePassword(password) {
+    this.setState({ password });
   }
 
   onUpdateHostname(hostname) {

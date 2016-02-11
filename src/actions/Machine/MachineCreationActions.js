@@ -6,6 +6,10 @@ export default class MachineCreationActions {
     return name;
   }
 
+  updatePassword(password) {
+    return password;
+  }
+
   updateHostname(hostname) {
     return hostname;
   }
@@ -14,10 +18,10 @@ export default class MachineCreationActions {
     return port;
   }
 
-  create(name, hostname, port) {
+  create(name, password, hostname, port) {
     return this.alt.promise(async (resolve) => {
       try {
-        const response = await Globals.services.saveMachine(null, name, hostname, port, this.alt.req);
+        const response = await Globals.services.saveMachine(null, name, password, hostname, port, this.alt.req);
         this.actions.createSuccess(response.machine);
       } catch (err) {
         this.actions.createError(err.message);

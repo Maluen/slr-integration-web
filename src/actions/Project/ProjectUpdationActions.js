@@ -47,7 +47,7 @@ export default class ProjectUpdationActions {
         const response = await Globals.services.saveProject(id, name, settings, this.alt.req);
         this.actions.updateSuccess(response.project);
       } catch (err) {
-        this.actions.updateError(err);
+        this.actions.updateError(err.message);
       }
       resolve();
     });

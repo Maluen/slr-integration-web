@@ -79,8 +79,8 @@ export default new class Services {
     return await readUsersService(req);
   }
 
-  async saveMachine(id, name, hostname, port, req) {
-    return await saveMachineService(id, name, hostname, port, req);
+  async saveMachine(id, name, password, hostname, port, req) {
+    return await saveMachineService(id, name, password, hostname, port, req);
   }
 
   async deleteMachine(id, req) {

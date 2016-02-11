@@ -3,7 +3,7 @@ import MachineAccess from '../../models/MachineAccess';
 import currentUserService from '../User/currentUser';
 import saveMachineAccessService from './saveMachineAccess';
 
-export default function saveMachine(id = null, name, hostname, port, req) {
+export default function saveMachine(id = null, name, password, hostname, port, req) {
   return Promise.resolve().then(async () => {
     // TODO: validation
 
@@ -20,6 +20,10 @@ export default function saveMachine(id = null, name, hostname, port, req) {
 
     if (!name || name === 'undefined') {
       throw new Error(`The 'name' query parameter cannot be empty.`);
+    }
+
+    if (!password || password === 'undefined') {
+      throw new Error(`The 'password' query parameter cannot be empty.`);
     }
 
     if (!hostname || hostname === 'undefined') {
@@ -60,11 +64,12 @@ export default function saveMachine(id = null, name, hostname, port, req) {
       }
 
       machine.name = name;
+      machine.password = password;
       machine.hostname = hostname;
       machine.port = port;
     } else {
       // create
-      machine = new Machine({ name, hostname, port });
+      machine = new Machine({ name, password, hostname, port });
     }
 
     try {

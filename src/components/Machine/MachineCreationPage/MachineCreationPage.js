@@ -12,6 +12,7 @@ class MachineCreationPage extends Component {
 
   static propTypes = {
     name: PropTypes.string,
+    password: PropTypes.string,
     hostname: PropTypes.string,
     port: PropTypes.string,
     errorMessage: PropTypes.string,
@@ -24,6 +25,7 @@ class MachineCreationPage extends Component {
 
   static defaultProps = {
     name: '',
+    password: '',
     hostname: '',
     port: '',
     errorMessage: '',
@@ -48,6 +50,11 @@ class MachineCreationPage extends Component {
     this.machineCreationActions.updateName(name);
   }
 
+  handlePasswordChange(event) {
+    const password = event.currentTarget.value.trim();
+    this.machineCreationActions.updatePassword(password);
+  }
+
   handleHostnameChange(event) {
     const hostname = event.currentTarget.value.trim();
     this.machineCreationActions.updateHostname(hostname);
@@ -60,7 +67,7 @@ class MachineCreationPage extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    this.machineCreationActions.create(this.props.name, this.props.hostname, this.props.port);
+    this.machineCreationActions.create(this.props.name, this.props.password, this.props.hostname, this.props.port);
   }
 
   render() {
@@ -73,10 +80,12 @@ class MachineCreationPage extends Component {
           <div>{this.props.errorMessage}</div>
           <MachineForm
             name={this.props.name}
+            password={this.props.password}
             hostname={this.props.hostname}
             port={this.props.port}
             onSubmit={this.handleSubmit.bind(this)}
             onNameChange={this.handleNameChange.bind(this)}
+            onPasswordChange={this.handlePasswordChange.bind(this)}
             onHostnameChange={this.handleHostnameChange.bind(this)}
             onPortChange={this.handlePortChange.bind(this)}
           />

@@ -6,6 +6,7 @@ class UserMachineListItem extends Component {
   static propTypes = {
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
+    password: PropTypes.string.isRequired,
     hostname: PropTypes.string.isRequired,
     port: PropTypes.string.isRequired,
   };

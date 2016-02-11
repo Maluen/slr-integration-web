@@ -47,7 +47,7 @@ export default class SearchUpdationActions {
         const response = await Globals.services.saveSearch(projectId, id, name, settings, this.alt.req);
         this.actions.updateSuccess(response.search);
       } catch (err) {
-        this.actions.updateError(err);
+        this.actions.updateError(err.message);
       }
       resolve();
     });

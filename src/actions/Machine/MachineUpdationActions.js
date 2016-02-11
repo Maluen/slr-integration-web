@@ -37,6 +37,10 @@ export default class MachineUpdationActions {
     return name;
   }
 
+  updatePassword(password) {
+    return password;
+  }
+
   updateHostname(hostname) {
     return hostname;
   }
@@ -45,13 +49,13 @@ export default class MachineUpdationActions {
     return port;
   }
 
-  update(id, name, hostname, port) {
+  update(id, name, password, hostname, port) {
     return this.alt.promise(async (resolve) => {
       try {
-        const response = await Globals.services.saveMachine(id, name, hostname, port, this.alt.req);
+        const response = await Globals.services.saveMachine(id, name, password, hostname, port, this.alt.req);
         this.actions.updateSuccess(response.machine);
       } catch (err) {
-        this.actions.updateError(err);
+        this.actions.updateError(err.message);
       }
       resolve();
     });

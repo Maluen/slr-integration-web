@@ -65,7 +65,7 @@ class MachineAccessesPage extends Component {
   renderFetchSuccess() {
     return (
       <div>
-        <h2>Machine {this.props.machine.hostname}:{this.props.machine.port}</h2>
+        <h2>Machine {this.props.machine.name} {this.props.machine.hostname}:{this.props.machine.port}</h2>
         <a className="MachineAccessesPage-link MachineAccessesPage-link-createMachineAccess"
           href={`/createMachineAccess/${this.props.machineId}`}
           onClick={Link.handleClick}>

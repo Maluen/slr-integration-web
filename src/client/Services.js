@@ -22,8 +22,8 @@ export default {
     return await http.get('/api/readUsers', { filterObj: JSON.stringify(filterObj) });
   },
 
-  saveMachine: async (id, name, hostname, port) => {
-    return await http.post('/api/saveMachine', { id, name, hostname, port });
+  saveMachine: async (id, name, password, hostname, port) => {
+    return await http.post('/api/saveMachine', { id, name, password, hostname, port });
   },
 
   deleteMachine: async (id) => {
