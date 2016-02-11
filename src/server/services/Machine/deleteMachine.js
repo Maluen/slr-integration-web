@@ -21,8 +21,12 @@ export default function deleteMachine(id, req) {
       throw new Error(`The 'id' query parameter cannot be empty.`);
     }
 
-    const machine = await Machine.findById(id);
-
+    let machine;
+    try {
+      machine = await Machine.findById(id);
+    } catch (err) {
+      throw new Error(err.err);
+    }
     if (!machine) {
       throw new Error('The requested machine does not exists.');
     }

@@ -103,6 +103,7 @@ class MachineCreationPage extends Component {
     return (
       <div>
         <div>{this.props.errorMessage}</div>
+        <p>Id: {this.props.id}</p>
         <MachineForm
           name={this.props.name}
           password={this.props.password}

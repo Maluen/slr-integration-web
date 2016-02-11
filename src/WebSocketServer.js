@@ -1,5 +1,5 @@
 import ws from 'ws';
-import url from 'url';
+import authenticateMachineService from './server/services/Machine/authenticateMachine';
 
 export default class WebSocketServer {
 
@@ -59,18 +59,29 @@ export default class WebSocketServer {
     }
   }
 
-  handleMachineMessages(connId, message) {
+  async handleMachineMessages(connId, message) {
+    const conn = this.clients[connId].conn;
+
     if (message.topic === 'login') {
-      console.log('Machine requested login');
+      //console.log('Machine requested login');
 
       const detail = message.detail;
       if (typeof detail !== 'object' || detail === null) return;
 
-      const machineName = message.name;
-      const machinePassword = message.password;
+      const machineId = detail.id;
+      const machineName = detail.name;
+      const machinePassword = detail.password;
 
-      // TODO: authenticate
-      const machine = { id: '56bc5291afc769d42517fc55' };
+      let machine;
+      try {
+        const response = await authenticateMachineService(machineId, machineName, machinePassword);
+        machine = response.machine;
+      } catch (err) {
+        this.sendMessage(conn, 'loginError', { message: err.message });
+        return;
+      }
+
+      this.sendMessage(conn, 'loginSuccess');
 
       this.clients[connId].machine = machine;
       this.machines[machine.id] = connId;
@@ -81,6 +92,8 @@ export default class WebSocketServer {
   }
 
   startSearch(project, search, machine) {
+    console.log('Start search', project, search, machine);
+
     const connId = this.machines[machine.id];
     if (typeof connId === 'undefined') {
       // machine not found
@@ -97,7 +110,9 @@ export default class WebSocketServer {
 
   sendMessage(conn, topic, detail = {}) {
     const message = { topic, detail };
-    conn.send(JSON.stringify(message));
+    const rawMessage = JSON.stringify(message);
+    console.log('Sending: %s', rawMessage);
+    conn.send(rawMessage);
   }
 
 }
