@@ -17,6 +17,7 @@ class SearchPage extends Component {
     projectId: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     machineId: PropTypes.string,
+    startSearchErrorMessage: PropTypes.string,
   };
 
   static contextTypes = {
@@ -27,6 +28,7 @@ class SearchPage extends Component {
   static defaultProps = {
     isFetched: false,
     fetchErrorMessage: '',
+    startSearchErrorMessage: '',
   };
 
   componentWillMount() {
@@ -68,6 +70,7 @@ class SearchPage extends Component {
   renderFetchSuccess() {
     return (
       <div>
+        <p>{this.props.startSearchErrorMessage}</p>
         <span>Choose the machine:</span>
         <SearchMachinesList searchId={this.props.id} />
         <button disabled={this.props.machineId === null} onClick={this.startSearch.bind(this)}>Start</button>

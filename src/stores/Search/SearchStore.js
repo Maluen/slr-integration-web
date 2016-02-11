@@ -23,6 +23,7 @@ export default class SearchUpdationStore {
     this.bindAction(searchActions.fetchSuccess, this.onFetchSuccess);
     this.bindAction(searchActions.fetchError, this.onFetchError);
     this.bindAction(searchActions.selectMachine, this.onSelectMachine);
+    this.bindAction(searchActions.startSearchError, this.onStartSearchError);
 
     this.state = this.getInitialState();
   }
@@ -37,6 +38,7 @@ export default class SearchUpdationStore {
       'settings': [ ...defaultSettings ],
       'errorMessage': '',
       machineId: null,
+      startSearchErrorMessage: '',
     };
   }
 
@@ -85,6 +87,10 @@ export default class SearchUpdationStore {
 
   onSelectMachine(machineId) {
     this.setState({ machineId });
+  }
+
+  onStartSearchError(errorMessage) {
+    this.setState({ startSearchErrorMessage: errorMessage });
   }
 }
 

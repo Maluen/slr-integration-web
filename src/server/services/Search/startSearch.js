@@ -92,6 +92,10 @@ export default function startSearch(projectId, id, machineId, req) {
       throw new Error('The machine does not exists.');
     }
 
+    search = search.toObject({ virtuals: true });
+    project = project.toObject({ virtuals: true });
+    machine = machine.toObject({ virtuals: true });
+
     return Globals.webSocketServer.startSearch(project, search, machine);
   });
 }

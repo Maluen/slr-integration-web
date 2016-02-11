@@ -42,11 +42,15 @@ export default class SearchActions {
       try {
         await Globals.services.startSearch(projectId, id, machineId, this.alt.req);
       } catch (err) {
-        // TODO
-        console.log('startSearch error', err.message);
+        this.actions.startSearchError(err.message);
       }
       resolve();
     });
+  }
+
+  startSearchError(errorMessage) {
+    console.log('startSearch error', errorMessage);
+    return errorMessage;
   }
 
 }

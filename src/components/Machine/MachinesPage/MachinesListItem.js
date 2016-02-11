@@ -22,7 +22,7 @@ class MachineListItem extends Component {
   render() {
     return (
       <li key={this.props.id}>
-        <span>{this.props.name}</span><span>{this.props.hostname}</span>:<span>{this.props.port}</span>&nbsp;
+        <span>{this.props.name}</span> <span>{this.props.hostname}</span>:<span>{this.props.port}</span>&nbsp;
         <a className="MachineListItem-link" href={`/updateMachine/${this.props.id}`} onClick={Link.handleClick}>Edit</a>&nbsp;
         <a className="MachineListItem-link" href={`/machineAccesses/${this.props.id}`} onClick={Link.handleClick}>Users</a>&nbsp;
         <a className="MachineListItem-link" href="javascript:void(0);" onClick={this.handleDeleteClick.bind(this)}>Remove</a>
