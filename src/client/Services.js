@@ -86,8 +86,8 @@ export default {
     return await http.get('/api/readSearches', { projectId, filterObj: JSON.stringify(filterObj) });
   },
 
-  startSearch: async (projectId, id, machineId) => {
-    return await http.post('/api/startSearch', { projectId, id, machineId });
+  startSearch: async (projectId, id, machineId, resume) => {
+    return await http.post('/api/startSearch', { projectId, id, machineId, resume });
   },
 
 };

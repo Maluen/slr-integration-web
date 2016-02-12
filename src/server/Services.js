@@ -143,8 +143,8 @@ export default new class Services {
     return await readSearchesService(projectId, filterObj, req);
   }
 
-  async startSearch(projectId, id, machineId, req) {
-    return await startSearchService(projectId, id, machineId, req);
+  async startSearch(projectId, id, machineId, resume, req) {
+    return await startSearchService(projectId, id, machineId, resume, req);
   }
 
 };

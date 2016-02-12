@@ -1,5 +1,6 @@
 import ws from 'ws';
 import authenticateMachineService from './server/services/Machine/authenticateMachine';
+import Search from './server/models/Search';
 
 export default class WebSocketServer {
 
@@ -18,7 +19,7 @@ export default class WebSocketServer {
 
   handleConnection(conn) {
     const connId = conn.upgradeReq.headers['sec-websocket-key'];
-    this.clients[connId] = { conn };
+    const client = this.clients[connId] = { connId, conn };
     console.log('Connected: %s', connId);
 
     conn.on('message', (rawMessage) => {
@@ -34,14 +35,14 @@ export default class WebSocketServer {
         return;
       }
 
-      this.handleMessage(connId, message);
+      this.handleMessage(client, message);
     });
 
     conn.on('close', () => {
       console.log('Disconnected: %s', connId);
 
-      if (typeof this.clients[connId].machine !== 'undefined') {
-        const machineId = this.clients[connId].machine.id;
+      if (typeof client.machine !== 'undefined') {
+        const machineId = client.machine.id;
         delete this.machines[machineId];
       }
       delete this.clients[connId];
@@ -51,47 +52,94 @@ export default class WebSocketServer {
     //conn.send('{"user": "server"}');
   }
 
-  handleMessage(connId, message) {
+  handleMessage(client, message) {
     if (message.type === 'machine') {
-      this.handleMachineMessages(connId, message);
+      this.handleMachineMessages(client, message);
     } else if (message.type === 'user') {
-      this.handleUserMessages(connId, message);
+      this.handleUserMessages(client, message);
     }
   }
 
-  async handleMachineMessages(connId, message) {
-    const conn = this.clients[connId].conn;
-
+  handleMachineMessages(client, message) {
     if (message.topic === 'login') {
-      //console.log('Machine requested login');
-
-      const detail = message.detail;
-      if (typeof detail !== 'object' || detail === null) return;
-
-      const machineId = detail.id;
-      const machineName = detail.name;
-      const machinePassword = detail.password;
-
-      let machine;
-      try {
-        const response = await authenticateMachineService(machineId, machineName, machinePassword);
-        machine = response.machine;
-      } catch (err) {
-        this.sendMessage(conn, 'loginError', { message: err.message });
-        return;
-      }
-
-      this.sendMessage(conn, 'loginSuccess');
-
-      this.clients[connId].machine = machine;
-      this.machines[machine.id] = connId;
-
-      // DEBUG
-      //this.startSearch({ id: 'TODO_PROJECT' }, { id: 'TODO_SEARCH' }, { id: 'TODO' });
+      this.handleMachineLogin(client, message);
+    } else if (message.topic === 'searchState') {
+      this.handleMachineSearchState(client, message);
     }
   }
 
-  startSearch(project, search, machine) {
+  async handleMachineLogin(client, message) {
+    const { connId, conn } = client;
+
+    //console.log('Machine requested login');
+
+    const detail = message.detail;
+    if (typeof detail !== 'object' || detail === null) return;
+
+    const machineId = detail.id;
+    const machineName = detail.name;
+    const machinePassword = detail.password;
+
+    let machine;
+    try {
+      const response = await authenticateMachineService(machineId, machineName, machinePassword);
+      machine = response.machine;
+    } catch (err) {
+      this.sendMessage(conn, 'loginError', { message: err.message });
+      return;
+    }
+
+    this.sendMessage(conn, 'loginSuccess');
+
+    this.clients[connId].machine = machine;
+    this.machines[machine.id] = connId;
+
+    // DEBUG
+    //this.startSearch({ id: 'TODO_PROJECT' }, { id: 'TODO_SEARCH' }, { id: 'TODO' }, false);
+  }
+
+  async handleMachineSearchState(client, message) {
+    const { connId, conn } = client;
+
+    console.log('Machine search state changed');
+
+    const detail = message.detail;
+    if (typeof detail !== 'object' || detail === null) return;
+
+    const searchState = detail.state;
+
+    const allowedStates = ['running', 'success', 'failure'];
+    if (allowedStates.indexOf(searchState) === -1) {
+      this.sendMessage(conn, 'searchStateError', { message: 'Invalid state' });
+      return;
+    }
+
+    let search;
+    try {
+      search = await Search.findById(client.search.id);
+    } catch (err) {
+      this.sendMessage(conn, 'searchStateError', { message: err.err });
+      return;
+    }
+    if (!search) {
+      // the search was deleted while it was running!
+      this.sendMessage(conn, 'searchStateError', { message: 'The search does not exist anymore.' });
+      return;
+    }
+
+    search.state = searchState;
+
+    try {
+      await search.save();
+    } catch (err) {
+      this.sendMessage(conn, 'searchStateError', { message: err.err });
+      return;
+    }
+
+    // notify search users
+  }
+
+  startSearch(project, search, machine, resume) {
     console.log('Start search', project, search, machine);
 
     const connId = this.machines[machine.id];
@@ -100,11 +148,16 @@ export default class WebSocketServer {
       throw new Error('The requested machine is not connected.');
     }
 
-    const conn = this.clients[connId].conn;
-    this.sendMessage(conn, 'startSearch', { project, search });
+    const client = this.clients[connId];
+
+    client.project = project;
+    client.search = search;
+
+    const conn = client.conn;
+    this.sendMessage(conn, 'startSearch', { project, search, resume });
   }
 
-  handleUserMessages(connId, message) {
+  handleUserMessages(client, message) {
 
   }
 

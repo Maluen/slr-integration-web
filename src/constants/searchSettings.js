@@ -6,7 +6,7 @@ export default {
     description: 'Query',
   },
   sites: {
-    defaultValue: sites.join(' '),
+    defaultValue: sites.join(', '),
     description: 'Sites',
   },
 

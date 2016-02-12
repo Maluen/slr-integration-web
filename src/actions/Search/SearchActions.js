@@ -37,10 +37,10 @@ export default class SearchActions {
     return machineId;
   }
 
-  startSearch(projectId, id, machineId) {
+  startSearch(projectId, id, machineId, resume) {
     return this.alt.promise(async (resolve) => {
       try {
-        await Globals.services.startSearch(projectId, id, machineId, this.alt.req);
+        await Globals.services.startSearch(projectId, id, machineId, resume, this.alt.req);
       } catch (err) {
         this.actions.startSearchError(err.message);
       }

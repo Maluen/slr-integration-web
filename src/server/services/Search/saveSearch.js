@@ -82,6 +82,7 @@ export default function saveSearch(projectId, id = null, name, settings, req) {
 
       search.name = name;
       search.settings = cleanSettings;
+      search.state = 'idle';
     } else {
       // create
       search = new Search({ project: projectId, name, settings: cleanSettings });

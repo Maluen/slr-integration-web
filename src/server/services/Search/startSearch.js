@@ -6,7 +6,7 @@ import Project from '../../models/Project';
 import Machine from '../../models/Machine';
 import Globals from '../../../core/Globals';
 
-export default function startSearch(projectId, id, machineId, req) {
+export default function startSearch(projectId, id, machineId, resume, req) {
   return Promise.resolve().then(async () => {
     // TODO: validation
 
@@ -31,6 +31,10 @@ export default function startSearch(projectId, id, machineId, req) {
 
     if (typeof machineId === 'undefined') {
       throw new Error(`The 'machineId' query parameter cannot be empty.`);
+    }
+
+    if (typeof resume === 'undefined') {
+      throw new Error(`The 'resume' query parameter cannot be empty.`);
     }
 
     try {
@@ -96,6 +100,6 @@ export default function startSearch(projectId, id, machineId, req) {
     project = project.toObject({ virtuals: true });
     machine = machine.toObject({ virtuals: true });
 
-    return Globals.webSocketServer.startSearch(project, search, machine);
+    return Globals.webSocketServer.startSearch(project, search, machine, resume);
   });
 }

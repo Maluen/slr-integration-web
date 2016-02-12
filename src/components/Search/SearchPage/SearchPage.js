@@ -56,7 +56,7 @@ class SearchPage extends Component {
   }
 
   startSearch() {
-    this.context.flux.getActions('searchActions').startSearch(this.props.projectId, this.props.id, this.props.machineId);
+    this.context.flux.getActions('searchActions').startSearch(this.props.projectId, this.props.id, this.props.machineId, true);
   }
 
   renderLoading() {
