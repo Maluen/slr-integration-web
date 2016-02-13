@@ -7,6 +7,9 @@ const ProjectAccess = new Schema({
   project: { type: ObjectId, ref: 'Project' },
   user: { type: ObjectId, ref: 'User' },
   permission: String,
+}, {
+  toObject: { virtuals: true },
+  toJSON: { virtuals: true },
 });
 
 module.exports = mongoose.model('ProjectAccess', ProjectAccess);

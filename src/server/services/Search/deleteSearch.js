@@ -1,6 +1,7 @@
 import Search from '../../models/Search';
 import ProjectAccess from '../../models/ProjectAccess';
 import currentUserService from '../User/currentUser';
+import SearchState from '../../models/SearchState';
 
 export default function deleteSearch(id, req) {
   return Promise.resolve().then(async () => {
@@ -37,7 +38,23 @@ export default function deleteSearch(id, req) {
         throw new Error('Access denied: you must be an Administrator of the project to delete its searches.');
       }
     } catch (err) {
+      throw new Error(err.err || err.message);
+    }
+
+    // Remove the search state first
+
+    let searchState;
+    try {
+      searchState = await SearchState.findById(search.state);
+    } catch (err) {
       throw new Error(err.err);
+    }
+    if (searchState) {
+      try {
+        await searchState.remove();
+      } catch (err) {
+        throw new Error(err.err);
+      }
     }
 
     // Remove the search

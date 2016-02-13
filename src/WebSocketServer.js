@@ -1,6 +1,36 @@
 import ws from 'ws';
 import authenticateMachineService from './server/services/Machine/authenticateMachine';
-import Search from './server/models/Search';
+import SearchState from './server/models/SearchState';
+
+function updateSearchState(id, updateFn) {
+  return Promise.resolve().then(async () => {
+    let searchState;
+    try {
+      searchState = await SearchState.findById(id);
+    } catch (err) {
+      throw new Error(err.err);
+    }
+    if (!searchState) {
+      throw new Error('The search state does not exist.');
+    }
+
+    searchState = updateFn(searchState);
+
+    try {
+      await searchState.save();
+    } catch (err) {
+      throw new Error(err.message);
+    }
+
+    return { searchState: searchState.toObject({ virtuals: true }) };
+  });
+}
+
+function extendObj(newObj) {
+  return (obj) => {
+    return Object.assign(obj, newObj);
+  };
+}
 
 export default class WebSocketServer {
 
@@ -63,8 +93,10 @@ export default class WebSocketServer {
   handleMachineMessages(client, message) {
     if (message.topic === 'login') {
       this.handleMachineLogin(client, message);
-    } else if (message.topic === 'searchState') {
-      this.handleMachineSearchState(client, message);
+    } else if (message.topic === 'searchStatus') {
+      this.handleMachineSearchStatus(client, message);
+    } else if (message.topic === 'outputLine') {
+      this.handleMachineOutputLine(client, message);
     }
   }
 
@@ -98,48 +130,56 @@ export default class WebSocketServer {
     //this.startSearch({ id: 'TODO_PROJECT' }, { id: 'TODO_SEARCH' }, { id: 'TODO' }, false);
   }
 
-  async handleMachineSearchState(client, message) {
+  async handleMachineSearchStatus(client, message) {
     const { connId, conn } = client;
 
-    console.log('Machine search state changed');
+    //console.log('Machine search status changed');
 
     const detail = message.detail;
     if (typeof detail !== 'object' || detail === null) return;
 
-    const searchState = detail.state;
+    const status = detail.status;
 
-    const allowedStates = ['running', 'success', 'failure'];
-    if (allowedStates.indexOf(searchState) === -1) {
-      this.sendMessage(conn, 'searchStateError', { message: 'Invalid state' });
+    const allowedStatus = ['running', 'success', 'failure'];
+    if (allowedStatus.indexOf(status) === -1) {
+      this.sendMessage(conn, 'searchStatusError', { message: 'Invalid status' });
       return;
     }
-
-    let search;
-    try {
-      search = await Search.findById(client.search.id);
-    } catch (err) {
-      this.sendMessage(conn, 'searchStateError', { message: err.err });
-      return;
-    }
-    if (!search) {
-      // the search was deleted while it was running!
-      this.sendMessage(conn, 'searchStateError', { message: 'The search does not exist anymore.' });
-      return;
-    }
-
-    search.state = searchState;
 
     try {
-      await search.save();
+      await updateSearchState(client.search.state, extendObj({ status }));
     } catch (err) {
-      this.sendMessage(conn, 'searchStateError', { message: err.err });
-      return;
+      this.sendMessage(conn, 'searchStatusError', { message: err.message });
     }
 
     // notify search users
   }
 
-  startSearch(project, search, machine, resume) {
+  async handleMachineOutputLine(client, message) {
+    const { connId, conn } = client;
+
+    //console.log('Machine sent output line');
+
+    const timestamp = message.timestamp;
+
+    const detail = message.detail;
+    if (typeof detail !== 'object' || detail === null) return;
+
+    const line = detail.line;
+
+    try {
+      await updateSearchState(client.search.state, (searchState) => {
+        searchState.output.push({ line, timestamp });
+        return searchState;
+      });
+    } catch (err) {
+      this.sendMessage(conn, 'outputLineError', { message: err.message });
+    }
+
+    // notify search users
+  }
+
+  async startSearch(project, search, machine, resume) {
     console.log('Start search', project, search, machine);
 
     const connId = this.machines[machine.id];
@@ -149,11 +189,17 @@ export default class WebSocketServer {
     }
 
     const client = this.clients[connId];
+    const conn = client.conn;
 
     client.project = project;
     client.search = search;
 
-    const conn = client.conn;
+    try {
+      await updateSearchState(client.search.state, extendObj({ machine: machine.id, output: [] }));
+    } catch (err) {
+      throw new Error(err.message);
+    }
+
     this.sendMessage(conn, 'startSearch', { project, search, resume });
   }
 
@@ -162,7 +208,7 @@ export default class WebSocketServer {
   }
 
   sendMessage(conn, topic, detail = {}) {
-    const message = { topic, detail };
+    const message = { topic, detail, timestamp: Date.now() };
     const rawMessage = JSON.stringify(message);
     console.log('Sending: %s', rawMessage);
     conn.send(rawMessage);

@@ -7,6 +7,9 @@ const Machine = new Schema({
   password: String,
   hostname: String,
   port: String,
+}, {
+  toObject: { virtuals: true },
+  toJSON: { virtuals: true },
 });
 
 module.exports = mongoose.model('Machine', Machine);

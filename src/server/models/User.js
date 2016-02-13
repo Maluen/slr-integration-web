@@ -6,6 +6,9 @@ const Schema = mongoose.Schema;
 const User = new Schema({
   email: String,
   password: String,
+}, {
+  toObject: { virtuals: true },
+  toJSON: { virtuals: true },
 });
 
 User.plugin(passportLocalMongoose, {

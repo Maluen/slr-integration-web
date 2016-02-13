@@ -1,6 +1,8 @@
 import Project from '../../models/Project';
 import ProjectAccess from '../../models/ProjectAccess';
 import currentUserService from '../User/currentUser';
+import Search from '../../models/Search';
+import deleteSearchService from '../Search/deleteSearch';
 
 export default function deleteProject(id, req) {
   return Promise.resolve().then(async () => {
@@ -38,6 +40,27 @@ export default function deleteProject(id, req) {
       }
     } catch (err) {
       throw new Error(err.err);
+    }
+
+    // Remove all the project searches first
+
+    let searchList = [];
+    try {
+      searchList = await Search.find({ project: id });
+    } catch (err) {
+      throw new Error(err.err);
+    }
+    const searchRemovePromises = [];
+    searchList.forEach(search => {
+      // by using the dedicate service, we make sure
+      // to recursively delete any other linked model
+      const promise = deleteSearchService(search.id, req);
+      searchRemovePromises.push(promise);
+    });
+    try {
+      await Promise.all(searchRemovePromises);
+    } catch (err) {
+      throw new Error(err.message);
     }
 
     // Remove all the project accesses first

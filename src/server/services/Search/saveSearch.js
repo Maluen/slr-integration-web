@@ -2,6 +2,7 @@ import Search from '../../models/Search';
 import currentUserService from '../User/currentUser';
 import ProjectAccess from '../../models/ProjectAccess';
 import searchSettings from '../../../constants/searchSettings';
+import SearchState from '../../models/SearchState';
 
 export default function saveSearch(projectId, id = null, name, settings, req) {
   return Promise.resolve().then(async () => {
@@ -82,10 +83,17 @@ export default function saveSearch(projectId, id = null, name, settings, req) {
 
       search.name = name;
       search.settings = cleanSettings;
-      search.state = 'idle';
     } else {
+      // create search state first
+      const searchState = new SearchState({ status: 'created' });
+      try {
+        await searchState.save();
+      } catch (err) {
+        throw new Error(err.message);
+      }
+
       // create
-      search = new Search({ project: projectId, name, settings: cleanSettings });
+      search = new Search({ project: projectId, name, settings: cleanSettings, state: searchState._id });
     }
 
     try {
