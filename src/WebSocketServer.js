@@ -1,6 +1,7 @@
 import ws from 'ws';
 import authenticateMachineService from './server/services/Machine/authenticateMachine';
 import SearchState from './server/models/SearchState';
+import Search from './server/models/Search';
 
 function updateSearchState(id, updateFn) {
   return Promise.resolve().then(async () => {
@@ -39,6 +40,8 @@ export default class WebSocketServer {
 
     this.clients = {}; // <conn id, conn data>
     this.machines = {}; // <machine id, conn id>
+
+    this.searchStates = {}; // <search id, search state>
   }
 
   start() {
@@ -146,13 +149,15 @@ export default class WebSocketServer {
       return;
     }
 
+    let searchState;
     try {
-      await updateSearchState(client.search.state, extendObj({ status }));
+      const response = await updateSearchState(client.search.state, extendObj({ status }));
+      searchState = response.searchState;
     } catch (err) {
       this.sendMessage(conn, 'searchStatusError', { message: err.message });
     }
 
-    // notify search users
+    this.notifySearchListeners(client.search.id, searchState);
   }
 
   async handleMachineOutputLine(client, message) {
@@ -167,16 +172,18 @@ export default class WebSocketServer {
 
     const line = detail.line;
 
+    let searchState;
     try {
-      await updateSearchState(client.search.state, (searchState) => {
-        searchState.output.push({ line, timestamp });
-        return searchState;
+      const response = await updateSearchState(client.search.state, (editableSearchState) => {
+        editableSearchState.output.push({ line, timestamp });
+        return editableSearchState;
       });
+      searchState = response.searchState;
     } catch (err) {
       this.sendMessage(conn, 'outputLineError', { message: err.message });
     }
 
-    // notify search users
+    this.notifySearchListeners(client.search.id, searchState);
   }
 
   async startSearch(project, search, machine, resume) {
@@ -204,7 +211,72 @@ export default class WebSocketServer {
   }
 
   handleUserMessages(client, message) {
+    if (message.topic === 'listenToSearch') {
+      this.handleUserListenToSearch(client, message);
+    } else if (message.topic === 'stopListeningToSearch') {
+      this.handleUserStopListeningToSearch(client, message);
+    }
+  }
 
+  async handleUserListenToSearch(client, message) {
+    try {
+      console.log('User requested listenToSearch');
+
+      const detail = message.detail;
+      if (typeof detail !== 'object' || detail === null) return;
+
+      const searchId = detail.searchId;
+      const lastUpdate = detail.lastUpdate;
+
+      let search;
+      try {
+        search = await Search.findById(searchId).populate('state');
+      } catch (err) {
+        throw new Error(err.err);
+      }
+      if (!search) {
+        throw new Error('The search does not exist.');
+      }
+      const searchState = search.state.toObject({ virtuals: true });
+
+      if (!client.searchListeners) client.searchListeners = {};
+      client.searchListeners[searchId] = { lastUpdate };
+
+      // send initial changes
+      this.notifySearchListeners(searchId, searchState);
+    } catch (err) {
+      this.sendMessage(client.conn, 'listenToSearchError', { message: err.message });
+    }
+  }
+
+  notifySearchListeners(searchId, searchState) {
+    console.log('notifySearchListeners', searchId);
+
+    // TODO: use more efficient way than looping over every client
+    for (const client of Object.values(this.clients)) {
+      const searchListener = client.searchListeners && client.searchListeners[searchId];
+      if (searchListener) {
+        console.log('Search listener candidate', searchListener.lastUpdate, searchState.updated_at);
+        if (searchListener.lastUpdate < searchState.updated_at) {
+          console.log('Sending search update to', client.connId);
+          const searchStateChanges = searchState;
+          this.sendMessage(client.conn, 'searchStateChange', searchStateChanges);
+        }
+      }
+    }
+  }
+
+  handleUserStopListeningToSearch(client, message) {
+    console.log('User requested stopListeningToSearch');
+
+    const detail = message.detail;
+    if (typeof detail !== 'object' || detail === null) return;
+
+    const searchId = detail.searchId;
+
+    if (client.searchListeners) {
+      delete client.searchListeners[searchId];
+    }
   }
 
   sendMessage(conn, topic, detail = {}) {

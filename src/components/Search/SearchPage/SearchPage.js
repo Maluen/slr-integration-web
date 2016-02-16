@@ -6,6 +6,7 @@ import withStyles from '../../../decorators/withStyles';
 import connectToStores from 'alt/utils/connectToStores';
 import Link from '../../Link';
 import SearchMachinesList from './SearchMachinesList';
+import Globals from '../../../core/Globals';
 
 @withStyles(styles)
 @connectToStores
@@ -17,6 +18,7 @@ class SearchPage extends Component {
     projectId: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     machineId: PropTypes.string,
+    state: PropTypes.object,
     startSearchErrorMessage: PropTypes.string,
   };
 
@@ -31,15 +33,24 @@ class SearchPage extends Component {
     startSearchErrorMessage: '',
   };
 
-  componentWillMount() {
+  async componentWillMount() {
     // TODO: don't fetch if it's already loading
     const { isFetched, isFetching } = this.context.flux.getStore('searchStore').getState();
     if (!isFetched && !isFetching) {
-      this.context.flux.getStore('searchStore').fetch(this.props.projectId, this.props.id);
+      try {
+        await this.context.flux.getStore('searchStore').fetch(this.props.projectId, this.props.id);
+        this.listenToSearch();
+      } catch (err) {
+        // no-op
+      }
+    } else {
+      // already fetched
+      this.listenToSearch();
     }
   }
 
   componentWillUnmount() {
+    Globals.webSocketClient.stopListeningToSearch(this.props.id);
     this.context.flux.getStore('searchStore').reset();
   }
 
@@ -53,6 +64,14 @@ class SearchPage extends Component {
       projectId: props.projectId,
       id: props.id,
     };
+  }
+
+  listenToSearch() {
+    Globals.webSocketClient.listenToSearch(this.props.id, this.props.state.updated_at, this.onSearchStateChange.bind(this));
+  }
+
+  onSearchStateChange() {
+
   }
 
   startSearch() {

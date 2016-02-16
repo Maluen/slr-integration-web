@@ -10,6 +10,7 @@ import Location from './core/Location';
 import { addEventListener, removeEventListener } from './core/DOMUtils';
 import Globals from './core/Globals';
 import NullComponent from './components/NullComponent';
+import WebSocketClient from './WebSocketClient';
 
 // services client implementation
 Globals.services = require('./client/Services');
@@ -58,7 +59,7 @@ function render(state) {
   });
 }
 
-function run() {
+async function run() {
   let currentLocation = null;
   let currentUser = null;
   let currentState = null;
@@ -71,6 +72,10 @@ function run() {
     // Now I do something with this data, perhaps run it through some library and then append the result to node?
     flux.bootstrap(fluxSnapshot);
   });
+
+  const webSocketClient = new WebSocketClient;
+  Globals.webSocketClient = webSocketClient;
+  await webSocketClient.start();
 
   // Re-render the app when window.location changes
   const unlisten = Location.listen(location => {

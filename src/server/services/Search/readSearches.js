@@ -38,7 +38,7 @@ export default function readSearches(projectId, filterObj, req) {
     try {
       searchList = await Search.find({
         project: projectId,
-      });
+      }).populate('state');
     } catch (err) {
       throw new Error(err.err);
     }

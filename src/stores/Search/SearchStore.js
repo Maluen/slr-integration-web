@@ -37,6 +37,7 @@ export default class SearchUpdationStore {
       'name': '',
       'settings': [ ...defaultSettings ],
       'errorMessage': '',
+      'state': {},
       machineId: null,
       startSearchErrorMessage: '',
     };
