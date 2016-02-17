@@ -24,6 +24,7 @@
     "iso": "^4.2.0",
     "jade": "1.11.0",
     "lodash.filter": "^3.1.1",
+    "lodash.pick": "^4.1.0",
     "mongoose": "^4.2.8",
     "node-event-emitter": "0.0.1",
     "normalize.css": "3.0.3",

@@ -5,7 +5,7 @@ export default class WebSocketClient extends EventEmitter {
   constructor() {
     super();
 
-    this.searchListeners = {}; // <searchId, callback>
+    this.searchListeners = {}; // <searchId, { onChange }>
   }
 
   start() {
@@ -48,13 +48,23 @@ export default class WebSocketClient extends EventEmitter {
 
     if (message.topic === 'searchStateChange') {
       console.log('Received searchStateChange');
+
+      const detail = message.detail;
+      if (typeof detail !== 'object' || detail === null) return;
+
+      const { searchId, searchStateChanges, type } = detail;
+
+      const searchListener = this.searchListeners[searchId];
+      if (searchListener) {
+        searchListener.onChange(searchStateChanges, type);
+      }
     }
   }
 
-  listenToSearch(searchId, lastUpdate, callback) {
+  listenToSearch(searchId, lastUpdate, onChange) {
     console.log('listenToSearch', searchId);
 
-    this.searchListeners[searchId] = callback;
+    this.searchListeners[searchId] = { onChange };
     this.sendMessage('listenToSearch', { searchId, lastUpdate });
   }
 

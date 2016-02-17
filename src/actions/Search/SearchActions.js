@@ -53,4 +53,8 @@ export default class SearchActions {
     return errorMessage;
   }
 
+  extendSearchState(searchStateChanges, type) {
+    return { searchStateChanges, type };
+  }
+
 }

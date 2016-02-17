@@ -70,7 +70,7 @@ export default function saveSearch(projectId, id = null, name, settings, req) {
       // update
 
       try {
-        search = await Search.findOne({ _id: id });
+        search = await Search.findOne({ _id: id }).populate('state');
       } catch (err) {
         throw new Error(err.err);
       }

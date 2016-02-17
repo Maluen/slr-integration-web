@@ -24,7 +24,7 @@ export default function readSearchMachines(searchId, req) {
 
     let search;
     try {
-      search = await Search.findOne({ _id: searchId });
+      search = await Search.findOne({ _id: searchId }).populate('state');
     } catch (err) {
       throw new Error(err.err);
     }

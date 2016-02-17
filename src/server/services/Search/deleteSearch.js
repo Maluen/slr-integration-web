@@ -22,7 +22,7 @@ export default function deleteSearch(id, req) {
       throw new Error(`The 'id' query parameter cannot be empty.`);
     }
 
-    const search = await Search.findById(id);
+    const search = await Search.findById(id).populate('state');
 
     if (!search) {
       throw new Error('The requested search does not exists.');

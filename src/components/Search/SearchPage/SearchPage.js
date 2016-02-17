@@ -70,8 +70,8 @@ class SearchPage extends Component {
     Globals.webSocketClient.listenToSearch(this.props.id, this.props.state.updated_at, this.onSearchStateChange.bind(this));
   }
 
-  onSearchStateChange() {
-
+  onSearchStateChange(searchStateChanges, type) {
+    this.context.flux.getActions('searchActions').extendSearchState(searchStateChanges, type);
   }
 
   startSearch() {
@@ -86,6 +86,14 @@ class SearchPage extends Component {
     return <p><b>Load error</b>: {this.props.fetchErrorMessage}</p>;
   }
 
+  renderOutputValue() {
+    if (!this.props.state.output) return '';
+
+    return this.props.state.output.reduce((previous, current) => {
+      return previous + `[${(new Date(current.timestamp)).toLocaleTimeString()}] ${current.line}` + '\n';
+    }, '');
+  }
+
   renderFetchSuccess() {
     return (
       <div>
@@ -93,6 +101,11 @@ class SearchPage extends Component {
         <span>Choose the machine:</span>
         <SearchMachinesList searchId={this.props.id} />
         <button disabled={this.props.machineId === null} onClick={this.startSearch.bind(this)}>Start</button>
+
+        <div>
+          <p>Status: {this.props.state.status}</p>
+          <textarea readOnly value={this.renderOutputValue()} cols="100" rows="20" />
+        </div>
       </div>
     );
   }

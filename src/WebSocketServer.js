@@ -2,6 +2,7 @@ import ws from 'ws';
 import authenticateMachineService from './server/services/Machine/authenticateMachine';
 import SearchState from './server/models/SearchState';
 import Search from './server/models/Search';
+import pick from 'lodash.pick';
 
 function updateSearchState(id, updateFn) {
   return Promise.resolve().then(async () => {
@@ -18,7 +19,7 @@ function updateSearchState(id, updateFn) {
     searchState = updateFn(searchState);
 
     try {
-      await searchState.save();
+      searchState = await searchState.save();
     } catch (err) {
       throw new Error(err.message);
     }
@@ -74,9 +75,8 @@ export default class WebSocketServer {
     conn.on('close', () => {
       console.log('Disconnected: %s', connId);
 
-      if (typeof client.machine !== 'undefined') {
-        const machineId = client.machine.id;
-        delete this.machines[machineId];
+      if (client.type === 'machine' && typeof client.machineId !== 'undefined') {
+        delete this.machines[client.machineId];
       }
       delete this.clients[connId];
     });
@@ -126,7 +126,8 @@ export default class WebSocketServer {
 
     this.sendMessage(conn, 'loginSuccess');
 
-    this.clients[connId].machine = machine;
+    client.type = 'machine';
+    client.machineId = machine.id;
     this.machines[machine.id] = connId;
 
     // DEBUG
@@ -151,13 +152,13 @@ export default class WebSocketServer {
 
     let searchState;
     try {
-      const response = await updateSearchState(client.search.state, extendObj({ status }));
+      const response = await updateSearchState(client.searchStateId, extendObj({ status }));
       searchState = response.searchState;
     } catch (err) {
       this.sendMessage(conn, 'searchStatusError', { message: err.message });
     }
 
-    this.notifySearchListeners(client.search.id, searchState);
+    this.notifySearchListeners(client.searchId, searchState, { status: searchState.status });
   }
 
   async handleMachineOutputLine(client, message) {
@@ -172,10 +173,12 @@ export default class WebSocketServer {
 
     const line = detail.line;
 
+    const outputToAppend = { line, timestamp };
+
     let searchState;
     try {
-      const response = await updateSearchState(client.search.state, (editableSearchState) => {
-        editableSearchState.output.push({ line, timestamp });
+      const response = await updateSearchState(client.searchStateId, (editableSearchState) => {
+        editableSearchState.output.push(outputToAppend);
         return editableSearchState;
       });
       searchState = response.searchState;
@@ -183,7 +186,7 @@ export default class WebSocketServer {
       this.sendMessage(conn, 'outputLineError', { message: err.message });
     }
 
-    this.notifySearchListeners(client.search.id, searchState);
+    this.notifySearchListeners(client.searchId, searchState, { output: [outputToAppend] }, 'push');
   }
 
   async startSearch(project, search, machine, resume) {
@@ -196,18 +199,24 @@ export default class WebSocketServer {
     }
 
     const client = this.clients[connId];
-    const conn = client.conn;
 
-    client.project = project;
-    client.search = search;
+    client.projectId = project.id;
+    client.searchId = search.id;
+    client.searchStateId = search.state.id;
 
+    const searchStateChanges = { machine: machine.id, output: [] };
+
+    let searchState;
     try {
-      await updateSearchState(client.search.state, extendObj({ machine: machine.id, output: [] }));
+      const response = await updateSearchState(client.searchStateId, extendObj(searchStateChanges));
+      searchState = response.searchState;
     } catch (err) {
       throw new Error(err.message);
     }
 
-    this.sendMessage(conn, 'startSearch', { project, search, resume });
+    this.sendMessage(client.conn, 'startSearch', { project, search, resume });
+
+    this.notifySearchListeners(search.id, searchState, searchStateChanges);
   }
 
   handleUserMessages(client, message) {
@@ -242,15 +251,22 @@ export default class WebSocketServer {
       if (!client.searchListeners) client.searchListeners = {};
       client.searchListeners[searchId] = { lastUpdate };
 
+      const searchStateChanges = {
+        ...searchState,
+        output: searchState.output.filter((anOutput) => anOutput.timestamp > lastUpdate),
+      };
+
       // send initial changes
-      this.notifySearchListeners(searchId, searchState);
+      this.notifySearchListeners(search.id, searchState, searchStateChanges);
     } catch (err) {
       this.sendMessage(client.conn, 'listenToSearchError', { message: err.message });
     }
   }
 
-  notifySearchListeners(searchId, searchState) {
+  notifySearchListeners(searchId, searchState, searchStateChanges, type = 'extend') {
     console.log('notifySearchListeners', searchId);
+
+    Object.assign(searchStateChanges, pick(searchState, 'created_at', 'updated_at'));
 
     // TODO: use more efficient way than looping over every client
     for (const client of Object.values(this.clients)) {
@@ -259,8 +275,8 @@ export default class WebSocketServer {
         console.log('Search listener candidate', searchListener.lastUpdate, searchState.updated_at);
         if (searchListener.lastUpdate < searchState.updated_at) {
           console.log('Sending search update to', client.connId);
-          const searchStateChanges = searchState;
-          this.sendMessage(client.conn, 'searchStateChange', searchStateChanges);
+          this.sendMessage(client.conn, 'searchStateChange', { searchId, searchStateChanges, type });
+          searchListener.lastUpdate = searchState.updated_at;
         }
       }
     }

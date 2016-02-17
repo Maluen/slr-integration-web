@@ -46,7 +46,7 @@ export default function deleteProject(id, req) {
 
     let searchList = [];
     try {
-      searchList = await Search.find({ project: id });
+      searchList = await Search.find({ project: id }).populate('state');
     } catch (err) {
       throw new Error(err.err);
     }

@@ -65,7 +65,7 @@ export default function startSearch(projectId, id, machineId, resume, req) {
 
     let search;
     try {
-      search = await Search.findOne({ _id: id });
+      search = await Search.findOne({ _id: id }).populate('state');
     } catch (err) {
       throw new Error(err.err);
     }
