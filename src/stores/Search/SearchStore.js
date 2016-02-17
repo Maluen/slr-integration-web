@@ -96,7 +96,6 @@ export default class SearchUpdationStore {
   }
 
   onExtendSearchState({ searchStateChanges, type }) {
-    debugger;
     const oldSearchState = this.state.state;
 
     // default 'extend' type behaviour
