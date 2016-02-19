@@ -4,8 +4,15 @@ import SearchState from './server/models/SearchState';
 import Search from './server/models/Search';
 import pick from 'lodash.pick';
 
-function updateSearchState(id, updateFn) {
-  return Promise.resolve().then(async () => {
+// Note: consecutive requests are queued and processed one at a time,
+// so that each will work on the output of the previous request.
+let updateSearchStatePromise = null;
+async function updateSearchState(id, updateFn) {
+  while (updateSearchStatePromise) {
+    await updateSearchStatePromise;
+  }
+
+  const promise = updateSearchStatePromise = Promise.resolve().then(async () => {
     let searchState;
     try {
       searchState = await SearchState.findById(id);
@@ -25,7 +32,14 @@ function updateSearchState(id, updateFn) {
     }
 
     return { searchState: searchState.toObject({ virtuals: true }) };
+  }).then((response) => {
+    updateSearchStatePromise = null;
+    return response;
+  }, (err) => {
+    updateSearchStatePromise = null;
+    throw new Error(err.message);
   });
+  return promise;
 }
 
 function extendObj(newObj) {
@@ -214,9 +228,9 @@ export default class WebSocketServer {
       throw new Error(err.message);
     }
 
-    this.sendMessage(client.conn, 'startSearch', { project, search, resume });
-
     this.notifySearchListeners(search.id, searchState, searchStateChanges);
+
+    this.sendMessage(client.conn, 'startSearch', { project, search, resume });
   }
 
   handleUserMessages(client, message) {
