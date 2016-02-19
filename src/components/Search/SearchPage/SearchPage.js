@@ -20,6 +20,7 @@ class SearchPage extends Component {
     machineId: PropTypes.string,
     state: PropTypes.object,
     startSearchErrorMessage: PropTypes.string,
+    stopSearchErrorMessage: PropTypes.string,
   };
 
   static contextTypes = {
@@ -31,6 +32,7 @@ class SearchPage extends Component {
     isFetched: false,
     fetchErrorMessage: '',
     startSearchErrorMessage: '',
+    stopSearchErrorMessage: '',
   };
 
   async componentWillMount() {
@@ -74,8 +76,36 @@ class SearchPage extends Component {
     this.context.flux.getActions('searchActions').extendSearchState(searchStateChanges, type);
   }
 
-  startSearch() {
-    this.context.flux.getActions('searchActions').startSearch(this.props.projectId, this.props.id, this.props.machineId, true);
+  startNewSearch() {
+    // (started on the selected machine)
+    this.context.flux.getActions('searchActions').startSearch(this.props.projectId, this.props.id, this.props.machineId, false);
+  }
+
+  resumeSearch() {
+    this.context.flux.getActions('searchActions').startSearch(this.props.projectId, this.props.id, this.props.state.machine, true);
+  }
+
+  stopSearch() {
+    this.context.flux.getActions('searchActions').stopSearch(this.props.projectId, this.props.id, this.props.state.machine);
+  }
+
+  // http://stackoverflow.com/a/18197341
+  downloadResultCSV(event) {
+    event.preventDefault();
+
+    const text = this.props.state.resultCSV;
+    const filename = 'output.csv';
+
+    const element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
   }
 
   renderLoading() {
@@ -98,14 +128,33 @@ class SearchPage extends Component {
     return (
       <div>
         <p>{this.props.startSearchErrorMessage}</p>
-        <span>Choose the machine:</span>
-        <SearchMachinesList searchId={this.props.id} />
-        <button disabled={this.props.machineId === null} onClick={this.startSearch.bind(this)}>Start</button>
-
-        <div>
-          <p>Status: {this.props.state.status}</p>
-          <textarea readOnly value={this.renderOutputValue()} cols="100" rows="20" />
-        </div>
+        {typeof this.props.state === 'undefined' || this.props.state.status === 'created' ?
+          <div>
+            <span>Choose the machine:</span>
+            <SearchMachinesList searchId={this.props.id} />
+            <button disabled={this.props.machineId === null} onClick={this.startNewSearch.bind(this)}>Start</button>
+          </div>
+        :
+          <div>
+            <p>Machine: {String(this.props.state.machine)}</p>
+            <p>Status: {this.props.state.status}</p>
+            {this.props.state.resultCSV ?
+              <p>Output CSV: <a href="#" onClick={this.downloadResultCSV.bind(this)}>Download</a></p>
+            : ''}
+            {this.props.state.status === 'running' ?
+              <div>
+                {this.props.stopSearchErrorMessage !== '' ?
+                  <p>Stop error: {this.props.stopSearchErrorMessage}</p>
+                : ''}
+                <p><button onClick={this.stopSearch.bind(this)}>Stop</button></p>
+              </div>
+            : ''}
+            {this.props.state.status === 'failure' ?
+              <p><button onClick={this.resumeSearch.bind(this)}>Resume</button></p>
+            : ''}
+            <textarea readOnly value={this.renderOutputValue()} cols="100" rows="20" />
+          </div>
+        }
       </div>
     );
   }

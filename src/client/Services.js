@@ -90,4 +90,8 @@ export default {
     return await http.post('/api/startSearch', { projectId, id, machineId, resume });
   },
 
+  stopSearch: async (projectId, id, machineId) => {
+    return await http.post('/api/stopSearch', { projectId, id, machineId });
+  },
+
 };

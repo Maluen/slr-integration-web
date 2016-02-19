@@ -53,6 +53,22 @@ export default class SearchActions {
     return errorMessage;
   }
 
+  stopSearch(projectId, id, machineId) {
+    return this.alt.promise(async (resolve) => {
+      try {
+        await Globals.services.stopSearch(projectId, id, machineId, this.alt.req);
+      } catch (err) {
+        this.actions.stopSearchError(err.message);
+      }
+      resolve();
+    });
+  }
+
+  stopSearchError(errorMessage) {
+    console.log('stopSearchError error', errorMessage);
+    return errorMessage;
+  }
+
   extendSearchState(searchStateChanges, type) {
     return { searchStateChanges, type };
   }

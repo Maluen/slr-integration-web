@@ -23,6 +23,7 @@ import saveSearchService from './services/Search/saveSearch';
 import deleteSearchService from './services/Search/deleteSearch';
 import readSearchesService from './services/Search/readSearches';
 import startSearchService from './services/Search/startSearch';
+import stopSearchService from './services/Search/stopSearch';
 
 function deferService(target, key, descriptor) {
   const fn = descriptor.value;
@@ -145,6 +146,10 @@ export default new class Services {
 
   async startSearch(projectId, id, machineId, resume, req) {
     return await startSearchService(projectId, id, machineId, resume, req);
+  }
+
+  async stopSearch(projectId, id, machineId, req) {
+    return await stopSearchService(projectId, id, machineId, req);
   }
 
 };

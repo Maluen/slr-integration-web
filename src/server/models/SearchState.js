@@ -7,6 +7,7 @@ const SearchState = new Schema({
   status: String,
   machine: { type: ObjectId, ref: 'Machine' },
   output: [{ line: String, timestamp: Number }],
+  resultCSV: { type: 'String' },
   created_at: { type: Number },
   updated_at: { type: Number },
 }, {

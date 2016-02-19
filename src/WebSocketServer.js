@@ -4,7 +4,8 @@ import SearchState from './server/models/SearchState';
 import Search from './server/models/Search';
 import pick from 'lodash.pick';
 
-// Note: consecutive requests are queued and processed one at a time,
+// Note: the processing is asynchronous, thus
+// consecutive requests are queued and processed one at a time,
 // so that each will work on the output of the previous request.
 let updateSearchStatePromise = null;
 async function updateSearchState(id, updateFn) {
@@ -114,6 +115,8 @@ export default class WebSocketServer {
       this.handleMachineSearchStatus(client, message);
     } else if (message.topic === 'outputLine') {
       this.handleMachineOutputLine(client, message);
+    } else if (message.topic === 'searchResult') {
+      this.handleMachineSearchResult(client, message);
     }
   }
 
@@ -203,6 +206,27 @@ export default class WebSocketServer {
     this.notifySearchListeners(client.searchId, searchState, { output: [outputToAppend] }, 'push');
   }
 
+  async handleMachineSearchResult(client, message) {
+    const { connId, conn } = client;
+
+    //console.log('Machine sent search result');
+
+    const detail = message.detail;
+    if (typeof detail !== 'object' || detail === null) return;
+
+    const csv = detail.csv;
+
+    let searchState;
+    try {
+      const response = await updateSearchState(client.searchStateId, extendObj({ resultCSV: csv }));
+      searchState = response.searchState;
+    } catch (err) {
+      this.sendMessage(conn, 'searchStatusError', { message: err.message });
+    }
+
+    this.notifySearchListeners(client.searchId, searchState, { resultCSV: csv });
+  }
+
   async startSearch(project, search, machine, resume) {
     console.log('Start search', project, search, machine);
 
@@ -231,6 +255,20 @@ export default class WebSocketServer {
     this.notifySearchListeners(search.id, searchState, searchStateChanges);
 
     this.sendMessage(client.conn, 'startSearch', { project, search, resume });
+  }
+
+  async stopSearch(project, search, machine) {
+    console.log('Stop search', project, search, machine);
+
+    const connId = this.machines[machine.id];
+    if (typeof connId === 'undefined') {
+      // machine not found
+      throw new Error('The requested machine is not connected.');
+    }
+
+    const client = this.clients[connId];
+
+    this.sendMessage(client.conn, 'stopSearch', { searchId: search.id });
   }
 
   handleUserMessages(client, message) {

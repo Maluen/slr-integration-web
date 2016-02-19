@@ -25,5 +25,6 @@ router.use(require('./saveSearch'));
 router.use(require('./deleteSearch'));
 router.use(require('./readSearches'));
 router.use(require('./startSearch'));
+router.use(require('./stopSearch'));
 
 export default router;
