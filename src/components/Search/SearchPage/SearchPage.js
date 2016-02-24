@@ -76,9 +76,11 @@ class SearchPage extends Component {
     this.context.flux.getActions('searchActions').extendSearchState(searchStateChanges, type);
   }
 
-  startNewSearch() {
+  startSearch() {
+    const resume = this.refs.resumeSearchCheckbox.checked;
+
     // (started on the selected machine)
-    this.context.flux.getActions('searchActions').startSearch(this.props.projectId, this.props.id, this.props.machineId, false);
+    this.context.flux.getActions('searchActions').startSearch(this.props.projectId, this.props.id, this.props.machineId, resume);
   }
 
   resumeSearch() {
@@ -108,6 +110,12 @@ class SearchPage extends Component {
     document.body.removeChild(element);
   }
 
+  useAnotherMachine(event) {
+    event.preventDefault();
+
+    this.context.flux.getActions('searchActions').resetSearchStateStatus();
+  }
+
   renderLoading() {
     return <p>Loading...</p>;
   }
@@ -132,7 +140,11 @@ class SearchPage extends Component {
           <div>
             <span>Choose the machine:</span>
             <SearchMachinesList searchId={this.props.id} />
-            <button disabled={this.props.machineId === null} onClick={this.startNewSearch.bind(this)}>Start</button>
+            <p>
+              <input type="checkbox" id="resumeSearchCheckbox" ref="resumeSearchCheckbox" defaultChecked={true} />
+              <label htmlFor="resumeSearchCheckbox">Resume search if possible</label>
+            </p>
+            <button disabled={this.props.machineId === null} onClick={this.startSearch.bind(this)}>Start</button>
           </div>
         :
           <div>
@@ -151,6 +163,9 @@ class SearchPage extends Component {
             : ''}
             {this.props.state.status === 'failure' ?
               <p><button onClick={this.resumeSearch.bind(this)}>Resume</button></p>
+            : ''}
+            {this.props.state.status === 'success' || this.props.state.status === 'failure' ?
+              <p><a href="#" onClick={this.useAnotherMachine.bind(this)}>Use another machine</a></p>
             : ''}
             <textarea readOnly value={this.renderOutputValue()} cols="100" rows="20" />
           </div>

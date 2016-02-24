@@ -26,6 +26,7 @@ export default class SearchUpdationStore {
     this.bindAction(searchActions.startSearchError, this.onStartSearchError);
     this.bindAction(searchActions.stopSearchError, this.onStopSearchError);
     this.bindAction(searchActions.extendSearchState, this.onExtendSearchState);
+    this.bindAction(searchActions.resetSearchStateStatus, this.onResetSearchStateStatus);
 
     this.state = this.getInitialState();
   }
@@ -118,6 +119,15 @@ export default class SearchUpdationStore {
     }
 
     this.setState({ state: newSearchState });
+  }
+
+  onResetSearchStateStatus() {
+    this.setState({
+      state: {
+        ...this.state.state,
+        status: 'created',
+      },
+    });
   }
 }
 

@@ -73,4 +73,8 @@ export default class SearchActions {
     return { searchStateChanges, type };
   }
 
+  resetSearchStateStatus() {
+    return '';
+  }
+
 }
