@@ -90,10 +90,21 @@ export default class WebSocketServer {
     conn.on('close', () => {
       console.log('Disconnected: %s', connId);
 
-      if (client.type === 'machine' && typeof client.machineId !== 'undefined') {
-        delete this.machines[client.machineId];
-      }
       delete this.clients[connId];
+      delete this.machines[client.machineId];
+
+      if (client.type === 'machine' && typeof client.machineId !== 'undefined') {
+        updateSearchState(client.searchStateId, (searchState) => {
+          if (searchState.status === 'running') {
+            searchState.status = 'failure';
+          }
+          return searchState;
+        })
+        .then((response) => {
+          const searchState = response.searchState;
+          this.notifySearchListeners(client.searchId, searchState, { status: searchState.status });
+        });
+      }
     });
 
     // DEBUG
