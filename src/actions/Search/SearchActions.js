@@ -41,6 +41,7 @@ export default class SearchActions {
     return this.alt.promise(async (resolve) => {
       try {
         await Globals.services.startSearch(projectId, id, machineId, resume, this.alt.req);
+        this.actions.startSearchSuccess();
       } catch (err) {
         this.actions.startSearchError(err.message);
       }
@@ -53,10 +54,15 @@ export default class SearchActions {
     return errorMessage;
   }
 
+  startSearchSuccess() {
+    return '';
+  }
+
   stopSearch(projectId, id, machineId) {
     return this.alt.promise(async (resolve) => {
       try {
         await Globals.services.stopSearch(projectId, id, machineId, this.alt.req);
+        this.actions.stopSearchSuccess();
       } catch (err) {
         this.actions.stopSearchError(err.message);
       }
@@ -67,6 +73,10 @@ export default class SearchActions {
   stopSearchError(errorMessage) {
     console.log('stopSearchError error', errorMessage);
     return errorMessage;
+  }
+
+  stopSearchSuccess() {
+    return '';
   }
 
   extendSearchState(searchStateChanges, type) {

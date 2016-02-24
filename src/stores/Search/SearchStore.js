@@ -24,7 +24,9 @@ export default class SearchUpdationStore {
     this.bindAction(searchActions.fetchError, this.onFetchError);
     this.bindAction(searchActions.selectMachine, this.onSelectMachine);
     this.bindAction(searchActions.startSearchError, this.onStartSearchError);
+    this.bindAction(searchActions.startSearchSuccess, this.onStartSearchSuccess);
     this.bindAction(searchActions.stopSearchError, this.onStopSearchError);
+    this.bindAction(searchActions.stopSearchSuccess, this.onStopSearchSuccess);
     this.bindAction(searchActions.extendSearchState, this.onExtendSearchState);
     this.bindAction(searchActions.resetSearchStateStatus, this.onResetSearchStateStatus);
 
@@ -98,8 +100,16 @@ export default class SearchUpdationStore {
     this.setState({ startSearchErrorMessage: errorMessage });
   }
 
+  onStartSearchSuccess() {
+    this.setState({ startSearchErrorMessage: '' });
+  }
+
   onStopSearchError(errorMessage) {
     this.setState({ stopSearchErrorMessage: errorMessage });
+  }
+
+  onStopSearchSuccess() {
+    this.setState({ stopSearchErrorMessage: '' });
   }
 
   onExtendSearchState({ searchStateChanges, type }) {
