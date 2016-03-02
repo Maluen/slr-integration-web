@@ -72,10 +72,7 @@ class ProjectUpdationPage extends Component {
     this.projectUpdationActions.updateName(name);
   }
 
-  handleSettingsChange(event) {
-    const name = event.currentTarget.name.trim();
-    const value = event.currentTarget.value.trim();
-
+  handleSettingsChange(name, value) {
     let found = false;
     const settings = this.props.settings.map(setting => {
       const result = { ...setting };

@@ -69,13 +69,13 @@ class ProjectsPage extends Component {
   }
 
   render() {
-    const title = 'Projects Manager';
+    const title = 'My Projects';
     this.context.onSetTitle(title);
     return (
       <div className="ProjectsPage">
         <div className="ProjectsPage-container">
           <h1>{title}</h1>
-          <a className="ProjectsPage-link ProjectsPage-link-createProject" href="/createProject" onClick={Link.handleClick}>Create new</a>
+          <a className="ProjectsPage-link ProjectsPage-link-createProject pure-button pure-button-primary" href="/createProject" onClick={Link.handleClick}>Create new</a>
           {this.renderFetch()}
         </div>
       </div>

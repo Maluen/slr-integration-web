@@ -25,28 +25,30 @@ class MachineForm extends Component {
 
   render() {
     return (
-      <form onSubmit={this.props.onSubmit}>
-        <p>
-          <label>Name</label>
-          <input type="text" value={this.props.name} onChange={this.props.onNameChange} />
-        </p>
+      <form onSubmit={this.props.onSubmit} className="pure-form pure-form-stacked">
+        <fieldset>
+          <div className="pure-control-group">
+            <label htmlFor="name">Name</label>
+            <input id="name" type="text" value={this.props.name} onChange={this.props.onNameChange} />
+          </div>
 
-        <p>
-          <label>Password</label>
-          <input type="password" value={this.props.password} onChange={this.props.onPasswordChange} />
-        </p>
+          <div className="pure-control-group">
+            <label htmlFor="password">Password</label>
+            <input id="password" type="password" value={this.props.password} onChange={this.props.onPasswordChange} />
+          </div>
 
-        <p>
-          <label>Hostname</label>
-          <input type="text" value={this.props.hostname} onChange={this.props.onHostnameChange} />
-        </p>
+          <div className="pure-control-group">
+            <label htmlFor="hostname">Hostname</label>
+            <input id="hostname" type="text" value={this.props.hostname} onChange={this.props.onHostnameChange} />
+          </div>
 
-        <p>
-          <label>Port</label>
-          <input type="text" value={this.props.port} onChange={this.props.onPortChange} />
-        </p>
+          <div className="pure-control-group">
+            <label htmlFor="port">Port</label>
+            <input id="port" type="text" value={this.props.port} onChange={this.props.onPortChange} />
+          </div>
+        </fieldset>
 
-        <input type="submit" value="Save" />
+        <button type="submit" className="pure-button pure-button-primary">Save</button>
       </form>
     );
   }

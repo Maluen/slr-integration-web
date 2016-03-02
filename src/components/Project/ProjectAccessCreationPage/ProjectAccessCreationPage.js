@@ -61,7 +61,7 @@ class ProjectAccessCreationPage extends Component {
   }
 
   render() {
-    const title = 'Add access to project';
+    const title = 'Add access to the project';
     this.context.onSetTitle(title);
     return (
       <div className="ProjectAccessCreationPage">

@@ -61,7 +61,7 @@ class MachineAccessCreationPage extends Component {
   }
 
   render() {
-    const title = 'Add access to machine';
+    const title = 'Add access to the machine';
     this.context.onSetTitle(title);
     return (
       <div className="MachineAccessCreationPage">

@@ -1,4 +1,6 @@
-@import '../../../node_modules/normalize.css/normalize.css';
+@import '../../../node_modules/purecss/build/pure.css';
+@import '../../../node_modules/purecss/build/grids-responsive.css';
+
 
 /*! React Starter Kit | MIT License | http://www.reactstarterkit.com/ */
 
@@ -164,5 +166,18 @@ textarea {
   h2,
   h3 {
     page-break-after: avoid;
+  }
+}
+
+/*
+ * Pure.css custom styles
+ * ========================================================================== */
+
+.pure-form.form-inline {
+  input, label {
+    margin-right: 10px;
+  }
+  span {
+    margin-right: 5px;
   }
 }

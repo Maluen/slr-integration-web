@@ -41,18 +41,13 @@ class LoginForm extends Component {
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit.bind(this)}>
-        <p>
-          <label>Email</label>
-          <input type="text" value={this.props.email} onChange={this.handleEmailChange.bind(this)} />
-        </p>
+      <form onSubmit={this.handleSubmit.bind(this)} className="pure-form form-inline">
+        <fieldset>
+          <input placeholder="Email" type="text" value={this.props.email} onChange={this.handleEmailChange.bind(this)} />
+          <input placeholder="Password" type="password" value={this.props.password} onChange={this.handlePasswordChange.bind(this)} />
 
-        <p>
-          <label>Password</label>
-          <input type="password" value={this.props.password} onChange={this.handlePasswordChange.bind(this)} />
-        </p>
-
-        <input type="submit" value="Login" />
+          <button type="submit" className="pure-button pure-button-primary">Log In</button>
+        </fieldset>
       </form>
     );
   }

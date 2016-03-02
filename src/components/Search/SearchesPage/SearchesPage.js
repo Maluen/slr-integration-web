@@ -77,13 +77,13 @@ class SearchesPage extends Component {
   }
 
   render() {
-    const title = 'Searches Manager';
+    const title = 'My Project Searches';
     this.context.onSetTitle(title);
     return (
       <div className="SearchesPage">
         <div className="SearchesPage-container">
           <h1>{title}</h1>
-          <a className="SearchesPage-link SearchesPage-link-createSearch" href={`/createSearch/${this.props.projectId}`} onClick={Link.handleClick}>Create new</a>
+          <a className="SearchesPage-link SearchesPage-link-createSearch pure-button pure-button-primary" href={`/createSearch/${this.props.projectId}`} onClick={Link.handleClick}>Create new</a>
           {this.renderFetch()}
         </div>
       </div>

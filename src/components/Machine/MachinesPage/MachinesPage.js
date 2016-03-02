@@ -69,13 +69,13 @@ class MachinesPage extends Component {
   }
 
   render() {
-    const title = 'Machines Manager';
+    const title = 'My Machines';
     this.context.onSetTitle(title);
     return (
       <div className="MachinesPage">
         <div className="MachinesPage-container">
           <h1>{title}</h1>
-          <a className="MachinesPage-link MachinesPage-link-createMachine" href="/createMachine" onClick={Link.handleClick}>Create new</a>
+          <a className="MachinesPage-link MachinesPage-link-createMachine pure-button pure-button-primary" href="/createMachine" onClick={Link.handleClick}>Create new</a>
           {this.renderFetch()}
         </div>
       </div>

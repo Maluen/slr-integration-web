@@ -41,18 +41,20 @@ class RegisterForm extends Component {
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit.bind(this)}>
-        <p>
-          <label>Email</label>
-          <input type="text" value={this.props.email} onChange={this.handleEmailChange.bind(this)} />
-        </p>
+      <form onSubmit={this.handleSubmit.bind(this)} className="pure-form pure-form-stacked">
+        <fieldset>
+          <div className="pure-control-group">
+            <label htmlFor="email">Email</label>
+            <input id="email" type="text" value={this.props.email} onChange={this.handleEmailChange.bind(this)} />
+          </div>
 
-        <p>
-          <label>Password</label>
-          <input type="password" value={this.props.password} onChange={this.handlePasswordChange.bind(this)} />
-        </p>
+          <div className="pure-control-group">
+            <label htmlFor="password">Password</label>
+            <input id="password" type="password" value={this.props.password} onChange={this.handlePasswordChange.bind(this)} />
+          </div>
+        </fieldset>
 
-        <input type="submit" value="Register" />
+        <button type="submit" className="pure-button pure-button-primary">Register</button>
       </form>
     );
   }

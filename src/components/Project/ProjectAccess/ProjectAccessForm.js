@@ -19,20 +19,24 @@ class ProjectAccessForm extends Component {
 
   render() {
     return (
-      <form onSubmit={this.props.onSubmit}>
-        <p>
-          <label>Email</label>
-          <input type="text" value={this.props.email} onChange={this.props.onEmailChange} />
-        </p>
+      <form onSubmit={this.props.onSubmit} className="pure-form pure-form-stacked">
+        <fieldset>
+          <div className="pure-g">
+            <div className="pure-u-1 pure-u-md-1-3">
+                <label htmlFor="Email">Email</label>
+                <input type="text" value={this.props.email} onChange={this.props.onEmailChange} className="pure-u-23-24" />
+            </div>
 
-        <p>
-          <label>Permission</label>
-          <select value={this.props.permission} onChange={this.props.onPermissionChange}>
-            <option value="Administrator">Administrator</option>
-          </select>
-        </p>
+            <div className="pure-u-1 pure-u-md-1-3">
+                <label htmlFor="permission">Permission</label>
+                <select id="permission" value={this.props.permission} onChange={this.props.onPermissionChange} className="pure-input-1-2">
+                  <option value="Administrator">Administrator</option>
+                </select>
+            </div>
+          </div>
+        </fieldset>
 
-        <input type="submit" value="Save" />
+        <button type="submit" className="pure-button pure-button-primary">Save</button>
       </form>
     );
   }

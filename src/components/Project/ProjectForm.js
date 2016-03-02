@@ -2,6 +2,7 @@
 
 import React, { PropTypes, Component } from 'react';
 import projectSettings from '../../constants/projectSettings';
+import Setting from '../Setting';
 
 class ProjectForm extends Component {
 
@@ -19,23 +20,31 @@ class ProjectForm extends Component {
 
   render() {
     return (
-      <form onSubmit={this.props.onSubmit}>
-        <p>
-          <label>Name</label>
-          <input type="text" value={this.props.name} onChange={this.props.onNameChange} />
-        </p>
+      <form onSubmit={this.props.onSubmit} className="pure-form pure-form-stacked">
+        <fieldset>
+          <div className="pure-control-group">
+            <label htmlFor="name">Name</label>
+            <input id="name" type="text" value={this.props.name} onChange={this.props.onNameChange} />
+          </div>
+        </fieldset>
 
         <fieldset>
           <legend>Settings:</legend>
           {this.props.settings.map(({ name, value }) =>
-            <p key={name}>
-              <span>{projectSettings[name].description}:</span>
-              <input type="text" name={name} value={value} onChange={this.props.onSettingsChange} /><br />
-            </p>
+            <div key={name} className="pure-control-group">
+              <label htmlFor={`projectSetting_${name}`}>{projectSettings[name].description}:</label>
+              <Setting
+                name={name}
+                value={value}
+                spec={projectSettings[name]}
+                id={`projectSetting_${name}`}
+                onSettingsChange={this.props.onSettingsChange}
+              />
+            </div>
           )}
         </fieldset>
 
-        <input type="submit" value="Save" />
+        <button type="submit" className="pure-button pure-button-primary">Save</button>
       </form>
     );
   }
