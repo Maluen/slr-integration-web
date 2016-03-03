@@ -15,8 +15,8 @@ class MachineAccessesList extends Component {
 
   render() {
     return (
-      <div className="MachineAccessesList">
-        <div className="MachineAccessesList-container">
+      <div className="List">
+        <div className="List-container">
           <ul>
             {this.props.machineAccesses.map((machineAccess) =>
               <MachineAccessesListItem key={machineAccess.id} {...machineAccess} />

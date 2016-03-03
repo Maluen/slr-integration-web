@@ -77,8 +77,8 @@ class SearchMachinesList extends Component {
 
   render() {
     return (
-      <div className="SearchMachinesList">
-        <div className="SearchMachinesList-container">
+      <div className="List">
+        <div className="List-container">
           {this.renderFetch()}
         </div>
       </div>

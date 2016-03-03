@@ -1,6 +1,6 @@
 @import '../../../node_modules/purecss/build/pure.css';
 @import '../../../node_modules/purecss/build/grids-responsive.css';
-
+@import '../../../node_modules/hint.css/hint.css';
 
 /*! React Starter Kit | MIT License | http://www.reactstarterkit.com/ */
 
@@ -170,7 +170,7 @@ textarea {
 }
 
 /*
- * Pure.css custom styles
+ * Custom styles
  * ========================================================================== */
 
 .pure-form.form-inline {
@@ -179,5 +179,55 @@ textarea {
   }
   span {
     margin-right: 5px;
+  }
+}
+
+.List {
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+
+  li {
+    padding: 10px;
+    border: 3px solid #d7dee3;
+    border-radius: 7px;
+    margin-bottom: 20px;
+    background: linear-gradient(to bottom, #ffffff 0%,#f3f3f3 50%,#ededed 51%,#ffffff 100%);
+
+    display: table;
+    width: 100%;
+    .meta, .controls {
+      display: table-cell;
+      vertical-align: middle;
+    }
+  }
+
+  a, a:visited, a:hover, a:active {
+    color: inherit;
+    text-decoration: inherit;
+  }
+
+  .name {
+    font-weight: bold;
+    font-size: 21px;
+    margin: 0;
+  }
+
+  .controls {
+    text-align: right;
+    visibility: hidden;
+
+    a {
+      margin-right: 20px;
+    }
+  }
+
+  li:hover {
+    border-color: grey;
+
+    .controls {
+      visibility: visible;
+    }
   }
 }

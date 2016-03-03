@@ -20,13 +20,18 @@ class ProjectAccessesListItem extends Component {
   render() {
     return (
       <li key={this.props.id}>
-        <span>{this.props.user.email}</span> <span>({this.props.permission})</span>&nbsp;
-        <a
-          className="ProjectAccessesListItem-link"
-          href="javascript:void(0);"
-          onClick={this.handleDeleteClick.bind(this)}>
-          Remove
-        </a>
+        <div className="meta">
+          <p className="name">{this.props.user.email} ({this.props.permission})</p>
+        </div>
+        <div className="controls">
+          <a
+            className="ListItem-link hint--bottom"
+            data-hint="Remove"
+            href="javascript:void(0);"
+            onClick={this.handleDeleteClick.bind(this)}>
+            <i className="fa fa-remove fa-lg"></i>
+          </a>
+        </div>
       </li>
     );
   }

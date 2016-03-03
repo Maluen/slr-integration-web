@@ -19,11 +19,27 @@ class ProjectListItem extends Component {
   render() {
     return (
       <li key={this.props.id}>
-        <span>{this.props.name}</span>&nbsp;
-        <a className="ProjectListItem-link" href={`/searches/${this.props.id}`} onClick={Link.handleClick}>Searches</a>&nbsp;
-        <a className="ProjectListItem-link" href={`/updateProject/${this.props.id}`} onClick={Link.handleClick}>Edit</a>&nbsp;
-        <a className="ProjectListItem-link" href={`/projectAccesses/${this.props.id}`} onClick={Link.handleClick}>Users</a>&nbsp;
-        <a className="ProjectListItem-link" href="javascript:void(0);" onClick={this.handleDeleteClick.bind(this)}>Remove</a>
+        <div className="meta">
+          <p className="name">
+            <a href={`/searches/${this.props.id}`} onClick={Link.handleClick}>
+              {this.props.name}
+            </a>
+          </p>
+        </div>
+        <div className="controls">
+          <a className="ListItem-link hint--bottom" data-hint="Searches" href={`/searches/${this.props.id}`} onClick={Link.handleClick}>
+            <i className="fa fa-arrow-right fa-lg"></i>
+          </a>
+          <a className="ListItem-link hint--bottom" data-hint="Edit" href={`/updateProject/${this.props.id}`} onClick={Link.handleClick}>
+            <i className="fa fa-edit fa-lg"></i>
+          </a>
+          <a className="ListItem-link hint--bottom" data-hint="Users" href={`/projectAccesses/${this.props.id}`} onClick={Link.handleClick}>
+            <i className="fa fa-users fa-lg"></i>
+          </a>
+          <a className="ListItem-link hint--bottom" data-hint="Remove" href="javascript:void(0);" onClick={this.handleDeleteClick.bind(this)}>
+            <i className="fa fa-remove fa-lg"></i>
+          </a>
+        </div>
       </li>
     );
   }

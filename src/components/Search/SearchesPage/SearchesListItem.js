@@ -20,10 +20,24 @@ class SearchListItem extends Component {
   render() {
     return (
       <li key={this.props.id}>
-        <span>{this.props.name}</span>&nbsp;
-        <a className="SearchListItem-link" href={`/search/${this.props.projectId}/${this.props.id}`} onClick={Link.handleClick}>Open</a>&nbsp;
-        <a className="SearchListItem-link" href={`/updateSearch/${this.props.projectId}/${this.props.id}`} onClick={Link.handleClick}>Edit</a>&nbsp;
-        <a className="SearchListItem-link" href="javascript:void(0);" onClick={this.handleDeleteClick.bind(this)}>Remove</a>
+        <div className="meta">
+          <p className="name">
+            <a href={`/search/${this.props.projectId}/${this.props.id}`} onClick={Link.handleClick}>
+              {this.props.name}
+            </a>
+          </p>
+        </div>
+        <div className="controls">
+          <a className="ListItem-link hint--bottom" data-hint="Open" href={`/search/${this.props.projectId}/${this.props.id}`} onClick={Link.handleClick}>
+            <i className="fa fa-arrow-right fa-lg"></i>
+          </a>
+          <a className="ListItem-link hint--bottom" data-hint="Edit" href={`/updateSearch/${this.props.projectId}/${this.props.id}`} onClick={Link.handleClick}>
+            <i className="fa fa-edit fa-lg"></i>
+          </a>
+          <a className="ListItem-link hint--bottom" data-hint="Remove" href="javascript:void(0);" onClick={this.handleDeleteClick.bind(this)}>
+            <i className="fa fa-remove fa-lg"></i>
+          </a>
+        </div>
       </li>
     );
   }

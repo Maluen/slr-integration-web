@@ -66,7 +66,7 @@ class ProjectAccessesPage extends Component {
     return (
       <div>
         <h2>Project {this.props.project.name}</h2>
-        <a className="ProjectAccessesPage-link ProjectAccessesPage-link-createProjectAccess"
+        <a className="ProjectAccessesPage-link ProjectAccessesPage-link-createProjectAccess pure-button pure-button-primary"
           href={`/createProjectAccess/${this.props.projectId}`}
           onClick={Link.handleClick}>
           Add access

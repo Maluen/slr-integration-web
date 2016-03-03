@@ -23,13 +23,16 @@ class UserMachineListItem extends Component {
   render() {
     return (
       <li key={this.props.id}>
-        <input
-          type="radio"
-          name="searchMachine"
-          value={this.props.id}
-          onChange={this.handleSearchMachineChange.bind(this)}
-        />
-        <span>{this.props.name}</span> <span>{this.props.hostname}</span>:<span>{this.props.port}</span>
+        <label htmlFor={`searchMachine_${this.props.id}`}>
+          <input
+            type="radio"
+            id={`searchMachine_${this.props.id}`}
+            name="searchMachine"
+            value={this.props.id}
+            onChange={this.handleSearchMachineChange.bind(this)}
+          />
+          {this.props.name}
+        </label>
       </li>
     );
   }

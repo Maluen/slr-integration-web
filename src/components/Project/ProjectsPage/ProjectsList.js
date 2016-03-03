@@ -15,8 +15,8 @@ class ProjectsList extends Component {
 
   render() {
     return (
-      <div className="ProjectsList">
-        <div className="ProjectsList-container">
+      <div className="List">
+        <div className="List-container">
           <ul>
             {this.props.projects.map((project) =>
               <ProjectListItem key={project.id} {...project} />

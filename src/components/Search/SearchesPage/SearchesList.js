@@ -16,8 +16,8 @@ class SearchesList extends Component {
 
   render() {
     return (
-      <div className="SearchesList">
-        <div className="SearchesList-container">
+      <div className="List">
+        <div className="List-container">
           <ul>
             {this.props.searches.map((search) =>
               <SearchListItem key={search.id} projectId={this.props.projectId} {...search} />
