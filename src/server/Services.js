@@ -57,9 +57,31 @@ function deferService(target, key, descriptor) {
   };
 }
 
+import * as services from './services/index';
+import callService from './callService';
+
 // Note: defined as singleton class to have access to method decorators
 export default new class Services {
+  call(method, serviceName, serviceArguments = {}) {
+    const service = services[serviceName];
+    if (service.method !== method) {
+      return Promise.reject(new Error(
+        `${serviceName}: service method does not match, expected ${service.method}, got ${method}`
+      ));
+    }
 
+    return callService(service, serviceArguments);
+  }
+
+  get(...args) {
+    return this.call('get', ...args);
+  }
+
+  post(...args) {
+    return this.call('post', ...args);
+  }
+
+  /*
   async register(email, password, req, res) {
     return await registerService(email, password, req, res);
   }
@@ -151,5 +173,6 @@ export default new class Services {
   async stopSearch(projectId, id, machineId, req) {
     return await stopSearchService(projectId, id, machineId, req);
   }
+  */
 
 };

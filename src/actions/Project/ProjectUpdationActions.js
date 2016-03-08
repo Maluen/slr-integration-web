@@ -10,7 +10,7 @@ export default class ProjectUpdationActions {
     return this.alt.defer(async (resolve) => {
       try {
         //this.actions.fetchBefore();
-        const response = await Globals.services.readProjects({ id }, this.alt.req);
+        const response = await Globals.services.get('readProjects', { filterObj: { id }, req: this.alt.req });
         const project = response.projects ? response.projects[0] : null;
         this.actions.fetchSuccess(project);
       } catch (err) {
@@ -44,7 +44,7 @@ export default class ProjectUpdationActions {
   update(id, name, settings) {
     return this.alt.promise(async (resolve) => {
       try {
-        const response = await Globals.services.saveProject(id, name, settings, this.alt.req);
+        const response = await Globals.services.post('saveProject', { id, name, settings, req: this.alt.req });
         this.actions.updateSuccess(response.project);
       } catch (err) {
         this.actions.updateError(err.message);

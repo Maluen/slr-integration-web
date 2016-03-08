@@ -10,7 +10,7 @@ export default class MachineAccessesActions {
     return this.alt.defer(async (resolve) => {
       try {
         //this.actions.fetchBefore();
-        const response = await Globals.services.readMachineAccesses(machineId, this.alt.req);
+        const response = await Globals.services.get('readMachineAccesses', { machineId, req: this.alt.req });
         const { machine, machineAccesses } = response;
         this.actions.fetchSuccess({ machine, machineAccesses });
       } catch (err) {
@@ -36,7 +36,7 @@ export default class MachineAccessesActions {
   deleteMachineAccess(id) {
     return this.alt.promise(async (resolve) => {
       try {
-        const response = await Globals.services.deleteMachineAccess(id, this.alt.req);
+        const response = await Globals.services.post('deleteMachineAccess', { id, req: this.alt.req });
         this.dispatch(response.machineAccess);
       } catch (err) {
         // TODO

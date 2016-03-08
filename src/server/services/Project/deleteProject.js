@@ -1,9 +1,71 @@
 import Project from '../../models/Project';
 import ProjectAccess from '../../models/ProjectAccess';
-import currentUserService from '../User/currentUser';
 import Search from '../../models/Search';
-import deleteSearchService from '../Search/deleteSearch';
+import { deleteSearch } from '../Search/deleteSearch';
+import callService from '../../callService';
 
+import authenticated from '../middlewares/authenticated';
+
+export const deleteProject = {
+  method: 'post',
+  remote: true,
+  parameters: {
+    id: String,
+  },
+  handler: [authenticated, ({ id, req, currentUser }) => {
+    return Promise.resolve().then(async () => {
+      // TODO: validation
+
+      if (!id) {
+        throw new Error(`The 'id' query parameter cannot be empty.`);
+      }
+
+      const project = await Project.findById(id);
+
+      if (!project) {
+        throw new Error('The requested project does not exists.');
+      }
+
+      const projectAccessCount = await ProjectAccess.count({
+        project: id,
+        user: currentUser._id,
+        permission: 'Administrator',
+      });
+      if (projectAccessCount === 0) {
+        throw new Error('Access denied: you must be an Administrator of this project to delete it.');
+      }
+
+      // Remove all the project searches first
+
+      const searchList = await Search.find({ project: id }).populate('state');
+      const searchRemovePromises = [];
+      searchList.forEach(search => {
+        // by using the dedicate service, we make sure
+        // to recursively delete any other linked model
+        const promise = callService(deleteSearch, { id: search.id, req });
+        searchRemovePromises.push(promise);
+      });
+      await Promise.all(searchRemovePromises);
+
+      // Remove all the project accesses first
+
+      const projectAccessList = await ProjectAccess.find({ project: id });
+      const projectAccessRemovePromises = [];
+      projectAccessList.forEach(projectAccess => {
+        const promise = projectAccess.remove();
+        projectAccessRemovePromises.push(promise);
+      });
+      await Promise.all(projectAccessRemovePromises);
+
+      // Remove the project
+      await project.remove();
+
+      return { project: project.toObject({ virtuals: true }) };
+    });
+  }],
+};
+
+/*
 export default function deleteProject(id, req) {
   return Promise.resolve().then(async () => {
     // TODO: validation
@@ -29,67 +91,44 @@ export default function deleteProject(id, req) {
       throw new Error('The requested project does not exists.');
     }
 
-    try {
-      const count = await ProjectAccess.count({
-        project: id,
-        user: currentUser._id,
-        permission: 'Administrator',
-      });
-      if (count === 0) {
-        throw new Error('Access denied: you must be an Administrator of this project to delete it.');
-      }
-    } catch (err) {
-      throw new Error(err.err);
+    const projectAccessCount = await ProjectAccess.count({
+      project: id,
+      user: currentUser._id,
+      permission: 'Administrator',
+    });
+    if (projectAccessCount === 0) {
+      throw new Error('Access denied: you must be an Administrator of this project to delete it.');
     }
 
     // Remove all the project searches first
 
-    let searchList = [];
-    try {
-      searchList = await Search.find({ project: id }).populate('state');
-    } catch (err) {
-      throw new Error(err.err);
-    }
+    const searchList = await Search.find({ project: id }).populate('state');
     const searchRemovePromises = [];
     searchList.forEach(search => {
       // by using the dedicate service, we make sure
       // to recursively delete any other linked model
-      const promise = deleteSearchService(search.id, req);
+      const promise = deleteSearch(search.id, req);
       searchRemovePromises.push(promise);
     });
-    try {
-      await Promise.all(searchRemovePromises);
-    } catch (err) {
-      throw new Error(err.message);
-    }
+    await Promise.all(searchRemovePromises);
 
     // Remove all the project accesses first
 
-    let projectAccessList = [];
-    try {
-      projectAccessList = await ProjectAccess.find({ project: id });
-    } catch (err) {
-      throw new Error(err.err);
-    }
+    const projectAccessList = await ProjectAccess.find({ project: id });
     const projectAccessRemovePromises = [];
     projectAccessList.forEach(projectAccess => {
       const promise = projectAccess.remove();
       projectAccessRemovePromises.push(promise);
     });
-    try {
-      await Promise.all(projectAccessRemovePromises);
-    } catch (err) {
-      throw new Error(err.err);
-    }
+    await Promise.all(projectAccessRemovePromises);
 
     // Remove the project
-
-    try {
-      await project.remove();
-    } catch (err) {
-      throw new Error(err.err);
-    }
+    await project.remove();
 
     return { project: project.toObject({ virtuals: true }) };
+  })
+  .catch(err => {
+    throw new Error(typeof err === 'object' ? (err.message || err.err) : err);
   });
 }
+*/

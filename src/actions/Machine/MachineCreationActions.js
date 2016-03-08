@@ -21,7 +21,7 @@ export default class MachineCreationActions {
   create(name, password, hostname, port) {
     return this.alt.promise(async (resolve) => {
       try {
-        const response = await Globals.services.saveMachine(null, name, password, hostname, port, this.alt.req);
+        const response = await Globals.services.post('saveMachine', { id: null, name, password, hostname, port, req: this.alt.req });
         this.actions.createSuccess(response.machine);
       } catch (err) {
         this.actions.createError(err.message);

@@ -10,7 +10,7 @@ export default class AccountActions {
     return this.alt.defer(async (resolve) => {
       try {
         //this.actions.fetchBefore();
-        const response = await Globals.services.currentUser(this.alt.req);
+        const response = await Globals.services.get('currentUser', { req: this.alt.req });
         this.actions.fetchSuccess(response.user);
       } catch (err) {
         this.actions.fetchError(err.message);
@@ -43,7 +43,7 @@ export default class AccountActions {
   register(email, password) {
     return this.alt.promise(async (resolve) => {
       try {
-        const response = await Globals.services.register(email, password, this.alt.req, this.alt.res);
+        const response = await Globals.services.post('register', { email, password, req: this.alt.req, res: this.alt.res });
         this.actions.registerSuccess(response.isActivationRequired);
       } catch (err) {
         this.actions.registerError(err.message);
@@ -72,7 +72,7 @@ export default class AccountActions {
   login(email, password) {
     return this.alt.promise(async (resolve) => {
       try {
-        await Globals.services.login(email, password, this.alt.req, this.alt.res);
+        await Globals.services.post('login', { email, password, req: this.alt.req, res: this.alt.res });
         this.actions.loginSuccess();
       } catch (err) {
         this.actions.loginError(err.message);
@@ -95,7 +95,7 @@ export default class AccountActions {
   logout() {
     return this.alt.promise(async (resolve) => {
       try {
-        await Globals.services.logout(this.alt.req);
+        await Globals.services.get('logout', { req: this.alt.req });
         this.dispatch();
         this.alt.redirect('/');
       } catch (err) {

@@ -13,7 +13,7 @@ export default class ProjectCreationActions {
   create(name, settings) {
     return this.alt.promise(async (resolve) => {
       try {
-        const response = await Globals.services.saveProject(null, name, settings, this.alt.req);
+        const response = await Globals.services.post('saveProject', { id: null, name, settings, req: this.alt.req });
         this.actions.createSuccess(response.project);
       } catch (err) {
         this.actions.createError(err.message);

@@ -76,7 +76,7 @@ server.use((req, res, next) => {
 //
 // Register API middleware
 // -----------------------------------------------------------------------------
-server.use('/api', require('./server/api/main'));
+server.use('/api', require('./server/api/index'));
 
 //
 // Register server-side rendering middleware

@@ -10,7 +10,7 @@ export default class MachineUpdationActions {
     return this.alt.defer(async (resolve) => {
       try {
         //this.actions.fetchBefore();
-        const response = await Globals.services.readMachines({ id }, this.alt.req);
+        const response = await Globals.services.get('readMachines', { filterObj: { id }, req: this.alt.req });
         const machine = response.machines ? response.machines[0] : null;
         this.actions.fetchSuccess(machine);
       } catch (err) {
@@ -52,7 +52,7 @@ export default class MachineUpdationActions {
   update(id, name, password, hostname, port) {
     return this.alt.promise(async (resolve) => {
       try {
-        const response = await Globals.services.saveMachine(id, name, password, hostname, port, this.alt.req);
+        const response = await Globals.services.post('saveMachine', { id, name, password, hostname, port, req: this.alt.req });
         this.actions.updateSuccess(response.machine);
       } catch (err) {
         this.actions.updateError(err.message);

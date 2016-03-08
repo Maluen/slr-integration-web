@@ -1,4 +1,3 @@
-import currentUserService from '../User/currentUser';
 import ProjectAccess from '../../models/ProjectAccess';
 import MachineAccess from '../../models/MachineAccess';
 import Search from '../../models/Search';
@@ -6,6 +5,83 @@ import Project from '../../models/Project';
 import Machine from '../../models/Machine';
 import Globals from '../../../core/Globals';
 
+import authenticated from '../middlewares/authenticated';
+
+export const startSearch = {
+  method: 'post',
+  remote: true,
+  parameters: {
+    projectId: String,
+    id: String,
+    machineId: String,
+    resume: Boolean,
+  },
+  handler: [authenticated, ({ projectId, id, machineId, resume, req, currentUser }) => {
+    return Promise.resolve().then(async () => {
+      // TODO: validation
+
+      if (!projectId) {
+        throw new Error(`The 'machineId' query parameter cannot be empty.`);
+      }
+
+      if (!id) {
+        throw new Error(`The 'id' query parameter cannot be empty.`);
+      }
+
+      if (!machineId) {
+        throw new Error(`The 'machineId' query parameter cannot be empty.`);
+      }
+
+      if (typeof resume !== 'boolean') {
+        throw new Error(`The 'resume' query parameter must be either true or false.`);
+      }
+
+      const projectAccessCount = await ProjectAccess.count({
+        project: projectId,
+        user: currentUser._id,
+        permission: 'Administrator',
+      });
+      if (projectAccessCount === 0) {
+        throw new Error('Access denied: you must be an Administrator of the project to start its searches.');
+      }
+
+      const machineAccessCount = await MachineAccess.count({
+        machine: machineId,
+        user: currentUser._id,
+        permission: 'Administrator',
+      });
+      if (machineAccessCount === 0) {
+        throw new Error('Access denied: you must be an Administrator of the machine to use it.');
+      }
+
+      let search = await Search.findOne({ _id: id }).populate('state');
+      if (!search) {
+        throw new Error('The search does not exists.');
+      }
+      if (!search.project.equals(projectId)) {
+        throw new Error('The search does not belong to the provided project.');
+      }
+
+      let project = await Project.findOne({ _id: projectId });
+      if (!project) {
+        throw new Error('The project does not exists.');
+      }
+
+      let machine = await Machine.findOne({ _id: machineId });
+      if (!machine) {
+        throw new Error('The machine does not exists.');
+      }
+
+      search = search.toObject({ virtuals: true });
+      project = project.toObject({ virtuals: true });
+      machine = machine.toObject({ virtuals: true });
+
+      return Globals.webSocketServer.startSearch(project, search, machine, resume);
+    });
+  }],
+};
+
+/*
 export default function startSearch(projectId, id, machineId, resume, req) {
   return Promise.resolve().then(async () => {
     // TODO: validation
@@ -21,54 +97,41 @@ export default function startSearch(projectId, id, machineId, resume, req) {
       throw err;
     }
 
-    if (typeof projectId === 'undefined') {
+    if (!projectId) {
       throw new Error(`The 'machineId' query parameter cannot be empty.`);
     }
 
-    if (typeof id === 'undefined') {
+    if (!id) {
       throw new Error(`The 'id' query parameter cannot be empty.`);
     }
 
-    if (typeof machineId === 'undefined') {
+    if (!machineId) {
       throw new Error(`The 'machineId' query parameter cannot be empty.`);
     }
 
-    if (typeof resume === 'undefined') {
-      throw new Error(`The 'resume' query parameter cannot be empty.`);
+    if (typeof resume !== 'boolean') {
+      throw new Error(`The 'resume' query parameter must be either true or false.`);
     }
 
-    try {
-      const count = await ProjectAccess.count({
-        project: projectId,
-        user: currentUser._id,
-        permission: 'Administrator',
-      });
-      if (count === 0) {
-        throw new Error('Access denied: you must be an Administrator of the project to start its searches.');
-      }
-    } catch (err) {
-      throw new Error(err.message);
+    const projectAccessCount = await ProjectAccess.count({
+      project: projectId,
+      user: currentUser._id,
+      permission: 'Administrator',
+    });
+    if (projectAccessCount === 0) {
+      throw new Error('Access denied: you must be an Administrator of the project to start its searches.');
     }
 
-    try {
-      const count = await MachineAccess.count({
-        machine: machineId,
-        user: currentUser._id,
-        permission: 'Administrator',
-      });
-      if (count === 0) {
-        throw new Error('Access denied: you must be an Administrator of the machine to use it.');
-      }
-    } catch (err) {
-      throw new Error(err.message);
+    const machineAccessCount = await MachineAccess.count({
+      machine: machineId,
+      user: currentUser._id,
+      permission: 'Administrator',
+    });
+    if (machineAccessCount === 0) {
+      throw new Error('Access denied: you must be an Administrator of the machine to use it.');
     }
 
-    let search;
-    try {
-      search = await Search.findOne({ _id: id }).populate('state');
-    } catch (err) {
-      throw new Error(err.err);
-    }
+    let search = await Search.findOne({ _id: id }).populate('state');
     if (!search) {
       throw new Error('The search does not exists.');
     }
@@ -76,22 +139,12 @@ export default function startSearch(projectId, id, machineId, resume, req) {
       throw new Error('The search does not belong to the provided project.');
     }
 
-    let project;
-    try {
-      project = await Project.findOne({ _id: projectId });
-    } catch (err) {
-      throw new Error(err.err);
-    }
+    let project = await Project.findOne({ _id: projectId });
     if (!project) {
       throw new Error('The project does not exists.');
     }
 
-    let machine;
-    try {
-      machine = await Machine.findOne({ _id: machineId });
-    } catch (err) {
-      throw new Error(err.err);
-    }
+    let machine = await Machine.findOne({ _id: machineId });
     if (!machine) {
       throw new Error('The machine does not exists.');
     }
@@ -101,5 +154,9 @@ export default function startSearch(projectId, id, machineId, resume, req) {
     machine = machine.toObject({ virtuals: true });
 
     return Globals.webSocketServer.startSearch(project, search, machine, resume);
+  })
+  .catch(err => {
+    throw new Error(typeof err === 'object' ? (err.message || err.err) : err);
   });
 }
+*/

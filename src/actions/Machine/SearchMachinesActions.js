@@ -10,7 +10,7 @@ export default class SearchMachinesActions {
     return this.alt.defer(async (resolve) => {
       try {
         //this.actions.fetchBefore();
-        const response = await Globals.services.readSearchMachines(searchId, this.alt.req);
+        const response = await Globals.services.get('readSearchMachines', { searchId, req: this.alt.req });
         this.actions.fetchSuccess(response.machines);
       } catch (err) {
         this.actions.fetchError(err.message);

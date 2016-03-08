@@ -10,7 +10,7 @@ export default class ProjectsActions {
     return this.alt.defer(async (resolve) => {
       try {
         //this.actions.fetchBefore();
-        const response = await Globals.services.readProjects(null, this.alt.req);
+        const response = await Globals.services.get('readProjects', { id: null, req: this.alt.req });
         this.actions.fetchSuccess(response.projects);
       } catch (err) {
         this.actions.fetchError(err.message);
@@ -35,7 +35,7 @@ export default class ProjectsActions {
   deleteProject(id) {
     return this.alt.promise(async (resolve) => {
       try {
-        const response = await Globals.services.deleteProject(id, this.alt.req);
+        const response = await Globals.services.post('deleteProject', { id, req: this.alt.req });
         this.dispatch(response.project);
       } catch (err) {
         // TODO

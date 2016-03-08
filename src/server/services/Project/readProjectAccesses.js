@@ -1,7 +1,50 @@
 import ProjectAccess from '../../models/ProjectAccess';
 import Project from '../../models/Project';
-import currentUserService from '../User/currentUser';
 
+import authenticated from '../middlewares/authenticated';
+
+export const readProjectAccesses = {
+  method: 'get',
+  remote: true,
+  parameters: {
+    projectId: String,
+  },
+  handler: [authenticated, ({ projectId, req, currentUser }) => {
+    return Promise.resolve().then(async () => {
+      // TODO: validation
+
+      if (!projectId) {
+        throw new Error(`The 'projectId' query parameter cannot be empty.`);
+      }
+
+      const projectAccessCount = await ProjectAccess.count({
+        project: projectId,
+        user: currentUser._id,
+      });
+      if (projectAccessCount === 0) {
+        throw new Error('Access denied: you must have access to this project (with any permission) to view its users.');
+      }
+
+      const projectAccessList = await ProjectAccess.find({
+        project: projectId,
+      }).populate('user');
+
+      const project = projectAccessList.length ? await Project.findById(projectAccessList[0].project) : undefined;
+      // TODO: rename to projectUsers
+      const projectAccesses = projectAccessList.map(projectAccess => {
+        return {
+          id: projectAccess.id,
+          user: projectAccess.user.toObject({ virtuals: true }),
+          permission: projectAccess.permission,
+        };
+      });
+
+      return { project: project.toObject({ virtuals: true }), projectAccesses };
+    });
+  }],
+};
+
+/*
 export default function readProjectAccesses(projectId, req) {
   return Promise.resolve().then(async () => {
     // TODO: validation
@@ -21,26 +64,17 @@ export default function readProjectAccesses(projectId, req) {
       throw new Error(`The 'projectId' query parameter cannot be empty.`);
     }
 
-    try {
-      const count = await ProjectAccess.count({
-        project: projectId,
-        user: currentUser._id,
-      });
-      if (count === 0) {
-        throw new Error('Access denied: you must have access to this project (with any permission) to view its users.');
-      }
-    } catch (err) {
-      throw new Error(err.err);
+    const projectAccessCount = await ProjectAccess.count({
+      project: projectId,
+      user: currentUser._id,
+    });
+    if (projectAccessCount === 0) {
+      throw new Error('Access denied: you must have access to this project (with any permission) to view its users.');
     }
 
-    let projectAccessList = [];
-    try {
-      projectAccessList = await ProjectAccess.find({
-        project: projectId,
-      }).populate('user');
-    } catch (err) {
-      throw new Error(err.err);
-    }
+    const projectAccessList = await ProjectAccess.find({
+      project: projectId,
+    }).populate('user');
 
     const project = projectAccessList.length ? await Project.findById(projectAccessList[0].project) : undefined;
     // TODO: rename to projectUsers
@@ -53,5 +87,9 @@ export default function readProjectAccesses(projectId, req) {
     });
 
     return { project: project.toObject({ virtuals: true }), projectAccesses };
+  })
+  .catch(err => {
+    throw new Error(typeof err === 'object' ? (err.message || err.err) : err);
   });
 }
+*/

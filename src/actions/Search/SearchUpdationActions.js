@@ -10,7 +10,7 @@ export default class SearchUpdationActions {
     return this.alt.defer(async (resolve) => {
       try {
         //this.actions.fetchBefore();
-        const response = await Globals.services.readSearches(projectId, { id }, this.alt.req);
+        const response = await Globals.services.get('readSearches', { projectId, filterObj: { id }, req: this.alt.req });
         const search = response.searches ? response.searches[0] : null;
         this.actions.fetchSuccess(search);
       } catch (err) {
@@ -44,7 +44,7 @@ export default class SearchUpdationActions {
   update(projectId, id, name, settings) {
     return this.alt.promise(async (resolve) => {
       try {
-        const response = await Globals.services.saveSearch(projectId, id, name, settings, this.alt.req);
+        const response = await Globals.services.post('saveSearch', { projectId, id, name, settings, req: this.alt.req });
         this.actions.updateSuccess(response.search);
       } catch (err) {
         this.actions.updateError(err.message);

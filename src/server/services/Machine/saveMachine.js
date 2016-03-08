@@ -1,8 +1,86 @@
 import Machine from '../../models/Machine';
 import MachineAccess from '../../models/MachineAccess';
-import currentUserService from '../User/currentUser';
-import saveMachineAccessService from './saveMachineAccess';
+import { saveMachineAccess } from './saveMachineAccess';
+import callService from '../../callService';
 
+import authenticated from '../middlewares/authenticated';
+
+export const saveMachine = {
+  method: 'post',
+  remote: true,
+  parameters: {
+    id: String,
+    name: String,
+    password: String,
+    hostname: String,
+    port: String,
+  },
+  handler: [authenticated, ({ id = null, name, password, hostname, port, req, currentUser }) => {
+    return Promise.resolve().then(async () => {
+      // TODO: validation
+
+      if (!name) {
+        throw new Error(`The 'name' query parameter cannot be empty.`);
+      }
+
+      if (!password) {
+        throw new Error(`The 'password' query parameter cannot be empty.`);
+      }
+
+      if (!hostname) {
+        throw new Error(`The 'hostname' query parameter cannot be empty.`);
+      }
+
+      if (!port) {
+        throw new Error(`The 'port' query parameter cannot be empty.`);
+      }
+
+      let machine;
+      if (id) {
+        // update
+
+        machine = await Machine.findOne({ _id: id });
+        if (!machine) {
+          throw new Error('The machine does not exists.');
+        }
+
+        const machineAccess = await MachineAccess.findOne({
+          user: currentUser._id,
+          machine: id,
+          permission: 'Administrator',
+        });
+        if (!machineAccess) {
+          throw new Error('Access denied: you must be an Administrator of this machine to edit it.');
+        }
+
+        machine.name = name;
+        machine.password = password;
+        machine.hostname = hostname;
+        machine.port = port;
+      } else {
+        // create
+        machine = new Machine({ name, password, hostname, port });
+      }
+
+      await machine.save();
+
+      if (!id) {
+        // add access to machine creator
+        await callService(saveMachineAccess, {
+          machineId: machine._id,
+          userId: currentUser._id,
+          permission: 'Administrator',
+          options: { isAfterCreate: true },
+          req,
+        });
+      }
+
+      return { machine: machine.toObject({ virtuals: true }) };
+    });
+  }],
+};
+
+/*
 export default function saveMachine(id = null, name, password, hostname, port, req) {
   return Promise.resolve().then(async () => {
     // TODO: validation
@@ -18,19 +96,19 @@ export default function saveMachine(id = null, name, password, hostname, port, r
       throw err;
     }
 
-    if (!name || name === 'undefined') {
+    if (!name) {
       throw new Error(`The 'name' query parameter cannot be empty.`);
     }
 
-    if (!password || password === 'undefined') {
+    if (!password) {
       throw new Error(`The 'password' query parameter cannot be empty.`);
     }
 
-    if (!hostname || hostname === 'undefined') {
+    if (!hostname) {
       throw new Error(`The 'hostname' query parameter cannot be empty.`);
     }
 
-    if (!port || port === 'undefined') {
+    if (!port) {
       throw new Error(`The 'port' query parameter cannot be empty.`);
     }
 
@@ -38,27 +116,16 @@ export default function saveMachine(id = null, name, password, hostname, port, r
     if (id) {
       // update
 
-      try {
-        machine = await Machine.findOne({ _id: id });
-      } catch (err) {
-        throw new Error(err.err);
-      }
-
+      machine = await Machine.findOne({ _id: id });
       if (!machine) {
         throw new Error('The machine does not exists.');
       }
 
-      let machineAccess;
-      try {
-        machineAccess = await MachineAccess.findOne({
-          user: currentUser._id,
-          machine: id,
-          permission: 'Administrator',
-        });
-      } catch (err) {
-        throw new Error(err.err);
-      }
-
+      const machineAccess = await MachineAccess.findOne({
+        user: currentUser._id,
+        machine: id,
+        permission: 'Administrator',
+      });
       if (!machineAccess) {
         throw new Error('Access denied: you must be an Administrator of this machine to edit it.');
       }
@@ -72,21 +139,17 @@ export default function saveMachine(id = null, name, password, hostname, port, r
       machine = new Machine({ name, password, hostname, port });
     }
 
-    try {
-      await machine.save();
-    } catch (err) {
-      throw new Error(err.err);
-    }
+    await machine.save();
 
     if (!id) {
       // add access to machine creator
-      try {
-        await saveMachineAccessService(machine._id, currentUser._id, 'Administrator', { isAfterCreate: true }, req);
-      } catch (err) {
-        throw err;
-      }
+      await saveMachineAccess(machine._id, currentUser._id, 'Administrator', { isAfterCreate: true }, req);
     }
 
     return { machine: machine.toObject({ virtuals: true }) };
+  })
+  .catch(err => {
+    throw new Error(typeof err === 'object' ? (err.message || err.err) : err);
   });
 }
+*/

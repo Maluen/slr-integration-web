@@ -1,8 +1,44 @@
-import currentUserService from '../User/currentUser';
 import Search from '../../models/Search';
 import ProjectAccess from '../../models/ProjectAccess';
-import readMachinesService from './readMachines';
+import { readMachines } from './readMachines';
+import callService from '../../callService';
 
+import authenticated from '../middlewares/authenticated';
+
+export const readSearchMachines = {
+  method: 'get',
+  remote: true,
+  parameters: {
+    searchId: String,
+  },
+  handler: [authenticated, ({ searchId, req, currentUser }) => {
+    return Promise.resolve().then(async () => {
+      // TODO: validation
+
+      if (!searchId) {
+        throw new Error(`The 'searchId' query parameter cannot be empty.`);
+      }
+
+      const search = await Search.findOne({ _id: searchId }).populate('state');
+      if (!search) {
+        throw new Error(`The search does not exists.`);
+      }
+
+      const projectAccessCount = await ProjectAccess.count({
+        project: search.project,
+        user: currentUser._id,
+        permission: 'Administrator',
+      });
+      if (projectAccessCount === 0) {
+        throw new Error('Access denied: you must be an Administrator of the search project to manage its searches.');
+      }
+
+      return callService(readMachines, { filterObj: null, req });
+    });
+  }],
+};
+
+/*
 export default function readSearchMachines(searchId, req) {
   return Promise.resolve().then(async () => {
     // TODO: validation
@@ -18,34 +54,28 @@ export default function readSearchMachines(searchId, req) {
       throw err;
     }
 
-    if (typeof searchId === 'undefined') {
-      throw new Error(`The 'searchId' query parameter cannot be undefined.`);
+    if (!searchId) {
+      throw new Error(`The 'searchId' query parameter cannot be empty.`);
     }
 
-    let search;
-    try {
-      search = await Search.findOne({ _id: searchId }).populate('state');
-    } catch (err) {
-      throw new Error(err.err);
-    }
-
+    const search = await Search.findOne({ _id: searchId }).populate('state');
     if (!search) {
       throw new Error(`The search does not exists.`);
     }
 
-    try {
-      const count = await ProjectAccess.count({
-        project: search.project,
-        user: currentUser._id,
-        permission: 'Administrator',
-      });
-      if (count === 0) {
-        throw new Error('Access denied: you must be an Administrator of the search project to manage its searches.');
-      }
-    } catch (err) {
-      throw new Error(err.err);
+    const projectAccessCount = await ProjectAccess.count({
+      project: search.project,
+      user: currentUser._id,
+      permission: 'Administrator',
+    });
+    if (projectAccessCount === 0) {
+      throw new Error('Access denied: you must be an Administrator of the search project to manage its searches.');
     }
 
     return readMachinesService(null, req);
+  })
+  .catch(err => {
+    throw new Error(typeof err === 'object' ? (err.message || err.err) : err);
   });
 }
+*/

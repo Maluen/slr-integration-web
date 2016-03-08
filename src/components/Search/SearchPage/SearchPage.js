@@ -133,6 +133,8 @@ class SearchPage extends Component {
   }
 
   renderFetchSuccess() {
+    const startDisabled = (this.props.machineId === null);
+
     return (
       <div>
         <p>{this.props.startSearchErrorMessage}</p>
@@ -144,7 +146,12 @@ class SearchPage extends Component {
               <input type="checkbox" id="resumeSearchCheckbox" ref="resumeSearchCheckbox" defaultChecked={true} />
               <label htmlFor="resumeSearchCheckbox">Resume search if possible</label>
             </p>
-            <button disabled={this.props.machineId === null} onClick={this.startSearch.bind(this)}>Start</button>
+            <button
+              className={`pure-button pure-button-primary ${startDisabled ? 'pure-button-disabled' : ''}`}
+              disabled={startDisabled}
+              onClick={this.startSearch.bind(this)}>
+              Start
+            </button>
           </div>
         :
           <div>

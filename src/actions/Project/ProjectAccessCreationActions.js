@@ -13,14 +13,14 @@ export default class ProjectAccessCreationActions {
   create(projectId, email, permission) {
     return this.alt.promise(async (resolve) => {
       try {
-        const readUsersResponse = await Globals.services.readUsers({ email });
+        const readUsersResponse = await Globals.services.get('readUsers', { filterObj: { email } });
         const users = readUsersResponse.users;
         if (!users || users.length === 0) {
           throw new Error('User not found.');
         }
         const userId = users[0].id;
 
-        const response = await Globals.services.saveProjectAccess(projectId, userId, permission, this.alt.req);
+        const response = await Globals.services.post('saveProjectAccess', { projectId, userId, permission, req: this.alt.req });
         this.actions.createSuccess(response.projectAccess);
       } catch (err) {
         this.actions.createError(err.message);

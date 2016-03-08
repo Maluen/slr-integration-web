@@ -1,8 +1,49 @@
 import Search from '../../models/Search';
 import ProjectAccess from '../../models/ProjectAccess';
-import currentUserService from '../User/currentUser';
 import filter from 'lodash.filter';
 
+import authenticated from '../middlewares/authenticated';
+
+export const readSearches = {
+  method: 'get',
+  remote: true,
+  parameters: {
+    projectId: String,
+    filterObj: Object,
+  },
+  handler: [authenticated, ({ projectId, filterObj, req, currentUser }) => {
+    return Promise.resolve().then(async () => {
+      // TODO: validation
+
+      if (!projectId) {
+        throw new Error(`The 'projectId' query parameter cannot be empty.`);
+      }
+
+      const projectAccessCount = await ProjectAccess.count({
+        project: projectId,
+        user: currentUser._id,
+      });
+      if (projectAccessCount === 0) {
+        throw new Error('Access denied: you must have access to the project to view its searches.');
+      }
+
+      const searchList = await Search.find({
+        project: projectId,
+      }).populate('state');
+
+      let searches = searchList.map(search => search.toObject({ virtuals: true }));
+
+      // filter
+      if (typeof filterObj === 'object' && filterObj !== null) {
+        searches = filter(searches, filterObj);
+      }
+
+      return { searches };
+    });
+  }],
+};
+
+/*
 export default function readSearches(projectId, filterObj, req) {
   return Promise.resolve().then(async () => {
     // TODO: validation
@@ -22,26 +63,17 @@ export default function readSearches(projectId, filterObj, req) {
       throw new Error(`The 'projectId' query parameter cannot be empty.`);
     }
 
-    try {
-      const count = await ProjectAccess.count({
-        project: projectId,
-        user: currentUser._id,
-      });
-      if (count === 0) {
-        throw new Error('Access denied: you must have access to the project to view its searches.');
-      }
-    } catch (err) {
-      throw new Error(err.err);
+    const projectAccessCount = await ProjectAccess.count({
+      project: projectId,
+      user: currentUser._id,
+    });
+    if (projectAccessCount === 0) {
+      throw new Error('Access denied: you must have access to the project to view its searches.');
     }
 
-    let searchList = [];
-    try {
-      searchList = await Search.find({
-        project: projectId,
-      }).populate('state');
-    } catch (err) {
-      throw new Error(err.err);
-    }
+    const searchList = await Search.find({
+      project: projectId,
+    }).populate('state');
 
     let searches = searchList.map(search => search.toObject({ virtuals: true }));
 
@@ -51,5 +83,9 @@ export default function readSearches(projectId, filterObj, req) {
     }
 
     return { searches };
+  })
+  .catch(err => {
+    throw new Error(typeof err === 'object' ? (err.message || err.err) : err);
   });
 }
+*/

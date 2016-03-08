@@ -173,6 +173,14 @@ textarea {
  * Custom styles
  * ========================================================================== */
 
+ul {
+  list-style-type: none;
+}
+
+input[type="checkbox"], input[type="radio"] {
+  margin-right: 5px;
+}
+
 .pure-form.form-inline {
   input, label {
     margin-right: 10px;

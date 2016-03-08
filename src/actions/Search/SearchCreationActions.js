@@ -13,7 +13,7 @@ export default class SearchCreationActions {
   create(projectId, name, settings) {
     return this.alt.promise(async (resolve) => {
       try {
-        const response = await Globals.services.saveSearch(projectId, null, name, settings, this.alt.req);
+        const response = await Globals.services.post('saveSearch', { projectId, id: null, name, settings, req: this.alt.req });
         this.actions.createSuccess(response.search);
       } catch (err) {
         this.actions.createError(err.message);

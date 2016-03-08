@@ -1,8 +1,53 @@
 import Search from '../../models/Search';
 import ProjectAccess from '../../models/ProjectAccess';
-import currentUserService from '../User/currentUser';
 import SearchState from '../../models/SearchState';
 
+import authenticated from '../middlewares/authenticated';
+
+export const deleteSearch = {
+  method: 'post',
+  remote: true,
+  parameters: {
+    id: String,
+  },
+  handler: [authenticated, ({ id, req, currentUser }) => {
+    return Promise.resolve().then(async () => {
+      // TODO: validation
+
+      if (!id) {
+        throw new Error(`The 'id' query parameter cannot be empty.`);
+      }
+
+      const search = await Search.findById(id).populate('state');
+
+      if (!search) {
+        throw new Error('The requested search does not exists.');
+      }
+
+      const projectAccessCount = await ProjectAccess.count({
+        project: search.project,
+        user: currentUser._id,
+        permission: 'Administrator',
+      });
+      if (projectAccessCount === 0) {
+        throw new Error('Access denied: you must be an Administrator of the project to delete its searches.');
+      }
+
+      // Remove the search state first
+      const searchState = await SearchState.findById(search.state);
+      if (searchState) {
+        await searchState.remove();
+      }
+
+      // Remove the search
+      await search.remove();
+
+      return { search: search.toObject({ virtuals: true }) };
+    });
+  }],
+};
+
+/*
 export default function deleteSearch(id, req) {
   return Promise.resolve().then(async () => {
     // TODO: validation
@@ -28,43 +73,28 @@ export default function deleteSearch(id, req) {
       throw new Error('The requested search does not exists.');
     }
 
-    try {
-      const count = await ProjectAccess.count({
-        project: search.project,
-        user: currentUser._id,
-        permission: 'Administrator',
-      });
-      if (count === 0) {
-        throw new Error('Access denied: you must be an Administrator of the project to delete its searches.');
-      }
-    } catch (err) {
-      throw new Error(err.err || err.message);
+    const projectAccessCount = await ProjectAccess.count({
+      project: search.project,
+      user: currentUser._id,
+      permission: 'Administrator',
+    });
+    if (projectAccessCount === 0) {
+      throw new Error('Access denied: you must be an Administrator of the project to delete its searches.');
     }
 
     // Remove the search state first
-
-    let searchState;
-    try {
-      searchState = await SearchState.findById(search.state);
-    } catch (err) {
-      throw new Error(err.err);
-    }
+    const searchState = await SearchState.findById(search.state);
     if (searchState) {
-      try {
-        await searchState.remove();
-      } catch (err) {
-        throw new Error(err.err);
-      }
+      await searchState.remove();
     }
 
     // Remove the search
-
-    try {
-      await search.remove();
-    } catch (err) {
-      throw new Error(err.err);
-    }
+    await search.remove();
 
     return { search: search.toObject({ virtuals: true }) };
+  })
+  .catch(err => {
+    throw new Error(typeof err === 'object' ? (err.message || err.err) : err);
   });
 }
+*/

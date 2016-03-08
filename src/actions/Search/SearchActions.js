@@ -10,7 +10,7 @@ export default class SearchActions {
     return this.alt.defer(async (resolve) => {
       try {
         //this.actions.fetchBefore();
-        const response = await Globals.services.readSearches(projectId, { id }, this.alt.req);
+        const response = await Globals.services.get('readSearches', { projectId, filterObj: { id }, req: this.alt.req });
         const search = response.searches ? response.searches[0] : null;
         this.actions.fetchSuccess(search);
       } catch (err) {
@@ -40,7 +40,7 @@ export default class SearchActions {
   startSearch(projectId, id, machineId, resume) {
     return this.alt.promise(async (resolve) => {
       try {
-        await Globals.services.startSearch(projectId, id, machineId, resume, this.alt.req);
+        await Globals.services.post('startSearch', { projectId, id, machineId, resume, req: this.alt.req });
         this.actions.startSearchSuccess();
       } catch (err) {
         this.actions.startSearchError(err.message);
@@ -61,7 +61,7 @@ export default class SearchActions {
   stopSearch(projectId, id, machineId) {
     return this.alt.promise(async (resolve) => {
       try {
-        await Globals.services.stopSearch(projectId, id, machineId, this.alt.req);
+        await Globals.services.post('stopSearch', { projectId, id, machineId, req: this.alt.req });
         this.actions.stopSearchSuccess();
       } catch (err) {
         this.actions.stopSearchError(err.message);

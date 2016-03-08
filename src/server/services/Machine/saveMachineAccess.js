@@ -1,6 +1,77 @@
 import MachineAccess from '../../models/MachineAccess';
-import currentUserService from '../User/currentUser';
 
+import authenticated from '../middlewares/authenticated';
+
+export const saveMachineAccess = {
+  method: 'post',
+  remote: true,
+  parameters: {
+    machineId: String,
+    userId: String,
+    permission: String,
+    options: Object,
+  },
+  handler: [authenticated, ({ machineId, userId, permission, options = {}, req, currentUser}) => {
+    return Promise.resolve().then(async () => {
+      // TODO: validation
+
+      if (!machineId) {
+        throw new Error(`The 'machineId' query parameter cannot be empty.`);
+      }
+
+      if (!userId) {
+        throw new Error(`The 'userId' query parameter cannot be empty.`);
+      }
+
+      if (permission !== 'Administrator') { // (only available permission for now)
+        throw new Error('Invalid permission.');
+      }
+
+      if (!options.isAfterCreate) {
+        // current user must have Administrator access
+        // to this machine to add another user
+        const machineAccessCount = await MachineAccess.count({
+          machine: machineId,
+          user: currentUser._id,
+          permission: 'Administrator',
+        });
+        if (machineAccessCount === 0) {
+          throw new Error('Access denied: you must be an Administrator of this machine to add users to it.');
+        }
+      } else {
+        if (permission !== 'Administrator') {
+          throw new Error({ error: 'Machine creator can only be an Administrator.' });
+        }
+      }
+
+      // check if user already has access to this machine (with any permission)
+      // update permission in such a case, create otherwise
+
+      let machineAccess = await MachineAccess.findOne({
+        machine: machineId,
+        user: userId,
+      });
+
+      if (machineAccess) {
+        // update access
+        if (machineAccess.user.equals(currentUser._id)) {
+          throw new Error('You can\'t change your own permission.');
+        }
+        // update permission
+        machineAccess.permission = permission;
+      } else {
+        // create access
+        machineAccess = new MachineAccess({ machine: machineId, user: userId, permission });
+      }
+
+      await machineAccess.save();
+
+      return { machineAccess: machineAccess.toObject({ virtuals: true }) };
+    });
+  }],
+};
+
+/*
 export default function saveMachineAccess(machineId, userId, permission, options = {}, req) {
   return Promise.resolve().then(async () => {
     // TODO: validation
@@ -31,17 +102,13 @@ export default function saveMachineAccess(machineId, userId, permission, options
     if (!options.isAfterCreate) {
       // current user must have Administrator access
       // to this machine to add another user
-      try {
-        const count = await MachineAccess.count({
-          machine: machineId,
-          user: currentUser._id,
-          permission: 'Administrator',
-        });
-        if (count === 0) {
-          throw new Error('Access denied: you must be an Administrator of this machine to add users to it.');
-        }
-      } catch (err) {
-        throw new Error(err.err);
+      const machineAccessCount = await MachineAccess.count({
+        machine: machineId,
+        user: currentUser._id,
+        permission: 'Administrator',
+      });
+      if (machineAccessCount === 0) {
+        throw new Error('Access denied: you must be an Administrator of this machine to add users to it.');
       }
     } else {
       if (permission !== 'Administrator') {
@@ -52,15 +119,10 @@ export default function saveMachineAccess(machineId, userId, permission, options
     // check if user already has access to this machine (with any permission)
     // update permission in such a case, create otherwise
 
-    let machineAccess;
-    try {
-      machineAccess = await MachineAccess.findOne({
-        machine: machineId,
-        user: userId,
-      });
-    } catch (err) {
-      throw new Error(err.err);
-    }
+    let machineAccess = await MachineAccess.findOne({
+      machine: machineId,
+      user: userId,
+    });
 
     if (machineAccess) {
       // update access
@@ -74,12 +136,12 @@ export default function saveMachineAccess(machineId, userId, permission, options
       machineAccess = new MachineAccess({ machine: machineId, user: userId, permission });
     }
 
-    try {
-      await machineAccess.save();
-    } catch (err) {
-      throw new Error(err.err);
-    }
+    await machineAccess.save();
 
     return { machineAccess: machineAccess.toObject({ virtuals: true }) };
+  })
+  .catch(err => {
+    throw new Error(typeof err === 'object' ? (err.message || err.err) : err);
   });
 }
+*/
