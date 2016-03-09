@@ -35,6 +35,12 @@ class SearchPage extends Component {
     stopSearchErrorMessage: '',
   };
 
+  constructor() {
+    super();
+
+    this.outputShouldScrollBottom = true;
+  }
+
   async componentWillMount() {
     // TODO: don't fetch if it's already loading
     const { isFetched, isFetching } = this.context.flux.getStore('searchStore').getState();
@@ -48,6 +54,22 @@ class SearchPage extends Component {
     } else {
       // already fetched
       this.listenToSearch();
+    }
+  }
+
+  componentWillUpdate() {
+    const output = this.refs.output;
+    if (output) {
+      this.outputShouldScrollBottom = output.scrollTop + output.clientHeight >= output.scrollHeight - 3;
+    }
+  }
+
+  componentDidUpdate() {
+    const output = this.refs.output;
+    if (output) {
+      if (this.outputShouldScrollBottom) {
+        output.scrollTop = output.scrollHeight;
+      }
     }
   }
 
@@ -174,7 +196,7 @@ class SearchPage extends Component {
             {this.props.state.status === 'success' || this.props.state.status === 'failure' ?
               <p><a href="#" onClick={this.useAnotherMachine.bind(this)}>Use another machine</a></p>
             : ''}
-            <textarea readOnly value={this.renderOutputValue()} cols="100" rows="20" />
+            <textarea ref="output" readOnly value={this.renderOutputValue()} cols="100" rows="20" />
           </div>
         }
       </div>
