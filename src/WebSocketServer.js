@@ -1,5 +1,6 @@
 import ws from 'ws';
-import authenticateMachineService from './server/services/Machine/authenticateMachine';
+import { authenticateMachine } from './server/services/Machine/authenticateMachine';
+import callService from './server/callService';
 import SearchState from './server/models/SearchState';
 import Search from './server/models/Search';
 import pick from 'lodash.pick';
@@ -145,7 +146,7 @@ export default class WebSocketServer {
 
     let machine;
     try {
-      const response = await authenticateMachineService(machineId, machineName, machinePassword);
+      const response = await callService(authenticateMachine, { id: machineId, name: machineName, password: machinePassword });
       machine = response.machine;
     } catch (err) {
       this.sendMessage(conn, 'loginError', { message: err.message });
