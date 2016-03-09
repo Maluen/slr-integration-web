@@ -56,6 +56,9 @@ class Setting extends Component {
 
       return (
         <select id={id} name={name} multiple={multiple} value={multiple ? value.split(', ') : value} onChange={this.onSettingsChange.bind(this)}>
+          {spec.none === true ?
+            <option value="">(none)</option>
+          : ''}
           {options.map((optionName, key) =>
             <option key={key} value={optionName}>{optionName}</option>
           )}

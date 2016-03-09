@@ -22,12 +22,14 @@ export default {
     description: 'Start Year',
     view: 'yearpicker',
     firstYear,
+    none: true,
   },
   endyear: {
     defaultValue: '',
     description: 'End Year',
     view: 'yearpicker',
     firstYear,
+    none: true,
   },
 
   fastoutput: {
