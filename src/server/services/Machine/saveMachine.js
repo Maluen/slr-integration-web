@@ -27,13 +27,13 @@ export const saveMachine = {
         throw new Error(`The 'password' query parameter cannot be empty.`);
       }
 
-      if (!hostname) {
+      /*if (!hostname) {
         throw new Error(`The 'hostname' query parameter cannot be empty.`);
       }
 
       if (!port) {
         throw new Error(`The 'port' query parameter cannot be empty.`);
-      }
+      }*/
 
       let machine;
       if (id) {

@@ -37,6 +37,7 @@ class MachineForm extends Component {
             <input id="password" type="password" value={this.props.password} onChange={this.props.onPasswordChange} />
           </div>
 
+          {/*
           <div className="pure-control-group">
             <label htmlFor="hostname">Hostname</label>
             <input id="hostname" type="text" value={this.props.hostname} onChange={this.props.onHostnameChange} />
@@ -46,6 +47,7 @@ class MachineForm extends Component {
             <label htmlFor="port">Port</label>
             <input id="port" type="text" value={this.props.port} onChange={this.props.onPortChange} />
           </div>
+          */}
         </fieldset>
 
         <button type="submit" className="pure-button pure-button-primary">Save</button>
