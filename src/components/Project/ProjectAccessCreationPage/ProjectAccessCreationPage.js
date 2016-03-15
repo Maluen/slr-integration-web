@@ -46,12 +46,12 @@ class ProjectAccessCreationPage extends Component {
   }
 
   handleEmailChange(event) {
-    const email = event.currentTarget.value.trim();
+    const email = event.currentTarget.value;
     this.projectAccessCreationActions.updateEmail(email);
   }
 
   handlePermissionChange(event) {
-    const permission = event.currentTarget.value.trim();
+    const permission = event.currentTarget.value;
     this.projectAccessCreationActions.updatePermission(permission);
   }
 

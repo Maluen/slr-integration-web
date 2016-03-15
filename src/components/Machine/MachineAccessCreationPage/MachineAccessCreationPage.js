@@ -46,12 +46,12 @@ class MachineAccessCreationPage extends Component {
   }
 
   handleEmailChange(event) {
-    const email = event.currentTarget.value.trim();
+    const email = event.currentTarget.value;
     this.machineAccessCreationActions.updateEmail(email);
   }
 
   handlePermissionChange(event) {
-    const permission = event.currentTarget.value.trim();
+    const permission = event.currentTarget.value;
     this.machineAccessCreationActions.updatePermission(permission);
   }
 

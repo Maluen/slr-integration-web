@@ -67,22 +67,22 @@ class MachineCreationPage extends Component {
   }
 
   handleNameChange(event) {
-    const name = event.currentTarget.value.trim();
+    const name = event.currentTarget.value;
     this.machineUpdationActions.updateName(name);
   }
 
   handlePasswordChange(event) {
-    const password = event.currentTarget.value.trim();
+    const password = event.currentTarget.value;
     this.machineUpdationActions.updatePassword(password);
   }
 
   handleHostnameChange(event) {
-    const hostname = event.currentTarget.value.trim();
+    const hostname = event.currentTarget.value;
     this.machineUpdationActions.updateHostname(hostname);
   }
 
   handlePortChange(event) {
-    const port = event.currentTarget.value.trim();
+    const port = event.currentTarget.value;
     this.machineUpdationActions.updatePort(port);
   }
 

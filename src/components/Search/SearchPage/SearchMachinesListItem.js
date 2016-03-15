@@ -16,7 +16,7 @@ class UserMachineListItem extends Component {
   };
 
   handleSearchMachineChange(event) {
-    const machineId = event.currentTarget.value.trim();
+    const machineId = event.currentTarget.value;
     this.context.flux.getActions('searchActions').selectMachine(machineId);
   }
 

@@ -16,7 +16,7 @@ class Setting extends Component {
   onSettingsChange(event) {
     const el = event.currentTarget;
 
-    const name = el.name.trim();
+    const name = el.name;
 
     let value = '';
     if (el.type === 'checkbox') {

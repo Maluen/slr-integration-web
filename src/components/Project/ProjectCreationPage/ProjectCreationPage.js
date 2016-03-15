@@ -47,7 +47,7 @@ class ProjectCreationPage extends Component {
   }
 
   handleNameChange(event) {
-    const name = event.currentTarget.value.trim();
+    const name = event.currentTarget.value;
     this.projectCreationActions.updateName(name);
   }
 

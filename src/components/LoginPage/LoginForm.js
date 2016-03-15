@@ -25,12 +25,12 @@ class LoginForm extends Component {
   }
 
   handleEmailChange(event) {
-    const email = event.currentTarget.value.trim();
+    const email = event.currentTarget.value;
     this.accountActions.updateEmail(email);
   }
 
   handlePasswordChange(event) {
-    const password = event.currentTarget.value.trim();
+    const password = event.currentTarget.value;
     this.accountActions.updatePassword(password);
   }
 
