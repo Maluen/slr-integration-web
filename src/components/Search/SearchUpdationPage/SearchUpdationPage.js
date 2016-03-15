@@ -22,6 +22,7 @@ class SearchUpdationPage extends Component {
     id: PropTypes.string.isRequired,
     name: PropTypes.string,
     settings: PropTypes.array,
+    project: PropTypes.object,
     errorMessage: PropTypes.string,
   };
 
@@ -35,6 +36,7 @@ class SearchUpdationPage extends Component {
     fetchErrorMessage: '',
     name: '',
     settings: [ ...defaultSettings ],
+    project: null,
     errorMessage: '',
   };
 
@@ -107,6 +109,8 @@ class SearchUpdationPage extends Component {
   renderFetchSuccess() {
     return (
       <div>
+        <h2>Project {this.props.project.name}</h2>
+
         <div>{this.props.errorMessage}</div>
         <SearchForm
           name={this.props.name}

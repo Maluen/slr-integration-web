@@ -16,6 +16,7 @@ class SearchesPage extends Component {
     fetchErrorMessage: PropTypes.string,
     projectId: PropTypes.string.isRequired,
     searches: PropTypes.array,
+    project: PropTypes.object,
   };
 
   static contextTypes = {
@@ -27,6 +28,7 @@ class SearchesPage extends Component {
     isFetched: false,
     fetchErrorMessage: '',
     searches: [],
+    project: null,
   };
 
   componentWillMount() {
@@ -62,7 +64,11 @@ class SearchesPage extends Component {
 
   renderFetchSuccess() {
     return (
-      <SearchesList projectId={this.props.projectId} searches={this.props.searches} />
+      <div>
+        <h2>Project {this.props.project.name}</h2>
+        <a className="SearchesPage-link SearchesPage-link-createSearch pure-button pure-button-primary" href={`/createSearch/${this.props.projectId}`} onClick={Link.handleClick}>Create new</a>
+        <SearchesList projectId={this.props.projectId} searches={this.props.searches} />
+      </div>
     );
   }
 
@@ -83,7 +89,6 @@ class SearchesPage extends Component {
       <div className="SearchesPage">
         <div className="SearchesPage-container">
           <h1>{title}</h1>
-          <a className="SearchesPage-link SearchesPage-link-createSearch pure-button pure-button-primary" href={`/createSearch/${this.props.projectId}`} onClick={Link.handleClick}>Create new</a>
           {this.renderFetch()}
         </div>
       </div>

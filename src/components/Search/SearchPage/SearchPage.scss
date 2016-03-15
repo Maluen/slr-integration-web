@@ -6,4 +6,10 @@
   margin: 0 auto;
   padding: 0 0 40px;
   max-width: $max-content-width;
+
+  .output {
+    background-color: black;
+    color: #0FBA06;
+    font-family: courier;
+  }
 }

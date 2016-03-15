@@ -33,6 +33,7 @@ export default class SearchesStore {
       isFetched: false,
       fetchErrorMessage: '',
       searches: [],
+      project: null,
     };
   }
 
@@ -61,11 +62,12 @@ export default class SearchesStore {
     });
   }
 
-  onFetchSuccess(searches = []) {
+  onFetchSuccess({ searches = [], project }) {
     this.setState({
       isFetching: false,
       isFetched: true,
       searches,
+      project,
     });
   }
 

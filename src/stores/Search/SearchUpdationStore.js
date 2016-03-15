@@ -38,6 +38,7 @@ export default class SearchUpdationStore {
       'id': '',
       'name': '',
       'settings': [ ...defaultSettings ],
+      project: null,
       'errorMessage': '',
     };
   }
@@ -67,11 +68,12 @@ export default class SearchUpdationStore {
     });
   }
 
-  onFetchSuccess(search) {
+  onFetchSuccess({ search, project }) {
     this.setState({
       isFetching: false,
       isFetched: true,
       ...search,
+      project,
       errorMessage: '',
     });
   }

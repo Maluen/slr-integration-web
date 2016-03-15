@@ -18,7 +18,9 @@ class SearchPage extends Component {
     projectId: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     machineId: PropTypes.string,
+    name: PropTypes.string,
     state: PropTypes.object,
+    project: PropTypes.object,
     startSearchErrorMessage: PropTypes.string,
     stopSearchErrorMessage: PropTypes.string,
   };
@@ -159,6 +161,8 @@ class SearchPage extends Component {
 
     return (
       <div>
+        <h2>Project {this.props.project.name} -> Search {this.props.name}</h2>
+
         <p>{this.props.startSearchErrorMessage}</p>
         {typeof this.props.state === 'undefined' || this.props.state.status === 'created' ?
           <div>
@@ -187,16 +191,16 @@ class SearchPage extends Component {
                 {this.props.stopSearchErrorMessage !== '' ?
                   <p>Stop error: {this.props.stopSearchErrorMessage}</p>
                 : ''}
-                <p><button onClick={this.stopSearch.bind(this)}>Stop</button></p>
+                <p><button className="pure-button pure-button-primary" onClick={this.stopSearch.bind(this)}>Stop</button></p>
               </div>
             : ''}
             {this.props.state.status === 'failure' ?
-              <p><button onClick={this.resumeSearch.bind(this)}>Resume</button></p>
+              <p><button className="pure-button pure-button-primary" onClick={this.resumeSearch.bind(this)}>Resume</button></p>
             : ''}
             {this.props.state.status === 'success' || this.props.state.status === 'failure' ?
-              <p><a href="#" onClick={this.useAnotherMachine.bind(this)}>Use another machine</a></p>
+              <p><a href="#" onClick={this.useAnotherMachine.bind(this)}>Use another machine or start new</a></p>
             : ''}
-            <textarea ref="output" readOnly value={this.renderOutputValue()} cols="100" rows="20" />
+            <textarea className="output" ref="output" readOnly value={this.renderOutputValue()} cols="90" rows="20" />
           </div>
         }
       </div>

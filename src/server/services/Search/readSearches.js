@@ -1,5 +1,6 @@
 import Search from '../../models/Search';
 import ProjectAccess from '../../models/ProjectAccess';
+import Project from '../../models/Project';
 import filter from 'lodash.filter';
 
 import authenticated from '../middlewares/authenticated';
@@ -27,6 +28,11 @@ export const readSearches = {
         throw new Error('Access denied: you must have access to the project to view its searches.');
       }
 
+      const project = await Project.findById(projectId);
+      if (!project) {
+        throw new Error('Project not found.');
+      }
+
       const searchList = await Search.find({
         project: projectId,
       }).populate('state');
@@ -38,7 +44,7 @@ export const readSearches = {
         searches = filter(searches, filterObj);
       }
 
-      return { searches };
+      return { searches, project: project.toObject({ virtuals: true }) };
     });
   }],
 };

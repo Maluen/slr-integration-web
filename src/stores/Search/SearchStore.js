@@ -43,6 +43,7 @@ export default class SearchUpdationStore {
       'settings': [ ...defaultSettings ],
       'errorMessage': '',
       'state': {},
+      project: null,
       machineId: null,
       startSearchErrorMessage: '',
       stopSearchErrorMessage: '',
@@ -74,11 +75,12 @@ export default class SearchUpdationStore {
     });
   }
 
-  onFetchSuccess(search) {
+  onFetchSuccess({ search, project }) {
     this.setState({
       isFetching: false,
       isFetched: true,
       ...search,
+      project,
       errorMessage: '',
       machineId: null,
     });

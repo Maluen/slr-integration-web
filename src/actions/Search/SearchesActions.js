@@ -11,7 +11,8 @@ export default class SearchesActions {
       try {
         //this.actions.fetchBefore();
         const response = await Globals.services.get('readSearches', { projectId, id: null, req: this.alt.req });
-        this.actions.fetchSuccess(response.searches);
+        const { searches, project } = response;
+        this.actions.fetchSuccess({ searches, project });
       } catch (err) {
         this.actions.fetchError(err.message);
       }
@@ -28,8 +29,8 @@ export default class SearchesActions {
     return errorMessage;
   }
 
-  fetchSuccess(searches) {
-    return searches;
+  fetchSuccess(result) {
+    return result;
   }
 
   deleteSearch(id) {
