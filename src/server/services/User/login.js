@@ -54,37 +54,3 @@ export const login = {
     });
   }],
 };
-
-/*
-export default function login(email, password, req, res) {
-  return Promise.resolve().then(async () => {
-    // HACK: passport requires <username, password> POST data
-    req.body.username = email;
-    req.body.password = password;
-
-    // Generate a JSON response reflecting authentication status
-
-    let user;
-    try {
-      user = await passportAuthenticate(req, res);
-    } catch (err) {
-      throw new Error(err);
-    }
-
-    if (!user) {
-      throw new Error('Invalid email or password');
-    }
-
-    try {
-      await reqLogin(req, user);
-    } catch (err) {
-      throw new Error(err);
-    }
-
-    return { user: user.toObject({ virtuals: true }) };
-  })
-  .catch(err => {
-    throw new Error(typeof err === 'object' ? (err.message || err.err) : err);
-  });
-}
-*/

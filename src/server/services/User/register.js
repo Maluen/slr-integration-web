@@ -49,38 +49,3 @@ export const register = {
     });
   }],
 };
-
-/*
-export default function register(email, password, req, res) {
-  return Promise.resolve().then(async () => {
-    // TODO: validation
-
-    if (!email) {
-      throw new Error(`The 'email' query parameter cannot be empty.`);
-    }
-
-    if (!password) {
-      throw new Error(`The 'password' query parameter cannot be empty.`);
-    }
-
-    // Actual registration
-    await userRegister(new User({ email }), password);
-
-    const isActivationRequired = serverConfig.ACCOUNT_ACTIVATION;
-    if (isActivationRequired) {
-      // TODO: send activation email
-      return { isActivationRequired: true };
-    }
-    // auto login
-    try {
-      await loginService(email, password, req, res);
-    } catch (err) {
-      throw err;
-    }
-    return { isActivationRequired: false };
-  })
-  .catch(err => {
-    throw new Error(typeof err === 'object' ? (err.message || err.err) : err);
-  });
-}
-*/
