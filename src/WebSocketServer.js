@@ -135,32 +135,66 @@ export default class WebSocketServer {
   async handleMachineLogin(client, message) {
     const { connId, conn } = client;
 
-    //console.log('Machine requested login');
-
-    const detail = message.detail;
-    if (typeof detail !== 'object' || detail === null) return;
-
-    const machineId = detail.id;
-    const machineName = detail.name;
-    const machinePassword = detail.password;
-
-    let machine;
     try {
-      const response = await callService(authenticateMachine, { id: machineId, name: machineName, password: machinePassword });
-      machine = response.machine;
+      //console.log('Machine requested login');
+
+      const detail = message.detail;
+      if (typeof detail !== 'object' || detail === null) return;
+
+      const machineId = detail.id;
+      const machineName = detail.name;
+      const machinePassword = detail.password;
+      const machineCurrentSearchId = detail.currentSearchId;
+
+      let machine;
+      try {
+        const response = await callService(authenticateMachine, { id: machineId, name: machineName, password: machinePassword });
+        machine = response.machine;
+      } catch (err) {
+        throw new Error(err.message);
+      }
+
+      if (machineCurrentSearchId) {
+        // restore machine state: already running search (e.g. after reconnect)
+        let search;
+        try {
+          search = await Search.findById(machineCurrentSearchId).populate('state');
+        } catch (err) {
+          throw new Error(err.err);
+        }
+        if (!search) {
+          throw new Error('The search does not exist.');
+        }
+        let searchState = search.state.toObject({ virtuals: true });
+
+        if (searchState.machine.toString() !== machineId) {
+          throw new Error('The search is assigned to another machine.');
+        }
+
+        client.projectId = search.project.toString();
+        client.searchId = search.id;
+        client.searchStateId = searchState.id;
+
+        try {
+          const response = await updateSearchState(client.searchStateId, extendObj({ status: 'running' }));
+          searchState = response.searchState;
+        } catch (err) {
+          throw new Error('Unable to update the search status to running');
+        }
+        this.notifySearchListeners(client.searchId, searchState, { status: searchState.status });
+      }
+
+      this.sendMessage(conn, 'loginSuccess');
+
+      client.type = 'machine';
+      client.machineId = machine.id;
+      this.machines[machine.id] = connId;
+
+      // DEBUG
+      //this.startSearch({ id: 'TODO_PROJECT' }, { id: 'TODO_SEARCH' }, { id: 'TODO' }, false);
     } catch (err) {
       this.sendMessage(conn, 'loginError', { message: err.message });
-      return;
     }
-
-    this.sendMessage(conn, 'loginSuccess');
-
-    client.type = 'machine';
-    client.machineId = machine.id;
-    this.machines[machine.id] = connId;
-
-    // DEBUG
-    //this.startSearch({ id: 'TODO_PROJECT' }, { id: 'TODO_SEARCH' }, { id: 'TODO' }, false);
   }
 
   async handleMachineSearchStatus(client, message) {
