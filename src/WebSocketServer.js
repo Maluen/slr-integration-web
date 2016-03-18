@@ -5,6 +5,8 @@ import SearchState from './server/models/SearchState';
 import Search from './server/models/Search';
 import pick from 'lodash.pick';
 
+const MAX_OUTPUT_LINES = 1000;
+
 // Note: the processing is asynchronous, thus
 // consecutive requests are queued and processed one at a time,
 // so that each will work on the output of the previous request.
@@ -57,8 +59,6 @@ export default class WebSocketServer {
 
     this.clients = {}; // <conn id, conn data>
     this.machines = {}; // <machine id, conn id>
-
-    this.searchStates = {}; // <search id, search state>
   }
 
   start() {
@@ -92,9 +92,10 @@ export default class WebSocketServer {
       console.log('Disconnected: %s', connId);
 
       delete this.clients[connId];
-      delete this.machines[client.machineId];
 
       if (client.type === 'machine' && typeof client.machineId !== 'undefined') {
+        delete this.machines[client.machineId];
+
         updateSearchState(client.searchStateId, (searchState) => {
           if (searchState.status === 'running') {
             searchState.status = 'failure';
@@ -171,7 +172,6 @@ export default class WebSocketServer {
           throw new Error('The search is assigned to another machine.');
         }
 
-        client.projectId = search.project.toString();
         client.searchId = search.id;
         client.searchStateId = searchState.id;
 
@@ -242,6 +242,9 @@ export default class WebSocketServer {
     try {
       const response = await updateSearchState(client.searchStateId, (editableSearchState) => {
         editableSearchState.output.push(outputToAppend);
+        if (editableSearchState.output.length > MAX_OUTPUT_LINES) {
+          editableSearchState.output.shift();
+        }
         return editableSearchState;
       });
       searchState = response.searchState;
@@ -284,7 +287,6 @@ export default class WebSocketServer {
 
     const client = this.clients[connId];
 
-    client.projectId = project.id;
     client.searchId = search.id;
     client.searchStateId = search.state.id;
 
@@ -300,7 +302,7 @@ export default class WebSocketServer {
 
     this.notifySearchListeners(search.id, searchState, searchStateChanges);
 
-    this.sendMessage(client.conn, 'startSearch', { project, search, resume });
+    this.sendMessage(client.conn, 'startSearch', { project, search: { ...search, state: search.state.id }, resume });
   }
 
   async stopSearch(project, search, machine) {
